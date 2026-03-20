@@ -1,16 +1,22 @@
-## Hi there 👋
+# threestripesdigital
 
-<!--
-**threestripesdigital/threestripesdigital** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Linux](https://img.shields.io/badge/-Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
+![Git](https://img.shields.io/badge/-Git-F05032?style=flat-square&logo=git&logoColor=white)
 
-Here are some ideas to get you started:
+> Shipping with AI agents around the clock -- human hours for thinking, machine hours for doing.
+>
+> Stats auto-updated by [aidevops](https://aidevops.sh).
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+<!-- STATS-START -->
+<!-- Stats will be populated on first update -->
+<!-- STATS-END -->
+
+## Connect
+
+[![GitHub](https://img.shields.io/badge/-Follow-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/threestripesdigital)
+
+---
+
+<!-- UPDATED-START -->
+<!-- UPDATED-END -->
