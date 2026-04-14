@@ -15,10 +15,10 @@
 | --- | ---: | ---: | ---: | ---: |
 | Screen time (Mac) | 0h | 0h | 0h | ~0h* |
 | User AI session hours | 0.7h | 13.0h | 13.0h | 13.0h |
-| AI worker hours | 1.6h | 4.8h | 4.8h | 4.8h |
+| AI worker hours | 1.5h | 4.8h | 4.8h | 4.8h |
 | AI concurrency hours | 2.5h | 22.2h | 22.2h | 22.2h |
 | Interactive sessions | 6 | 16 | 16 | 16 |
-| Worker sessions | 13 | 47 | 47 | 47 |
+| Worker sessions | 12 | 47 | 47 | 47 |
 
 _Screen time from macOS display events, snapshotted daily. *365-day extrapolated (accumulating real data)._
 
@@ -43,11 +43,11 @@ _Model savings are modest because ~94.8% of tokens are cache reads, where price 
 | Model | Requests | Input | Output | Cache read | API Cost | Cache savings | Model savings |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | claude-opus-4-6 | 1,424 | 1K | 548K | 265.7M | $439.74 | $3,587.15 | $0.00 |
-| claude-sonnet-4-6 | 927 | 996 | 248K | 57.9M | $21.09 | $156.39 | $84.43 |
+| claude-sonnet-4-6 | 928 | 996 | 248K | 57.9M | $21.09 | $156.39 | $84.43 |
 | mimo-v2-pro-free | 53 | 171K | 12K | 2.1M | $1.32 | $5.73 | $5.33 |
 | gpt-5.2-chat-latest | 25 | 168K | 5K | 804K | $0.97 | $1.51 | $3.15 |
 | gpt-5.4-pro | 3 | 78K | 1K | 0 | $0.20 | $0.00 | $1.09 |
-| **Total** | **2,432** | **421K** | **816K** | **326.5M** | **$463.32** | **$3,750.77** | **$94.00** |
+| **Total** | **2,433** | **421K** | **816K** | **326.5M** | **$463.32** | **$3,750.77** | **$94.00** |
 
 _349.1M total tokens processed. 93.9% cache hit rate._
 
@@ -63,5 +63,5 @@ _Model savings are modest because ~93.9% of tokens are cache reads, where price 
 ---
 
 <!-- UPDATED-START -->
-_Stats auto-updated 2026-04-14 04:19 UTC by [aidevops](https://aidevops.sh) pulse._
+_Stats auto-updated 2026-04-14 05:19 UTC by [aidevops](https://aidevops.sh) pulse._
 <!-- UPDATED-END -->
