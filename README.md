@@ -15,10 +15,10 @@
 | --- | ---: | ---: | ---: | ---: |
 | Screen time (Mac) | 0h | 0h | 0h | ~0h* |
 | User AI session hours | 1.3h | 49.0h | 76.1h | 76.1h |
-| AI worker hours | 1.8h | 6.7h | 12.3h | 12.3h |
-| AI concurrency hours | 3.9h | 141.3h | 219.9h | 219.9h |
+| AI worker hours | 1.3h | 6.7h | 12.3h | 12.3h |
+| AI concurrency hours | 3.4h | 141.3h | 219.9h | 219.9h |
 | Interactive sessions | 5 | 31 | 58 | 58 |
-| Worker sessions | 21 | 102 | 156 | 156 |
+| Worker sessions | 20 | 102 | 156 | 156 |
 
 _Screen time from macOS display events, snapshotted daily. *365-day extrapolated (accumulating real data)._
 
@@ -30,12 +30,12 @@ _User AI session hours measured from AI message timestamps (reading, thinking, t
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | claude-opus-4-7 | 10,592 | 255K | 13.8M | 1,336.8M | $4,794.74 | $18,046.89 | $0.00 |
 | claude-opus-4-6 | 3,412 | 4K | 1.6M | 841.9M | $2,043.82 | $11,365.81 | $0.00 |
-| claude-sonnet-4-6 | 3,149 | 3K | 1.2M | 181.3M | $122.60 | $489.55 | $293.58 |
-| **Total** | **17,153** | **263K** | **16.7M** | **2,360.0M** | **$6,961.16** | **$29,902.26** | **$293.58** |
+| claude-sonnet-4-6 | 3,168 | 3K | 1.2M | 182.3M | $123.28 | $492.26 | $295.39 |
+| **Total** | **17,172** | **263K** | **16.7M** | **2,361.0M** | **$6,961.84** | **$29,904.97** | **$295.39** |
 
-_2,518.5M total tokens processed. 93.7% cache hit rate._
+_2,519.6M total tokens processed. 93.7% cache hit rate._
 
-_$30,195.84 total saved ($29,902.26 caching + $293.58 model routing vs all-Opus)._
+_$30,200.36 total saved ($29,904.97 caching + $295.39 model routing vs all-Opus)._
 
 _Model savings are modest because ~93.7% of tokens are cache reads, where price differences between models are small._
 
@@ -65,5 +65,5 @@ _Model savings are modest because ~93.6% of tokens are cache reads, where price 
 ---
 
 <!-- UPDATED-START -->
-_Stats auto-updated 2026-04-27 05:50 UTC by [aidevops](https://aidevops.sh) pulse._
+_Stats auto-updated 2026-04-27 06:50 UTC by [aidevops](https://aidevops.sh) pulse._
 <!-- UPDATED-END -->
