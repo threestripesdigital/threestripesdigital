@@ -15,10 +15,10 @@
 | --- | ---: | ---: | ---: | ---: |
 | Screen time (Mac) | 0h | 0h | 0h | ~0h* |
 | User AI session hours | 4.8h | 21.4h | 58.7h | 58.7h |
-| AI worker hours | 0.6h | 2.0h | 9.3h | 9.3h |
-| AI concurrency hours | 7.3h | 108.7h | 204.3h | 204.3h |
+| AI worker hours | 0.6h | 1.9h | 9.3h | 9.3h |
+| AI concurrency hours | 7.3h | 108.6h | 204.3h | 204.3h |
 | Interactive sessions | 4 | 20 | 48 | 48 |
-| Worker sessions | 12 | 45 | 153 | 153 |
+| Worker sessions | 12 | 44 | 153 | 153 |
 
 _Screen time from macOS display events, snapshotted daily. *365-day extrapolated (accumulating real data)._
 
@@ -31,12 +31,12 @@ _User AI session hours measured from AI message timestamps (reading, thinking, t
 | claude-opus-4-7 | 13,313 | 259K | 15.9M | 1,695.8M | $5,917.37 | $22,894.05 | $0.00 |
 | claude-opus-4-6 | 3,412 | 4K | 1.6M | 841.9M | $2,043.82 | $11,365.81 | $0.00 |
 | claude-sonnet-4-6 | 3,691 | 3K | 1.5M | 208.0M | $145.42 | $561.65 | $342.67 |
-| gpt-5.5 | 526 | 4.1M | 126K | 47.1M | $24.94 | $127.17 | $113.50 |
-| **Total** | **20,942** | **4.3M** | **19.2M** | **2,792.8M** | **$8,131.55** | **$34,948.68** | **$456.17** |
+| gpt-5.5 | 533 | 4.1M | 127K | 47.1M | $25.13 | $127.40 | $114.33 |
+| **Total** | **20,949** | **4.4M** | **19.2M** | **2,792.9M** | **$8,131.74** | **$34,948.91** | **$457.00** |
 
-_2,983.4M total tokens processed. 93.6% cache hit rate._
+_2,983.5M total tokens processed. 93.6% cache hit rate._
 
-_$35,404.85 total saved ($34,948.68 caching + $456.17 model routing vs all-Opus)._
+_$35,405.91 total saved ($34,948.91 caching + $457.00 model routing vs all-Opus)._
 
 _Model savings are modest because ~93.6% of tokens are cache reads, where price differences between models are small._
 
@@ -67,5 +67,5 @@ _Model savings are modest because ~93.5% of tokens are cache reads, where price 
 ---
 
 <!-- UPDATED-START -->
-_Stats auto-updated 2026-05-04 12:28 UTC by [aidevops](https://aidevops.sh) pulse._
+_Stats auto-updated 2026-05-04 13:28 UTC by [aidevops](https://aidevops.sh) pulse._
 <!-- UPDATED-END -->
