@@ -15,10 +15,10 @@
 | --- | ---: | ---: | ---: | ---: |
 | Screen time (Mac) | 0h | 0h | 0h | ~0h* |
 | User AI session hours | 0.5h | 16.4h | 36.9h | 36.9h |
-| AI worker hours | 0.6h | 4.2h | 8.4h | 8.4h |
+| AI worker hours | 0.6h | 4.2h | 8.3h | 8.3h |
 | AI concurrency hours | 1.9h | 27.2h | 136.4h | 136.4h |
 | Interactive sessions | 2 | 21 | 40 | 40 |
-| Worker sessions | 11 | 78 | 147 | 147 |
+| Worker sessions | 11 | 78 | 146 | 146 |
 
 _Screen time from macOS display events, snapshotted daily. *365-day extrapolated (accumulating real data)._
 
@@ -29,14 +29,14 @@ _User AI session hours measured from AI message timestamps (reading, thinking, t
 | Model | Requests | Input | Output | Cache read | API Cost | Cache savings | Model savings |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | claude-opus-4-7 | 13,313 | 259K | 15.9M | 1,695.8M | $5,917.37 | $22,894.05 | $0.00 |
-| claude-opus-4-6 | 2,926 | 3K | 1.4M | 750.9M | $1,831.95 | $10,138.11 | $0.00 |
-| claude-sonnet-4-6 | 3,467 | 3K | 1.5M | 192.3M | $137.52 | $519.26 | $320.89 |
-| gpt-5.5 | 2,534 | 15.3M | 609K | 166.7M | $92.68 | $450.15 | $420.27 |
-| **Total** | **22,240** | **15.5M** | **19.5M** | **2,805.8M** | **$7,979.52** | **$34,001.56** | **$741.16** |
+| claude-opus-4-6 | 2,841 | 3K | 1.4M | 735.8M | $1,798.85 | $9,934.58 | $0.00 |
+| claude-sonnet-4-6 | 3,449 | 3K | 1.4M | 191.1M | $136.78 | $516.13 | $319.26 |
+| gpt-5.5 | 2,540 | 15.3M | 610K | 166.8M | $92.78 | $450.41 | $420.73 |
+| **Total** | **22,143** | **15.5M** | **19.5M** | **2,789.7M** | **$7,945.78** | **$33,795.16** | **$739.99** |
 
-_3,003.8M total tokens processed. 93.4% cache hit rate._
+_2,987.1M total tokens processed. 93.4% cache hit rate._
 
-_$34,742.72 total saved ($34,001.56 caching + $741.16 model routing vs all-Opus)._
+_$34,535.15 total saved ($33,795.16 caching + $739.99 model routing vs all-Opus)._
 
 _Model savings are modest because ~93.4% of tokens are cache reads, where price differences between models are small._
 
@@ -67,5 +67,5 @@ _Model savings are modest because ~93.5% of tokens are cache reads, where price 
 ---
 
 <!-- UPDATED-START -->
-_Stats auto-updated 2026-05-09 20:04 UTC by [aidevops](https://aidevops.sh) pulse._
+_Stats auto-updated 2026-05-09 21:04 UTC by [aidevops](https://aidevops.sh) pulse._
 <!-- UPDATED-END -->
