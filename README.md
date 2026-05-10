@@ -14,11 +14,11 @@
 | Metric | 24h | 7 Days | 28 Days | 365 Days |
 | --- | ---: | ---: | ---: | ---: |
 | Screen time (Mac) | 0h | 0h | 0h | ~0h* |
-| User AI session hours | 5.1h | 20.5h | 37.0h | 37.0h |
+| User AI session hours | 5.0h | 20.1h | 37.0h | 37.0h |
 | AI worker hours | 0.5h | 4.5h | 8.5h | 8.5h |
-| AI concurrency hours | 38.9h | 63.8h | 167.9h | 167.9h |
-| Interactive sessions | 4 | 23 | 39 | 39 |
-| Worker sessions | 11 | 85 | 147 | 147 |
+| AI concurrency hours | 38.6h | 63.2h | 167.9h | 167.9h |
+| Interactive sessions | 4 | 22 | 39 | 39 |
+| Worker sessions | 10 | 85 | 146 | 146 |
 
 _Screen time from macOS display events, snapshotted daily. *365-day extrapolated (accumulating real data)._
 
@@ -30,13 +30,13 @@ _User AI session hours measured from AI message timestamps (reading, thinking, t
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | claude-opus-4-7 | 13,314 | 259K | 15.9M | 1,695.8M | $5,917.37 | $22,894.05 | $0.00 |
 | claude-opus-4-6 | 2,667 | 3K | 1.3M | 698.7M | $1,715.03 | $9,433.33 | $0.00 |
-| claude-sonnet-4-6 | 3,380 | 3K | 1.4M | 186.5M | $133.72 | $503.61 | $312.73 |
+| claude-sonnet-4-6 | 3,377 | 3K | 1.4M | 186.4M | $133.22 | $503.45 | $312.64 |
 | gpt-5.5 | 3,078 | 19.1M | 784K | 227.4M | $120.52 | $614.18 | $549.85 |
-| **Total** | **22,439** | **19.4M** | **19.6M** | **2,808.6M** | **$7,886.64** | **$33,445.16** | **$862.59** |
+| **Total** | **22,436** | **19.4M** | **19.6M** | **2,808.5M** | **$7,886.14** | **$33,445.00** | **$862.50** |
 
-_3,008.3M total tokens processed. 93.4% cache hit rate._
+_3,008.1M total tokens processed. 93.4% cache hit rate._
 
-_$34,307.75 total saved ($33,445.16 caching + $862.59 model routing vs all-Opus)._
+_$34,307.50 total saved ($33,445.00 caching + $862.50 model routing vs all-Opus)._
 
 _Model savings are modest because ~93.4% of tokens are cache reads, where price differences between models are small._
 
@@ -67,5 +67,5 @@ _Model savings are modest because ~93.5% of tokens are cache reads, where price 
 ---
 
 <!-- UPDATED-START -->
-_Stats auto-updated 2026-05-10 04:07 UTC by [aidevops](https://aidevops.sh) pulse._
+_Stats auto-updated 2026-05-10 05:00 UTC by [aidevops](https://aidevops.sh) pulse._
 <!-- UPDATED-END -->
