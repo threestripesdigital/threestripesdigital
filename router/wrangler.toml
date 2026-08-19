@@ -1,0 +1,17 @@
+# Router Worker: serves the rank-boost LP under threestripesdigital.com paths.
+# /rank-boost/law-firms/*  ->  tsd-law-firm-rank-boost.pages.dev/*
+# Future verticals map the same way: add a prefix -> pages-project entry
+# in VERTICALS in worker.js and deploy.
+
+name = "tsd-rank-boost-router"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+account_id = "17f7c095d40a8771cf3568fdcae11770"
+
+routes = [
+  { pattern = "threestripesdigital.com/rank-boost*", zone_name = "threestripesdigital.com" },
+  { pattern = "www.threestripesdigital.com/rank-boost*", zone_name = "threestripesdigital.com" },
+]
+
+[triggers]
+crons = ["* * * * *"]

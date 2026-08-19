@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Card 3 Animation Options · Three Stripes Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A1628; --navy-2: #0F1F35; --gold: #C4A35A; --gold-light: #D4B96A;
+      --muted: #94A3B8; --muted-2: #64748B; --white: #F8FAFC; --line: rgba(148,163,184,0.18);
+      --line-strong: rgba(196,163,90,0.35); --success: #34D399; --danger: #F87171;
+      --mono: "JetBrains Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--navy); color: var(--white); font-family: "Inter", sans-serif; padding: 3rem 1.5rem 5rem; }
+    .wrap { max-width: 1120px; margin: 0 auto; }
+    h1 { font-size: 1.8rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+    .sub { color: var(--muted); margin: 0 0 2.5rem; max-width: 64ch; }
+    .grid { display: grid; gap: 1.25rem; }
+    @media (min-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .opt { background: var(--navy-2); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem 1.3rem 1.4rem; }
+    .opt-tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin: 0 0 0.25rem; }
+    .opt h3 { margin: 0 0 0.35rem; font-size: 1.02rem; }
+    .opt p.desc { margin: 0 0 1rem; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+    .viz { background: rgba(7,15,28,0.7); border: 1px solid var(--line); border-radius: 10px; padding: 1.1rem 1.1rem 1rem; min-height: 220px; position: relative; overflow: hidden; }
+
+    /* ============ 3C: fuel gauges ============ */
+    .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center; }
+    .fg-dial {
+      width: 130px; height: 65px; margin: 0.6rem auto 0.4rem;
+      border: 8px solid rgba(148,163,184,0.25); border-bottom: none;
+      border-radius: 130px 130px 0 0; position: relative;
+    }
+    .fg-needle {
+      position: absolute; left: 50%; bottom: -4px; width: 4px; height: 52px;
+      margin-left: -2px; border-radius: 2px; background: var(--gold-light);
+      transform-origin: 50% 100%;
+    }
+    .fg-needle.seo { animation: seo-needle 9s linear infinite; }
+    @keyframes seo-needle { 0% { transform: rotate(-82deg); } 90%, 100% { transform: rotate(-58deg); } }
+    .fg-needle.ads { animation: ads-needle 7s ease-in-out infinite; }
+    @keyframes ads-needle {
+      0% { transform: rotate(-82deg); }
+      30% { transform: rotate(74deg); }
+      46% { transform: rotate(74deg); }
+      56%, 100% { transform: rotate(-86deg); }
+    }
+    .fg-lbl { margin: 0.2rem 0 0.15rem; font-size: 0.8rem; font-weight: 600; }
+    .fg-sub { margin: 0; position: relative; height: 1.2em; font-family: var(--mono); font-size: 0.62rem; color: var(--muted-2); }
+    .fg-sub em { position: absolute; left: 0; right: 0; font-style: normal; opacity: 0; }
+    .seo-months .s1 { animation: cyc3 9s linear infinite; }
+    .seo-months .s2 { animation: cyc3 9s linear infinite 3s; }
+    .seo-months .s3 { animation: cyc3 9s linear infinite 6s; color: var(--danger); }
+    @keyframes cyc3 { 0%, 3% { opacity: 0; } 6%, 30% { opacity: 1; } 36%, 100% { opacity: 0; } }
+    .ads-state .a1 { animation: ads-a1 7s infinite; }
+    .ads-state .a2 { animation: ads-a2 7s infinite; color: var(--danger); }
+    @keyframes ads-a1 { 0%, 4% { opacity: 0; } 8%, 44% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    @keyframes ads-a2 { 0%, 52% { opacity: 0; } 58%, 96% { opacity: 1; } 100% { opacity: 0; } }
+    .fg-empty {
+      position: absolute; right: 0.9rem; top: 0.8rem;
+      font-family: var(--mono); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--danger); border: 1px solid rgba(248,113,113,0.5); border-radius: 5px; padding: 2px 7px;
+      opacity: 0; animation: empty-flash 7s infinite;
+    }
+    @keyframes empty-flash { 0%, 54% { opacity: 0; } 60%, 70% { opacity: 1; } 74% { opacity: 0.3; } 78%, 96% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* ============ 3D: calendar vs cash ============ */
+    .cal { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .cal-card {
+      width: 92px; height: 74px; margin: 0.4rem auto 0.6rem;
+      border: 1px solid var(--line); border-radius: 8px; background: rgba(148,163,184,0.07);
+      position: relative; overflow: hidden;
+    }
+    .cal-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 18px; background: rgba(148,163,184,0.2); }
+    .cal-m {
+      position: absolute; inset: 18px 0 0 0; display: grid; place-items: center;
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 700; color: var(--white); opacity: 0;
+    }
+    .cal-m.m1 { animation: cyc3 9s linear infinite; }
+    .cal-m.m2 { animation: cyc3 9s linear infinite 3s; }
+    .cal-m.m3 { animation: cyc3 9s linear infinite 6s; color: var(--danger); }
+    .cal-bar { height: 7px; border-radius: 4px; background: rgba(148,163,184,0.14); overflow: hidden; margin: 0.4rem 0; }
+    .cal-bar i { display: block; height: 100%; border-radius: 4px; background: rgba(148,163,184,0.5); width: 0; animation: cal-crawl 9s linear infinite; }
+    @keyframes cal-crawl { 0% { width: 4%; } 100% { width: 22%; } }
+    .cal p { margin: 0; font-family: var(--mono); font-size: 0.62rem; color: var(--muted-2); text-align: center; }
+    .cash { display: grid; gap: 5px; width: 110px; margin: 0.5rem auto 0.6rem; }
+    .cash i { display: block; height: 12px; border-radius: 3px; background: linear-gradient(90deg, var(--gold-light), var(--gold)); animation: bill 8s infinite; }
+    .cash i:nth-child(2) { animation-delay: 0.9s; }
+    .cash i:nth-child(3) { animation-delay: 1.8s; }
+    .cash i:nth-child(4) { animation-delay: 2.7s; }
+    .cash i:nth-child(5) { animation-delay: 3.6s; }
+    @keyframes bill { 0%, 8% { opacity: 1; transform: translateX(0); } 30%, 88% { opacity: 0; transform: translateX(26px); } 96%, 100% { opacity: 1; transform: translateX(0); } }
+    .cash-out {
+      position: absolute; right: 0.9rem; top: 0.8rem;
+      font-family: var(--mono); font-size: 0.58rem; font-weight: 700; color: var(--danger);
+      border: 1px solid rgba(248,113,113,0.5); border-radius: 5px; padding: 2px 7px;
+      opacity: 0; animation: out-tag 8s infinite;
+    }
+    @keyframes out-tag { 0%, 48% { opacity: 0; } 54%, 90% { opacity: 1; } 96%, 100% { opacity: 0; } }
+    .traffic i { background: linear-gradient(90deg, #F87171, #EF4444); animation: traffic-die 8s infinite; }
+    @keyframes traffic-die { 0%, 10% { width: 0; } 40% { width: 78%; } 52% { width: 78%; } 64%, 92% { width: 0; } 100% { width: 0; } }
+
+    /* ============ 3E: the race ============ */
+    .race { display: grid; gap: 1.1rem; padding-top: 1.4rem; }
+    .lane { position: relative; height: 30px; border-bottom: 1px dashed var(--line); }
+    .lname { position: absolute; top: -1.15em; left: 0; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-2); }
+    .dot { position: absolute; bottom: -6px; left: 0; width: 12px; height: 12px; border-radius: 50%; }
+    .seo-dot { background: rgba(148,163,184,0.6); animation: seo-run 11s linear infinite; }
+    @keyframes seo-run { 0% { left: 0%; } 95%, 100% { left: 9%; } }
+    .ads-dot { background: #F87171; animation: ads-run 11s ease-out infinite; }
+    @keyframes ads-run {
+      0% { left: 0%; opacity: 1; }
+      30% { left: 58%; opacity: 1; }
+      34%, 88% { left: 58%; opacity: 0.35; }
+      92%, 100% { left: 0%; opacity: 1; }
+    }
+    .wall {
+      position: absolute; left: 62%; top: 4px;
+      font-family: var(--mono); font-size: 0.58rem; font-weight: 700; color: var(--danger);
+      opacity: 0; animation: wall-in 11s infinite;
+    }
+    @keyframes wall-in { 0%, 30% { opacity: 0; } 36%, 86% { opacity: 1; } 90%, 100% { opacity: 0; } }
+    .boost-dot { background: var(--gold-light); box-shadow: 0 0 12px rgba(212,185,106,0.8); animation: boost-run 11s ease-in-out infinite; }
+    @keyframes boost-run { 0%, 8% { left: 0%; } 52%, 96% { left: 92%; } 100% { left: 0%; } }
+    .flag {
+      position: absolute; right: 0; top: 4px;
+      font-family: var(--mono); font-size: 0.58rem; font-weight: 700; color: var(--gold-light);
+      opacity: 0; animation: flag-in 11s infinite;
+    }
+    @keyframes flag-in { 0%, 50% { opacity: 0; } 56%, 96% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* ============ 3F: the flatline ============ */
+    .ekg { padding-top: 0.8rem; }
+    .ekg-row { margin-bottom: 0.8rem; }
+    .ekg-lbl { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.62rem; color: var(--muted-2); margin-bottom: 0.25rem; }
+    .ekg svg { display: block; width: 100%; height: 46px; }
+    .ekg path { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .ekg-seo-path { stroke: rgba(148,163,184,0.7); stroke-dasharray: 400; stroke-dashoffset: 400; animation: trace 8s linear infinite; }
+    .ekg-ads-path { stroke: #F87171; stroke-dasharray: 460; stroke-dashoffset: 460; animation: trace 8s linear infinite; }
+    @keyframes trace { 0% { stroke-dashoffset: var(--len, 420); } 70%, 96% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; } }
+    .ekg-seo-path { --len: 400; }
+    .ekg-ads-path { --len: 460; }
+    .ekg-flat {
+      font-family: var(--mono); font-size: 0.6rem; font-weight: 700; color: var(--danger);
+      opacity: 0; animation: flat-in 8s infinite;
+    }
+    @keyframes flat-in { 0%, 55% { opacity: 0; } 62%, 96% { opacity: 1; } 100% { opacity: 0; } }
+
+    .pick { margin-top: 3rem; padding: 1.25rem 1.4rem; border-left: 3px solid var(--gold); background: rgba(196,163,90,0.08); border-radius: 0 10px 10px 0; color: var(--muted); font-size: 0.92rem; }
+    .pick strong { color: var(--white); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Problem card 3 — four takes on “both of your options are bad”</h1>
+    <p class="sub">Four wildly different metaphors, all live below. Reply with one (3C, 3D, 3E, or 3F) and I’ll build it into the landing page at full polish.</p>
+
+    <div class="grid">
+      <div class="opt">
+        <p class="opt-tag">Option 3C</p>
+        <h3>The fuel gauges</h3>
+        <p class="desc">SEO’s needle barely creeps off empty while the months tick by. The ads needle races to full, then snaps back to empty the moment payments stop.</p>
+        <div class="viz">
+          <span class="fg-empty">EMPTY = INVISIBLE</span>
+          <div class="fg">
+            <div>
+              <div class="fg-dial"><i class="fg-needle seo"></i></div>
+              <p class="fg-lbl">Traditional SEO</p>
+              <p class="fg-sub seo-months"><em class="s1">month 3</em><em class="s2">month 6</em><em class="s3">month 9 · still waiting</em></p>
+            </div>
+            <div>
+              <div class="fg-dial"><i class="fg-needle ads"></i></div>
+              <p class="fg-lbl">Google Ads</p>
+              <p class="fg-sub ads-state"><em class="a1">burning $50–1,000 / click</em><em class="a2">payments stopped</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opt">
+        <p class="opt-tag">Option 3D</p>
+        <h3>The calendar and the cash</h3>
+        <p class="desc">Left: the calendar flips month after month and the SEO bar barely moves. Right: the ad budget burns bill by bill; when it runs out, the traffic bar dies with it.</p>
+        <div class="viz">
+          <span class="cash-out">OUT OF BUDGET</span>
+          <div class="cal">
+            <div>
+              <div class="cal-card">
+                <span class="cal-m m1">MONTH 2</span><span class="cal-m m2">MONTH 5</span><span class="cal-m m3">MONTH 9</span>
+              </div>
+              <div class="cal-bar"><i></i></div>
+              <p>Traditional SEO · still page 2</p>
+            </div>
+            <div>
+              <div class="cash"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="cal-bar traffic"><i></i></div>
+              <p>Google Ads · traffic dies with the budget</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opt">
+        <p class="opt-tag">Option 3E</p>
+        <h3>The race <span style="color:var(--muted-2);font-weight:400">(sneaks in the pitch)</span></h3>
+        <p class="desc">Three lanes. SEO crawls. Ads sprints, then dies mid-track when the payments stop. The gold boost lane quietly wins the race — your third option, animated.</p>
+        <div class="viz">
+          <div class="race">
+            <div class="lane"><span class="lname">Traditional SEO</span><i class="dot seo-dot"></i></div>
+            <div class="lane"><span class="lname">Google Ads</span><i class="dot ads-dot"></i><b class="wall">✕ stopped paying</b></div>
+            <div class="lane"><span class="lname">Free rank boost</span><i class="dot boost-dot"></i><b class="flag">page one ›</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opt">
+        <p class="opt-tag">Option 3F</p>
+        <h3>The flatline</h3>
+        <p class="desc">Two heart monitors. SEO has a faint pulse — barely alive after nine months. Ads pulses hard, then flatlines the second the card stops working.</p>
+        <div class="viz ekg">
+          <div class="ekg-row">
+            <div class="ekg-lbl"><span>TRADITIONAL SEO</span><span>faint pulse · month 9</span></div>
+            <svg viewBox="0 0 320 46" preserveAspectRatio="none">
+              <path class="ekg-seo-path" d="M0 30 h52 l5 -5 5 5 h68 l5 -6 5 6 h74 l5 -5 5 5 h96" />
+            </svg>
+          </div>
+          <div class="ekg-row">
+            <div class="ekg-lbl"><span>GOOGLE ADS</span><span class="ekg-flat">payments stopped → flatline</span></div>
+            <svg viewBox="0 0 320 46" preserveAspectRatio="none">
+              <path class="ekg-ads-path" d="M0 30 h22 l7 -22 7 22 h20 l7 -22 7 22 h20 l7 -22 7 22 h26 h168" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="pick"><strong>To pick:</strong> reply “3C”, “3D”, “3E”, or “3F”. The winner replaces the burn bars on the live page.</p>
+  </div>
+</body>
+</html>
