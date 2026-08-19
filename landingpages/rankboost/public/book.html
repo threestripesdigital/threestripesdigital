@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book Your Free Boost Call | Three Stripes Digital</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#0A1628" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Optional Meta measurement loads only after an explicit visitor choice. -->
+  <script src="consent.js"></script>
+
+  <style>
+    .calendly-embed {
+      height: 740px; margin-top: 1.1rem; border-radius: 12px; overflow: hidden;
+      background: #fff; border: 1px solid var(--line-strong);
+    }
+    .calendly-embed .calendly-inline-widget { height: 100% !important; min-width: 0 !important; }
+    .calendly-loading { height: 100%; display: grid; place-items: center; color: #666; font-size: 0.9rem; }
+    .res-note-alt { font-size: 0.8rem; margin-top: 0.6rem; }
+    .res-note-alt a { color: var(--gold-light); }
+    @media (max-width: 560px) { .calendly-embed { height: 820px; } }
+  </style>
+</head>
+<body class="step-body">
+  <header class="step-header">
+    <!-- Deliberately not a link: no exits from the funnel. -->
+    <span class="wordmark">Three Stripes <span>Digital</span></span>
+    <ol class="step-track" aria-label="Progress">
+      <li class="done"><span class="dot" aria-hidden="true">✓</span>Your firm</li>
+      <li class="done"><span class="dot" aria-hidden="true">✓</span>Your opportunity</li>
+      <li class="current"><span class="dot" aria-hidden="true">3</span>Book your call</li>
+    </ol>
+  </header>
+
+  <main class="step-main">
+    <div class="step-result">
+      <h1 class="step-h">Pick your call time.</h1>
+      <p class="res-sub">30 minutes with me, Bilal. We go through your keyword list together, I show you
+        the proposed path toward stronger visibility and what maintaining it may require, and then I kick off your
+        boost while we’re still on the call.</p>
+      <ol class="step-agenda">
+        <li><b>On the call</b> we pick the keyword and I walk you through the plan to rank and hold it.</li>
+        <li><b>Right after</b> I kick off your boost. Nothing needed from you, no logins, no site access.</li>
+        <li><b>Then we review</b> the measured before-and-after on a follow-up call. Timing and outcomes vary.</li>
+      </ol>
+      <p class="res-sub">Free either way. No credit card, no contract. If your keyword can’t move, I’ll tell
+        you that on the call instead of running it.</p>
+      <p class="res-note res-note-big res-note-urgent">
+        <span class="res-arrow">⬇</span>
+        <strong>This is the last step.</strong>
+        <strong class="res-red">No call, no boost.</strong> Your spot is held while you book.
+        <span class="res-arrow">⬇</span>
+      </p>
+      <div class="calendly-embed" id="calendly-embed">
+        <div class="calendly-loading">Loading your booking calendar…</div>
+      </div>
+      <p class="res-note res-note-alt">Calendar not loading?
+        <a id="calendly-fallback" href="https://calendly.com/bilal-threestripesdigital/three-stripes-digital-rank-boost" target="_blank" rel="noopener noreferrer">Open the booking page instead</a>.
+      </p>
+      <p class="res-note"><a class="step-back" id="step-back-link" href="results">← Back to your opportunity</a></p>
+    </div>
+  </main>
+
+  <footer class="step-footer">
+    <p>Three Stripes Digital · <a href="privacy.html">Privacy</a> · <a href="https://threestripesdigital.com/terms-of-service/">Terms</a> · <a href="https://threestripesdigital.com/contact/">Contact</a></p>
+  </footer>
+
+  <script src="book.js"></script>
+</body>
+</html>

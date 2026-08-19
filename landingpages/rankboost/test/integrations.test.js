@@ -1,0 +1,1641 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { DatabaseSync } from "node:sqlite";
+
+import { onRequestPost as boostLivePost } from "../functions/api/boost-live.js";
+import {
+  onRequestPost as calendlyPost,
+  pollCalendlyNoShows,
+} from "../functions/api/calendly.js";
+import { onRequestPost as checkPost } from "../functions/api/check.js";
+import {
+  processIntegrationJobs,
+  repairIntegrationJobs,
+  requeueDeadIntegrationJobs,
+} from "../functions/api/_jobs.js";
+import {
+  dispatchIntegrationJob,
+  IntegrationError,
+} from "../functions/api/_providers.js";
+import { KIT_TAG_IDS } from "../functions/api/_kit.js";
+import { createLeadToken } from "../functions/api/_security.js";
+import { onRequestPost as trackPost } from "../functions/api/track.js";
+
+const CALENDLY_EVENT_TYPE_URI =
+  "https://api.calendly.com/event_types/rank-boost-test-event";
+
+test("runtime Kit tag IDs match the verified automation manifest", () => {
+  const config = JSON.parse(
+    readFileSync(new URL("../ops/kit-email-system.json", import.meta.url), "utf8")
+  );
+  assert.deepEqual(KIT_TAG_IDS, {
+    lead: config.enrollment.unbooked.tag_id,
+    booked: config.enrollment.booked.tag_id,
+    noShow: config.enrollment.no_show.tag_id,
+    boostLive: config.enrollment.boost_live.tag_id,
+  });
+});
+
+function migratedSqlite() {
+  const db = new DatabaseSync(":memory:");
+  for (const name of [
+    "0001_initial.sql",
+    "0002_secure_attribution.sql",
+    "0003_reliable_integrations.sql",
+    "0004_lifecycle_operations.sql",
+    "0005_job_dependencies.sql",
+  ]) {
+    db.exec(readFileSync(new URL(`../migrations/${name}`, import.meta.url), "utf8"));
+  }
+  return db;
+}
+
+function d1Sqlite(db) {
+  return {
+    prepare(sql) {
+      return {
+        sql,
+        args: [],
+        bind(...args) {
+          this.args = args;
+          return this;
+        },
+        async run() {
+          const result = db.prepare(sql).run(...this.args);
+          return { meta: { changes: Number(result.changes) || 0 } };
+        },
+        async first() {
+          return db.prepare(sql).get(...this.args) || null;
+        },
+        async all() {
+          return { results: db.prepare(sql).all(...this.args) };
+        },
+      };
+    },
+    async batch(statements) {
+      db.exec("BEGIN");
+      try {
+        const results = statements.map((statement) => {
+          const result = db.prepare(statement.sql).run(...statement.args);
+          return { meta: { changes: Number(result.changes) || 0 } };
+        });
+        db.exec("COMMIT");
+        return results;
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
+    },
+  };
+}
+
+function applyStatements(db, statements) {
+  db.exec("BEGIN");
+  try {
+    for (const statement of statements) {
+      db.prepare(statement.sql).run(...statement.args);
+    }
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+}
+
+function recordingDb(rows = [], firstRow = null, calendlyRows = [], options = {}) {
+  const batches = [];
+  const runs = [];
+  return {
+    batches,
+    runs,
+    prepare(sql) {
+      return {
+        sql,
+        args: [],
+        bind(...args) {
+          this.args = args;
+          return this;
+        },
+        async all() {
+          if (sql.includes("FROM calendly_invitees")) {
+            return { results: calendlyRows };
+          }
+          return { results: sql.includes("FROM integration_jobs") ? rows : [] };
+        },
+        async first() {
+          return firstRow;
+        },
+        async run() {
+          runs.push({ sql, args: this.args });
+          const deniedClaim =
+            options.denyCalendlyClaim && sql.includes("SET poll_lease_token = ?1");
+          return { meta: { changes: deniedClaim ? 0 : 1 } };
+        },
+      };
+    },
+    async batch(statements) {
+      batches.push(statements.map((statement) => ({
+        sql: statement.sql,
+        args: statement.args,
+      })));
+      return statements.map(() => ({ meta: { changes: 1 } }));
+    },
+  };
+}
+
+async function calendlyRequest(event, key, includeRotatedSignature = false) {
+  const body = JSON.stringify({
+    created_at: "2026-08-18T12:00:00Z",
+    ...event,
+  });
+  const timestamp = String(Math.floor(Date.now() / 1000));
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(key),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    cryptoKey,
+    new TextEncoder().encode(`${timestamp}.${body}`)
+  );
+  const hex = Array.from(new Uint8Array(signature))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+  return new Request("https://example.test/api/calendly", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Calendly-Webhook-Signature":
+        `t=${timestamp},` +
+        (includeRotatedSignature ? `v1=${"0".repeat(64)},` : "") +
+        `v1=${hex}`,
+    },
+    body,
+  });
+}
+
+function queuedJobs(db) {
+  return db.batches[0]
+    .filter(({ sql }) => sql.includes("INTO integration_jobs"))
+    .map(({ args }) => ({
+      leadRef: args[0],
+      kind: args[1],
+      dedupeKey: args[2],
+      payload: JSON.parse(args[3]),
+    }));
+}
+
+function rankCheckDb() {
+  const batches = [];
+  return {
+    batches,
+    prepare(sql) {
+      return {
+        sql,
+        args: [],
+        bind(...args) {
+          this.args = args;
+          return this;
+        },
+        async run() {
+          return { meta: { changes: 1 } };
+        },
+        async first() {
+          if (sql.includes("RETURNING count")) return { count: 1 };
+          return null;
+        },
+        async all() {
+          return { results: [] };
+        },
+      };
+    },
+    async batch(statements) {
+      batches.push(statements.map((statement) => ({
+        sql: statement.sql,
+        args: statement.args,
+      })));
+      return statements.map(() => ({ meta: { changes: 1 } }));
+    },
+  };
+}
+
+test("rank check persists one lead and durable provider jobs", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests = [];
+  globalThis.fetch = async (url) => {
+    requests.push(String(url));
+    return Response.json({
+      tasks: [{
+        status_code: 20000,
+        cost: 0.0125,
+        result: [{
+          total_count: 1,
+          items: [{
+            keyword_data: {
+              keyword: "personal injury lawyer chicago",
+              keyword_info: { search_volume: 100 },
+            },
+            ranked_serp_element: {
+              serp_item: {
+                rank_absolute: 18,
+                type: "organic",
+                url: "https://example.test/injury",
+              },
+            },
+          }],
+        }],
+      }],
+    });
+  };
+  try {
+    const db = rankCheckDb();
+    const waits = [];
+    const response = await checkPost({
+      request: new Request("https://threestripesdigital.com/rank-boost/law-firms/api/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://threestripesdigital.com",
+          "CF-Connecting-IP": "192.0.2.10",
+        },
+        body: JSON.stringify({
+          name: "Test Lawyer",
+          phone: "+15555550110",
+          email: "lawyer@example.test",
+          website_url: "https://example.test",
+          page_url: "https://threestripesdigital.com/rank-boost/law-firms/",
+          event_id: "submission-test-10",
+          external_id: "external-test-10",
+        }),
+      }),
+      env: {
+        DATAFORSEO_LOGIN: "dataforseo-test-login",
+        DATAFORSEO_PASSWORD: "dataforseo-test-password",
+        FUNNEL_SIGNING_KEY: "funnel-test-key",
+        LEADS_DB: db,
+      },
+      waitUntil(promise) {
+        waits.push(promise);
+      },
+    });
+    await Promise.all(waits);
+
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.qualified, true);
+    assert.ok(data.lead_token);
+    assert.equal(requests.length, 1);
+    const saved = db.batches[0];
+    assert.match(saved[0].sql, /INSERT INTO leads/);
+    assert.equal(saved[0].args.at(-1), 0.0125);
+    assert.deepEqual(
+      saved
+        .filter(({ sql }) => sql.includes("INTO integration_jobs"))
+        .map(({ args }) => args[1]),
+      ["slack.webhook", "meta.events", "kit.upsert_tag"]
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Calendly lifecycle webhooks enqueue durable provider work", async (t) => {
+  await t.test("booking queues Slack, Kit, and SMS with stable dedupe keys", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      assert.equal(
+        String(url),
+        "https://api.calendly.com/scheduled_events/event-1"
+      );
+      return Response.json({
+        resource: {
+          uri: "https://api.calendly.com/scheduled_events/event-1",
+          event_type: CALENDLY_EVENT_TYPE_URI,
+          start_time: "2026-08-20T15:00:00Z",
+        },
+      });
+    };
+    try {
+      const signingKey = "funnel-test-key";
+      const leadToken = await createLeadToken(signingKey, "lead-booking-test", 60);
+      const db = recordingDb([], { qualified: 1 });
+      const waits = [];
+      const key = "calendly-test-key";
+      const request = await calendlyRequest({
+        event: "invitee.created",
+        payload: {
+          uri: "https://api.calendly.com/scheduled_events/event-1/invitees/invitee-1",
+          event: "https://api.calendly.com/scheduled_events/event-1",
+          updated_at: "2026-08-18T12:00:00Z",
+          name: "Test Lawyer",
+          email: "lawyer@example.test",
+          timezone: "America/New_York",
+          tracking: { utm_content: leadToken },
+          questions_and_answers: [
+            { question: "Best phone number", answer: "+15555550100" },
+            { question: "Firm website", answer: "example.test" },
+          ],
+        },
+      }, key, true);
+
+      const response = await calendlyPost({
+        request,
+        env: {
+          CALENDLY_WEBHOOK_SIGNING_KEY: key,
+          FUNNEL_SIGNING_KEY: signingKey,
+          CALENDLY_PAT: "pat-test-value",
+          CALENDLY_EVENT_TYPE_URI,
+          LEADS_DB: db,
+        },
+        waitUntil(promise) {
+          waits.push(promise);
+        },
+      });
+      await Promise.all(waits);
+
+      assert.equal(response.status, 200);
+      assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), [
+        "slack.webhook",
+        "kit.upsert_tag",
+        "roezan.sms",
+        "meta.events",
+      ]);
+      assert.ok(
+        queuedJobs(db).every(({ dedupeKey }) => dedupeKey.includes("invitee-1"))
+      );
+      const inviteeRecord = db.batches[0].find(({ sql }) =>
+        sql.includes("INTO calendly_invitees")
+      );
+      assert.equal(inviteeRecord.args[4], "2026-08-20 15:00:00");
+      assert.equal(inviteeRecord.args[7], Date.parse("2026-08-18T12:00:00Z"));
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("no-show hydrates the invitee before durable acknowledgement", async () => {
+    const originalFetch = globalThis.fetch;
+    const signingKey = "funnel-test-key";
+    const leadToken = await createLeadToken(signingKey, "lead-no-show-test", 60);
+    globalThis.fetch = async (url) => {
+      if (String(url).includes("/invitees/")) {
+        return Response.json({
+          resource: {
+            uri: "https://api.calendly.com/scheduled_events/event-2/invitees/invitee-2",
+            event: "https://api.calendly.com/scheduled_events/event-2",
+            name: "No Show",
+            email: "noshow@example.test",
+            questions_and_answers: [
+              { question: "Best phone number", answer: "+15555550101" },
+            ],
+            tracking: { utm_content: leadToken },
+          },
+        });
+      }
+      return Response.json({
+        resource: {
+          event_type: CALENDLY_EVENT_TYPE_URI,
+          start_time: "2026-08-20T16:00:00Z",
+        },
+      });
+    };
+    try {
+      const db = recordingDb([], { qualified: 1 });
+      const waits = [];
+      const key = "calendly-test-key";
+      const request = await calendlyRequest({
+        event: "invitee_no_show.created",
+        payload: {
+          invitee:
+            "https://api.calendly.com/scheduled_events/event-2/invitees/invitee-2",
+        },
+      }, key);
+      const response = await calendlyPost({
+        request,
+        env: {
+          CALENDLY_WEBHOOK_SIGNING_KEY: key,
+          FUNNEL_SIGNING_KEY: signingKey,
+          CALENDLY_PAT: "pat-test-value",
+          CALENDLY_EVENT_TYPE_URI,
+          LEADS_DB: db,
+        },
+        waitUntil(promise) {
+          waits.push(promise);
+        },
+      });
+      await Promise.all(waits);
+
+      assert.equal(response.status, 200);
+      assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), [
+        "slack.webhook",
+        "kit.tag_existing",
+        "roezan.sms",
+        "meta.events",
+      ]);
+      assert.equal(queuedJobs(db)[1].payload.email, "noshow@example.test");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("unrelated organization bookings are ignored", async () => {
+    const db = recordingDb();
+    const key = "calendly-test-key";
+    const request = await calendlyRequest({
+      event: "invitee.created",
+      payload: {
+        uri: "https://api.calendly.com/scheduled_events/event-3/invitees/invitee-3",
+        name: "Other Client",
+        email: "other@example.test",
+        scheduled_event: {
+          event_type: "https://api.calendly.com/event_types/other-client-event",
+        },
+      },
+    }, key);
+    const response = await calendlyPost({
+      request,
+      env: {
+        CALENDLY_WEBHOOK_SIGNING_KEY: key,
+        FUNNEL_SIGNING_KEY: "funnel-test-key",
+        CALENDLY_EVENT_TYPE_URI,
+        LEADS_DB: db,
+      },
+      waitUntil() {},
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(db.batches.length, 0);
+  });
+
+});
+
+test("Calendly polling converts a marked invitee into durable no-show work", async () => {
+  const originalFetch = globalThis.fetch;
+  const inviteeUri =
+    "https://api.calendly.com/scheduled_events/event-poll/invitees/invitee-poll";
+  globalThis.fetch = async (url) => {
+    assert.equal(String(url), inviteeUri);
+    return Response.json({
+      resource: {
+        uri: inviteeUri,
+        event: "https://api.calendly.com/scheduled_events/event-poll",
+        name: "Polling Test",
+        email: "polling@example.test",
+        no_show: { created_at: "2026-08-18T16:00:00Z" },
+        questions_and_answers: [
+          { question: "Best phone number", answer: "+15555550102" },
+          { question: "Firm website", answer: "example.test" },
+        ],
+      },
+    });
+  };
+  try {
+    const db = recordingDb([], { qualified: 1 }, [{
+      invitee_uri: inviteeUri,
+      event_uri: "https://api.calendly.com/scheduled_events/event-poll",
+      event_type_uri: CALENDLY_EVENT_TYPE_URI,
+      lead_ref: "lead-poll-test",
+      scheduled_start_at: "2026-08-18 15:00:00",
+    }]);
+    const summary = await pollCalendlyNoShows({
+      CALENDLY_PAT: "pat-test-value",
+      CALENDLY_EVENT_TYPE_URI,
+      FUNNEL_SIGNING_KEY: "funnel-test-key",
+      LEADS_DB: db,
+    });
+
+    assert.equal(summary.configured, true);
+    assert.equal(summary.claimed, 1);
+    assert.equal(summary.skipped, 0);
+    assert.equal(summary.checked, 1);
+    assert.equal(summary.noShows, 1);
+    assert.equal(summary.failed, 0);
+    assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), [
+      "slack.webhook",
+      "kit.tag_existing",
+      "roezan.sms",
+      "meta.events",
+    ]);
+    assert.ok(
+      queuedJobs(db).every(({ dedupeKey }) =>
+        dedupeKey.startsWith("calendly:no_show:invitee-poll:")
+      )
+    );
+    const inviteeRecord = db.batches[0].find(({ sql }) =>
+      sql.includes("INTO calendly_invitees")
+    );
+    assert.equal(inviteeRecord.args[5], "no_show");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Calendly polling skips invitees claimed by another cron", async () => {
+  let fetched = false;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    fetched = true;
+    return Response.json({});
+  };
+  try {
+    const db = recordingDb([], null, [{
+      invitee_uri:
+        "https://api.calendly.com/scheduled_events/event-busy/invitees/invitee-busy",
+      event_uri: "https://api.calendly.com/scheduled_events/event-busy",
+      lead_ref: "lead-busy-test",
+      scheduled_start_at: "2026-08-18 15:00:00",
+    }], { denyCalendlyClaim: true });
+    const summary = await pollCalendlyNoShows({
+      CALENDLY_PAT: "pat-test-value",
+      CALENDLY_EVENT_TYPE_URI,
+      FUNNEL_SIGNING_KEY: "funnel-test-key",
+      LEADS_DB: db,
+    });
+
+    assert.equal(summary.claimed, 0);
+    assert.equal(summary.skipped, 1);
+    assert.equal(summary.checked, 0);
+    assert.equal(fetched, false);
+    assert.equal(db.batches.length, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("ordered lifecycle keeps no-show precedence in both arrival orders", async () => {
+  const key = "calendly-test-key";
+  const inviteeUri =
+    "https://api.calendly.com/scheduled_events/event-race/invitees/invitee-race";
+  async function capture(event, updatedAt, extra = {}) {
+    const db = recordingDb();
+    const request = await calendlyRequest({
+      created_at: updatedAt,
+      event,
+      payload: {
+        uri: inviteeUri,
+        event: "https://api.calendly.com/scheduled_events/event-race",
+        name: "Terminal Race",
+        email: "race@example.test",
+        updated_at: updatedAt,
+        scheduled_event: {
+          event_type: CALENDLY_EVENT_TYPE_URI,
+          start_time: "2026-08-18T15:00:00Z",
+        },
+        questions_and_answers: [
+          { question: "Best phone number", answer: "+15555550103" },
+        ],
+        ...extra,
+      },
+    }, key);
+    const response = await calendlyPost({
+      request,
+      env: {
+        CALENDLY_WEBHOOK_SIGNING_KEY: key,
+        FUNNEL_SIGNING_KEY: "funnel-test-key",
+        CALENDLY_EVENT_TYPE_URI,
+        LEADS_DB: db,
+      },
+      waitUntil() {},
+    });
+    assert.equal(response.status, 200);
+    return db.batches[0];
+  }
+
+  const canceledEarly = await capture(
+    "invitee.canceled",
+    "2026-08-18T13:00:00Z"
+  );
+  const canceledLate = await capture(
+    "invitee.canceled",
+    "2026-08-18T15:00:00Z"
+  );
+  const noShow = await capture("invitee_no_show.created", "2026-08-18T14:00:00Z", {
+    no_show: { created_at: "2026-08-18T16:00:00Z" },
+  });
+  const cases = [
+    [canceledEarly, noShow],
+    [noShow, canceledLate],
+  ];
+  for (const batches of cases) {
+    const db = migratedSqlite();
+    try {
+      applyStatements(db, batches[0]);
+      applyStatements(db, batches[1]);
+      assert.equal(
+        db.prepare("SELECT status FROM calendly_invitees").get().status,
+        "no_show"
+      );
+      assert.equal(
+        db.prepare("SELECT status FROM calendly_terminal_transitions").get().status,
+        "no_show"
+      );
+      const leadColumns = db.prepare("PRAGMA table_info(leads)")
+        .all()
+        .map(({ name }) => name);
+      assert.ok(leadColumns.includes("calendly_invitee_uri"));
+      assert.ok(leadColumns.includes("calendly_lifecycle_at"));
+    } finally {
+      db.close();
+    }
+  }
+});
+
+test("rescheduled invitee remains current when webhooks arrive out of order", async () => {
+  const key = "calendly-test-key";
+  const signingKey = "funnel-test-key";
+  const leadRef = "lead-reschedule-test";
+  const leadToken = await createLeadToken(signingKey, leadRef, 60);
+  const oldInvitee =
+    "https://api.calendly.com/scheduled_events/event-old/invitees/invitee-old";
+  const newInvitee =
+    "https://api.calendly.com/scheduled_events/event-new/invitees/invitee-new";
+
+  async function capture(event, payload) {
+    const recorded = recordingDb([], { qualified: 1 });
+    const response = await calendlyPost({
+      request: await calendlyRequest({
+        created_at: payload.updated_at,
+        event,
+        payload,
+      }, key),
+      env: {
+        CALENDLY_WEBHOOK_SIGNING_KEY: key,
+        FUNNEL_SIGNING_KEY: signingKey,
+        CALENDLY_EVENT_TYPE_URI,
+        LEADS_DB: recorded,
+      },
+      waitUntil() {},
+    });
+    assert.equal(response.status, 200);
+    return recorded.batches[0];
+  }
+
+  function payload(uri, eventUri, updatedAt, relations = {}) {
+    return {
+      uri,
+      event: eventUri,
+      updated_at: updatedAt,
+      name: "Reschedule Test",
+      email: "reschedule@example.test",
+      tracking: { utm_content: leadToken },
+      scheduled_event: {
+        uri: eventUri,
+        event_type: CALENDLY_EVENT_TYPE_URI,
+        start_time: "2026-08-20T15:00:00Z",
+      },
+      questions_and_answers: [
+        { question: "Best phone number", answer: "+15555550104" },
+      ],
+      ...relations,
+    };
+  }
+
+  const oldBooked = await capture(
+    "invitee.created",
+    payload(
+      oldInvitee,
+      "https://api.calendly.com/scheduled_events/event-old",
+      "2026-08-18T12:00:00Z"
+    )
+  );
+  const oldCanceled = await capture(
+    "invitee.canceled",
+    payload(
+      oldInvitee,
+      "https://api.calendly.com/scheduled_events/event-old",
+      "2026-08-18T13:00:00Z",
+      {
+        rescheduled: true,
+        cancellation: { created_at: "2026-08-18T13:00:00Z" },
+        new_invitee: newInvitee,
+      }
+    )
+  );
+  const newBooked = await capture(
+    "invitee.created",
+    payload(
+      newInvitee,
+      "https://api.calendly.com/scheduled_events/event-new",
+      "2026-08-18T14:00:00Z",
+      { old_invitee: oldInvitee }
+    )
+  );
+
+  const db = migratedSqlite();
+  try {
+    db.prepare(
+      "INSERT INTO leads (lead_ref, status, qualified) VALUES (?1, 'qualified', 1)"
+    )
+      .run(leadRef);
+    applyStatements(db, newBooked);
+    applyStatements(db, oldCanceled);
+    applyStatements(db, oldBooked);
+
+    const lead = db.prepare(
+      "SELECT status, calendly_invitee_uri FROM leads WHERE lead_ref = ?1"
+    ).get(leadRef);
+    assert.deepEqual({ ...lead }, {
+      status: "booked",
+      calendly_invitee_uri: newInvitee,
+    });
+    assert.deepEqual(
+      db.prepare(
+        "SELECT invitee_uri, status FROM calendly_invitees ORDER BY invitee_uri"
+      ).all().map((row) => ({ ...row })),
+      [
+        { invitee_uri: newInvitee, status: "booked" },
+        { invitee_uri: oldInvitee, status: "canceled" },
+      ]
+    );
+    const jobs = db.prepare(
+      "SELECT source_resource, source_status FROM integration_jobs ORDER BY id"
+    ).all();
+    assert.ok(jobs.length >= 3);
+    assert.ok(jobs.every((job) =>
+      job.source_resource === newInvitee && job.source_status === "booked"
+    ));
+  } finally {
+    db.close();
+  }
+});
+
+test("reschedule relation binds a new invitee without a redirect token", async () => {
+  const originalFetch = globalThis.fetch;
+  const key = "calendly-test-key";
+  const signingKey = "funnel-test-key";
+  const leadRef = "lead-reschedule-relation";
+  const leadToken = await createLeadToken(signingKey, leadRef, 60);
+  const oldEvent = "https://api.calendly.com/scheduled_events/event-relation-old";
+  const newEvent = "https://api.calendly.com/scheduled_events/event-relation-new";
+  const oldInvitee = `${oldEvent}/invitees/invitee-relation-old`;
+  const newInvitee = `${newEvent}/invitees/invitee-relation-new`;
+  const sqlite = migratedSqlite();
+  const env = {
+    CALENDLY_WEBHOOK_SIGNING_KEY: key,
+    FUNNEL_SIGNING_KEY: signingKey,
+    CALENDLY_PAT: "pat-test-value",
+    CALENDLY_EVENT_TYPE_URI,
+    LEADS_DB: d1Sqlite(sqlite),
+  };
+  const hydrationRequests = [];
+  globalThis.fetch = async (url) => {
+    hydrationRequests.push(String(url));
+    assert.equal(String(url), newInvitee);
+    return Response.json({
+      resource: {
+        uri: newInvitee,
+        event: newEvent,
+        name: "Updated Relation",
+        email: "updated-relation@example.test",
+        timezone: "America/Chicago",
+        questions_and_answers: [
+          { question: "Best phone number", answer: "+15555550199" },
+          { question: "Firm website", answer: "updated.example.test" },
+        ],
+        created_at: "2026-08-18T14:00:00Z",
+        updated_at: "2026-08-18T14:00:00Z",
+      },
+    });
+  };
+
+  async function send(event, createdAt, payload) {
+    const response = await calendlyPost({
+      request: await calendlyRequest({ created_at: createdAt, event, payload }, key),
+      env,
+    });
+    assert.equal(response.status, 200);
+  }
+
+  function bookingPayload(uri, eventUri, tracking = null) {
+    return {
+      uri,
+      event: eventUri,
+      name: "Relation Test",
+      email: "relation@example.test",
+      ...(tracking ? { tracking } : {}),
+      scheduled_event: {
+        uri: eventUri,
+        event_type: CALENDLY_EVENT_TYPE_URI,
+        start_time: "2026-08-20T15:00:00Z",
+      },
+      questions_and_answers: [
+        { question: "Best phone number", answer: "+15555550105" },
+      ],
+    };
+  }
+
+  try {
+    sqlite.prepare(
+      "INSERT INTO leads (lead_ref, status, qualified) VALUES (?1, 'qualified', 1)"
+    ).run(leadRef);
+    await send(
+      "invitee.created",
+      "2026-08-18T12:00:00Z",
+      bookingPayload(oldInvitee, oldEvent, { utm_content: leadToken })
+    );
+    await send(
+      "invitee.created",
+      "2026-08-18T14:00:00Z",
+      bookingPayload(newInvitee, newEvent)
+    );
+    assert.equal(
+      sqlite.prepare(
+        "SELECT lead_ref FROM calendly_invitees WHERE invitee_uri = ?1"
+      ).get(newInvitee).lead_ref,
+      null
+    );
+    await send(
+      "invitee.canceled",
+      "2026-08-18T13:00:00Z",
+      {
+        ...bookingPayload(oldInvitee, oldEvent),
+        rescheduled: true,
+        cancellation: { created_at: "2026-08-18T13:00:00Z" },
+        new_invitee: newInvitee,
+      }
+    );
+
+    assert.deepEqual(
+      { ...sqlite.prepare(
+        `SELECT status, calendly_invitee_uri
+         FROM leads WHERE lead_ref = ?1`
+      ).get(leadRef) },
+      { status: "booked", calendly_invitee_uri: newInvitee }
+    );
+    assert.equal(
+      sqlite.prepare(
+        "SELECT lead_ref FROM calendly_invitees WHERE invitee_uri = ?1"
+      ).get(newInvitee).lead_ref,
+      leadRef
+    );
+    assert.deepEqual(
+      sqlite.prepare(
+        `SELECT kind, payload_json FROM integration_jobs
+         WHERE source_resource = ?1 ORDER BY id`
+      ).all(newInvitee).map(({ kind }) => kind),
+      ["slack.webhook", "kit.upsert_tag", "roezan.sms", "meta.events"]
+    );
+    const recoveredJobs = sqlite.prepare(
+      `SELECT kind, payload_json FROM integration_jobs
+       WHERE source_resource = ?1 ORDER BY id`
+    ).all(newInvitee).map((job) => ({
+      kind: job.kind,
+      payload: JSON.parse(job.payload_json),
+    }));
+    assert.equal(hydrationRequests.length, 1);
+    assert.match(recoveredJobs[0].payload.text, /Updated Relation/);
+    assert.equal(recoveredJobs[1].payload.email, "updated-relation@example.test");
+    assert.equal(recoveredJobs[2].payload.phone, "+15555550199");
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("terminal webhook binds a qualified lead before invitee creation", async () => {
+  const key = "calendly-test-key";
+  const signingKey = "funnel-test-key";
+  const leadRef = "lead-terminal-first";
+  const leadToken = await createLeadToken(signingKey, leadRef, 60);
+  const eventUri = "https://api.calendly.com/scheduled_events/event-terminal-first";
+  const inviteeUri = `${eventUri}/invitees/invitee-terminal-first`;
+  const sqlite = migratedSqlite();
+  const env = {
+    CALENDLY_WEBHOOK_SIGNING_KEY: key,
+    FUNNEL_SIGNING_KEY: signingKey,
+    CALENDLY_EVENT_TYPE_URI,
+    LEADS_DB: d1Sqlite(sqlite),
+  };
+  const basePayload = {
+    uri: inviteeUri,
+    event: eventUri,
+    name: "Terminal First",
+    email: "terminal@example.test",
+    scheduled_event: {
+      uri: eventUri,
+      event_type: CALENDLY_EVENT_TYPE_URI,
+      start_time: "2026-08-20T15:00:00Z",
+    },
+    questions_and_answers: [
+      { question: "Best phone number", answer: "+15555550106" },
+    ],
+  };
+
+  try {
+    sqlite.prepare(
+      "INSERT INTO leads (lead_ref, status, qualified) VALUES (?1, 'qualified', 1)"
+    ).run(leadRef);
+    const canceled = await calendlyPost({
+      request: await calendlyRequest({
+        created_at: "2026-08-18T14:00:00Z",
+        event: "invitee.canceled",
+        payload: {
+          ...basePayload,
+          tracking: { utm_content: leadToken },
+          cancellation: { created_at: "2026-08-18T14:00:00Z" },
+        },
+      }, key),
+      env,
+    });
+    assert.equal(canceled.status, 200);
+    assert.deepEqual(
+      { ...sqlite.prepare(
+        `SELECT status, calendly_invitee_uri
+         FROM leads WHERE lead_ref = ?1`
+      ).get(leadRef) },
+      { status: "booking_canceled", calendly_invitee_uri: inviteeUri }
+    );
+    assert.deepEqual(
+      sqlite.prepare("SELECT kind FROM integration_jobs ORDER BY id")
+        .all()
+        .map(({ kind }) => kind),
+      ["slack.webhook", "roezan.sms", "meta.events"]
+    );
+
+    const created = await calendlyPost({
+      request: await calendlyRequest({
+        created_at: "2026-08-18T13:00:00Z",
+        event: "invitee.created",
+        payload: basePayload,
+      }, key),
+      env,
+    });
+    assert.equal(created.status, 200);
+    assert.deepEqual(
+      { ...sqlite.prepare(
+        `SELECT status, calendly_invitee_uri
+         FROM leads WHERE lead_ref = ?1`
+      ).get(leadRef) },
+      { status: "booking_canceled", calendly_invitee_uri: inviteeUri }
+    );
+    assert.equal(
+      sqlite.prepare(
+        "SELECT status FROM calendly_invitees WHERE invitee_uri = ?1"
+      ).get(inviteeUri).status,
+      "canceled"
+    );
+  } finally {
+    sqlite.close();
+  }
+});
+
+test("integration providers use idempotent Kit enrollment and redact errors", async (t) => {
+  await t.test("Kit tag enrollment ensures the subscriber first", async () => {
+    const originalFetch = globalThis.fetch;
+    const requests = [];
+    globalThis.fetch = async (url, options) => {
+      requests.push({ url: String(url), options });
+      return Response.json({}, { status: 201 });
+    };
+    try {
+      await dispatchIntegrationJob(
+        { KIT_API_KEY: "kit-test-key" },
+        "kit.upsert_tag",
+        { tag_id: 22494626, email: "lawyer@example.test" }
+      );
+      assert.deepEqual(requests.map(({ url }) => url), [
+        "https://api.kit.com/v4/subscribers",
+        "https://api.kit.com/v4/tags/22494626/subscribers",
+      ]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("direct Kit sequence enrollment is unsupported", async () => {
+    await assert.rejects(
+      dispatchIntegrationJob(
+        { KIT_API_KEY: "kit-test-key" },
+        "kit.add_sequence",
+        { sequence_id: 2862358, email: "lawyer@example.test" }
+      ),
+      (error) => {
+        assert.ok(error instanceof IntegrationError);
+        assert.equal(error.message, "unknown_job_kind");
+        return true;
+      }
+    );
+  });
+
+  await t.test("provider response bodies never enter durable errors", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => new Response("private-provider-detail", { status: 400 });
+    try {
+      await assert.rejects(
+        dispatchIntegrationJob(
+          { SLACK_WEBHOOK_URL: "https://example.test/slack" },
+          "slack.webhook",
+          { text: "test" }
+        ),
+        (error) => {
+          assert.ok(error instanceof IntegrationError);
+          assert.equal(error.message, "provider_http_400");
+          assert.equal(error.retryable, false);
+          assert.doesNotMatch(error.message, /private-provider-detail/);
+          return true;
+        }
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("Slack bot delivery remains available without a webhook", async () => {
+    const originalFetch = globalThis.fetch;
+    const requests = [];
+    globalThis.fetch = async (url, options) => {
+      requests.push({ url: String(url), options });
+      return Response.json({ ok: true });
+    };
+    try {
+      await dispatchIntegrationJob(
+        {
+          SLACK_BOT_TOKEN: "slack-test-token",
+          SLACK_CHANNEL_ID: "channel-test-id",
+        },
+        "slack.webhook",
+        { text: "test", destination: "leads" }
+      );
+      assert.equal(requests[0].url, "https://slack.com/api/chat.postMessage");
+      assert.equal(
+        requests[0].options.headers.Authorization,
+        "Bearer slack-test-token"
+      );
+      assert.deepEqual(JSON.parse(requests[0].options.body), {
+        channel: "channel-test-id",
+        text: "test",
+        unfurl_links: false,
+        unfurl_media: false,
+      });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("Slack bot replaces a definitively rejected webhook", async () => {
+    const originalFetch = globalThis.fetch;
+    const requests = [];
+    globalThis.fetch = async (url, options) => {
+      requests.push({ url: String(url), options });
+      if (requests.length === 1) return new Response(null, { status: 410 });
+      return Response.json({ ok: true });
+    };
+    try {
+      await dispatchIntegrationJob(
+        {
+          SLACK_WEBHOOK_URL: "https://example.test/slack",
+          SLACK_BOT_TOKEN: "slack-test-token",
+          SLACK_CHANNEL_ID: "channel-test-id",
+        },
+        "slack.webhook",
+        { text: "test", destination: "leads" }
+      );
+      assert.deepEqual(requests.map(({ url }) => url), [
+        "https://example.test/slack",
+        "https://slack.com/api/chat.postMessage",
+      ]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("provider throttling exposes a bounded Retry-After delay", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => new Response(null, {
+      status: 429,
+      headers: { "Retry-After": "90" },
+    });
+    try {
+      await assert.rejects(
+        dispatchIntegrationJob(
+          { SLACK_WEBHOOK_URL: "https://example.test/slack" },
+          "slack.webhook",
+          { text: "test" }
+        ),
+        (error) => {
+          assert.equal(error.retryable, true);
+          assert.equal(error.retryAfterSeconds, 90);
+          return true;
+        }
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test("Slack 408 and 5xx responses stop automatic replay as ambiguous", async () => {
+    const originalFetch = globalThis.fetch;
+    try {
+      for (const status of [408, 500]) {
+        globalThis.fetch = async () => new Response(null, { status });
+        await assert.rejects(
+          dispatchIntegrationJob(
+            { SLACK_WEBHOOK_URL: "https://example.test/slack" },
+            "slack.webhook",
+            { text: "test" }
+          ),
+          (error) => {
+            assert.equal(error.retryable, true);
+            assert.equal(error.deliveryUnknown, true);
+            assert.equal(error.message, `provider_http_${status}`);
+            return true;
+          }
+        );
+      }
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+});
+
+test("integration processor dead-letters configuration errors and can requeue them", async () => {
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO integration_jobs (kind, dedupe_key, payload_json)
+       VALUES ('slack.webhook', 'test:missing-config', '{"text":"test"}')`
+    ).run();
+    const db = d1Sqlite(sqlite);
+    const summary = await processIntegrationJobs({ LEADS_DB: db }, { limit: 1 });
+    assert.equal(summary.claimed, 1);
+    assert.equal(summary.dead, 1);
+    assert.equal(summary.ambiguous, 0);
+    const failed = sqlite.prepare(
+      "SELECT status, last_error FROM integration_jobs"
+    ).get();
+    assert.deepEqual({ ...failed }, {
+      status: "failed",
+      last_error: "missing_slack_webhook_url",
+    });
+    assert.equal(
+      sqlite.prepare("SELECT COUNT(*) AS count FROM operational_alerts").get().count,
+      1
+    );
+    assert.equal(
+      await requeueDeadIntegrationJobs({ LEADS_DB: db }, {
+        kind: "slack.webhook",
+        limit: 10,
+      }),
+      1
+    );
+    assert.equal(
+      sqlite.prepare("SELECT status FROM integration_jobs").get().status,
+      "pending"
+    );
+  } finally {
+    sqlite.close();
+  }
+});
+
+test("tracking relay returns 503 when durable lead lookup is unavailable", async () => {
+  const signingKey = "funnel-test-key";
+  const leadToken = await createLeadToken(signingKey, "lead-test-ref", 60);
+  const response = await trackPost({
+    request: new Request("https://threestripesdigital.com/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://threestripesdigital.com",
+      },
+      body: JSON.stringify({
+        event_name: "BookingStarted",
+        event_id: "booking-test-event",
+        lead_token: leadToken,
+        page_url: "https://threestripesdigital.com/rank-boost/law-firms/results",
+      }),
+    }),
+    env: {
+      FUNNEL_SIGNING_KEY: signingKey,
+      LEADS_DB: {
+        prepare() {
+          return {
+            bind() { return this; },
+            async first() { throw new Error("test outage"); },
+          };
+        },
+      },
+    },
+  });
+  assert.equal(response.status, 503);
+});
+
+test("tracking receipt suppresses replay after completed-job retention", async () => {
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO leads
+         (name, phone, email, domain, qualified, status, lead_ref)
+       VALUES ('Test Lead', '5555550100', 'lead@example.test', 'example.test', 1, 'qualified', 'lead-track-ref')`
+    ).run();
+    const db = d1Sqlite(sqlite);
+    const signingKey = "tracking-replay-signing-key";
+    const leadToken = await createLeadToken(signingKey, "lead-track-ref", 60);
+    const send = () => trackPost({
+      request: new Request("https://threestripesdigital.com/api/track", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://threestripesdigital.com",
+        },
+        body: JSON.stringify({
+          event_name: "BookingStarted",
+          event_id: "booking-track-event",
+          lead_token: leadToken,
+          page_url: "https://threestripesdigital.com/rank-boost/law-firms/results",
+        }),
+      }),
+      env: { FUNNEL_SIGNING_KEY: signingKey, LEADS_DB: db },
+    });
+
+    assert.equal((await send()).status, 204);
+    assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM integration_jobs").get().count, 1);
+    assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM funnel_events").get().count, 1);
+
+    sqlite.exec("DELETE FROM integration_jobs");
+    assert.equal((await send()).status, 204);
+    assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM integration_jobs").get().count, 0);
+  } finally {
+    sqlite.close();
+  }
+});
+
+test("integration processor leases and completes a queued job", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => Response.json({ ok: true });
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO integration_jobs (kind, dedupe_key, payload_json)
+       VALUES ('slack.webhook', 'test:slack', '{"text":"test"}')`
+    ).run();
+    const db = d1Sqlite(sqlite);
+    const summary = await processIntegrationJobs(
+      { LEADS_DB: db, SLACK_WEBHOOK_URL: "https://example.test/slack" },
+      { limit: 1 }
+    );
+
+    assert.equal(summary.claimed, 1);
+    assert.equal(summary.completed, 1);
+    assert.equal(summary.dead, 0);
+    assert.equal(
+      sqlite.prepare("SELECT status FROM integration_jobs").get().status,
+      "completed"
+    );
+    assert.deepEqual(
+      sqlite.prepare(
+        "SELECT event_type FROM integration_job_attempts ORDER BY id"
+      ).all().map(({ event_type: eventType }) => eventType),
+      ["started", "succeeded"]
+    );
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("dependent jobs wait for a completed prerequisite", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests = [];
+  let failBookedTag = true;
+  globalThis.fetch = async (url) => {
+    requests.push(String(url));
+    if (failBookedTag) return new Response(null, { status: 500 });
+    return Response.json({}, { status: 201 });
+  };
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO integration_jobs
+         (kind, dedupe_key, payload_json, depends_on_dedupe_key)
+       VALUES
+         ('kit.upsert_tag', 'boost:booked',
+          '{"email":"lawyer@example.test","tag_id":22494644}', NULL),
+         ('kit.upsert_tag', 'boost:live',
+          '{"email":"lawyer@example.test","tag_id":22511246}', 'boost:booked')`
+    ).run();
+    const env = { LEADS_DB: d1Sqlite(sqlite), KIT_API_KEY: "kit-test-key" };
+
+    const first = await processIntegrationJobs(env, { limit: 2 });
+    assert.equal(first.claimed, 1);
+    assert.equal(first.retried, 1);
+    assert.equal(requests.length, 1);
+    assert.deepEqual(
+      sqlite.prepare(
+        `SELECT dedupe_key, status, attempts
+         FROM integration_jobs ORDER BY id`
+      ).all().map((row) => ({ ...row })),
+      [
+        { dedupe_key: "boost:booked", status: "pending", attempts: 1 },
+        { dedupe_key: "boost:live", status: "pending", attempts: 0 },
+      ]
+    );
+
+    sqlite.prepare(
+      `UPDATE integration_jobs SET status = 'completed', completed_at = CURRENT_TIMESTAMP
+       WHERE dedupe_key = 'boost:booked'`
+    ).run();
+    failBookedTag = false;
+    const second = await processIntegrationJobs(env, { limit: 2 });
+    assert.equal(second.completed, 1);
+    assert.equal(requests.length, 3);
+    assert.equal(
+      sqlite.prepare(
+        "SELECT status FROM integration_jobs WHERE dedupe_key = 'boost:live'"
+      ).get().status,
+      "completed"
+    );
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("ambiguous Slack delivery requires an explicit targeted repair", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new TypeError("simulated network reset");
+  };
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO integration_jobs (lead_ref, kind, dedupe_key, payload_json)
+       VALUES ('lead-ambiguous', 'slack.webhook', 'test:ambiguous', '{"text":"test"}')`
+    ).run();
+    const db = d1Sqlite(sqlite);
+    const env = { LEADS_DB: db, SLACK_WEBHOOK_URL: "https://example.test/slack" };
+    const processed = await processIntegrationJobs(env, { limit: 1 });
+    assert.equal(processed.ambiguous, 1);
+    assert.match(
+      sqlite.prepare("SELECT last_error FROM integration_jobs").get().last_error,
+      /^delivery_unknown:/
+    );
+    assert.deepEqual(
+      await repairIntegrationJobs(env, { leadRef: "lead-ambiguous" }),
+      { matched: 1, requeued: 0, skippedUnknown: 1 }
+    );
+    assert.deepEqual(
+      await repairIntegrationJobs(env, {
+        leadRef: "lead-ambiguous",
+        confirmUnknown: true,
+      }),
+      { matched: 1, requeued: 1, skippedUnknown: 0 }
+    );
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("stale Calendly jobs are completed without contacting providers", async () => {
+  const originalFetch = globalThis.fetch;
+  let fetched = false;
+  globalThis.fetch = async () => {
+    fetched = true;
+    return Response.json({ ok: true });
+  };
+  const sqlite = migratedSqlite();
+  try {
+    const oldInvitee =
+      "https://api.calendly.com/scheduled_events/event-old/invitees/invitee-old";
+    const newInvitee =
+      "https://api.calendly.com/scheduled_events/event-new/invitees/invitee-new";
+    sqlite.prepare(
+      `INSERT INTO leads (lead_ref, status, calendly_invitee_uri)
+       VALUES ('lead-stale', 'booked', ?1)`
+    ).run(newInvitee);
+    sqlite.prepare(
+      `INSERT INTO calendly_invitees
+         (invitee_uri, event_type_uri, lead_ref, status, provider_event_at_ms)
+       VALUES (?1, ?2, 'lead-stale', 'canceled', 1)`
+    ).run(oldInvitee, CALENDLY_EVENT_TYPE_URI);
+    sqlite.prepare(
+      `INSERT INTO integration_jobs
+         (lead_ref, kind, dedupe_key, payload_json, source_resource, source_status)
+       VALUES ('lead-stale', 'slack.webhook', 'test:stale', '{"text":"test"}', ?1, 'booked')`
+    ).run(oldInvitee);
+    const summary = await processIntegrationJobs({
+      LEADS_DB: d1Sqlite(sqlite),
+      SLACK_WEBHOOK_URL: "https://example.test/slack",
+    }, { limit: 1 });
+    assert.equal(summary.stale, 1);
+    assert.equal(fetched, false);
+    assert.deepEqual(
+      { ...sqlite.prepare(
+        "SELECT status, last_error FROM integration_jobs"
+      ).get() },
+      { status: "completed", last_error: "skipped_stale_source" }
+    );
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Boost Live preserves delayed booked state without replaying messages", async () => {
+  const originalFetch = globalThis.fetch;
+  const requests = [];
+  globalThis.fetch = async (url) => {
+    requests.push(String(url));
+    return Response.json({}, { status: 201 });
+  };
+  const sqlite = migratedSqlite();
+  try {
+    const invitee =
+      "https://api.calendly.com/scheduled_events/event-live/invitees/invitee-live";
+    sqlite.prepare(
+      `INSERT INTO leads (lead_ref, status, calendly_invitee_uri)
+       VALUES ('lead-live', 'boost_live', ?1)`
+    ).run(invitee);
+    sqlite.prepare(
+      `INSERT INTO calendly_invitees
+         (invitee_uri, event_type_uri, lead_ref, status, provider_event_at_ms)
+       VALUES (?1, ?2, 'lead-live', 'booked', 1)`
+    ).run(invitee, CALENDLY_EVENT_TYPE_URI);
+    sqlite.prepare(
+      `INSERT INTO integration_jobs
+         (lead_ref, kind, dedupe_key, payload_json, source_resource, source_status)
+       VALUES
+         ('lead-live', 'kit.upsert_tag', 'test:live:kit',
+          '{"email":"lawyer@example.test","tag_id":22494644}', ?1, 'booked'),
+         ('lead-live', 'roezan.sms', 'test:live:sms',
+          '{"phone":"+15555550109","message":"stale confirmation"}', ?1, 'booked')`
+    ).run(invitee);
+    const summary = await processIntegrationJobs({
+      LEADS_DB: d1Sqlite(sqlite),
+      KIT_API_KEY: "kit-test-key",
+      ROEZAN_API_KEY: "roezan-test-key",
+    }, { limit: 2 });
+
+    assert.equal(summary.completed, 1);
+    assert.equal(summary.stale, 1);
+    assert.equal(requests.length, 2);
+    assert.ok(requests.every((url) => url.startsWith("https://api.kit.com/")));
+    assert.deepEqual(
+      sqlite.prepare(
+        "SELECT kind, last_error FROM integration_jobs ORDER BY id"
+      ).all().map((row) => ({ ...row })),
+      [
+        { kind: "kit.upsert_tag", last_error: null },
+        { kind: "roezan.sms", last_error: "skipped_stale_source" },
+      ]
+    );
+  } finally {
+    sqlite.close();
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Calendly replays cannot regress a Boost Live lead", async () => {
+  const key = "calendly-test-key";
+  const leadRef = "lead-live-replay";
+  const eventUri = "https://api.calendly.com/scheduled_events/event-live-replay";
+  const inviteeUri = `${eventUri}/invitees/invitee-live-replay`;
+  const providerAt = Date.parse("2026-08-18T12:00:00Z");
+  const sqlite = migratedSqlite();
+  try {
+    sqlite.prepare(
+      `INSERT INTO leads
+         (lead_ref, email, status, qualified, boost_live_at,
+          calendly_invitee_uri, calendly_provider_event_at_ms)
+       VALUES (?1, 'lawyer@example.test', 'boost_live', 1, CURRENT_TIMESTAMP, ?2, ?3)`
+    ).run(leadRef, inviteeUri, providerAt);
+    sqlite.prepare(
+      `INSERT INTO calendly_invitees
+         (invitee_uri, event_uri, event_type_uri, lead_ref, status,
+          provider_event_at_ms)
+       VALUES (?1, ?2, ?3, ?4, 'booked', ?5)`
+    ).run(inviteeUri, eventUri, CALENDLY_EVENT_TYPE_URI, leadRef, providerAt);
+
+    const response = await calendlyPost({
+      request: await calendlyRequest({
+        event: "invitee.created",
+        payload: {
+          uri: inviteeUri,
+          event: eventUri,
+          name: "Live Replay",
+          email: "lawyer@example.test",
+          scheduled_event: {
+            uri: eventUri,
+            event_type: CALENDLY_EVENT_TYPE_URI,
+            start_time: "2026-08-20T15:00:00Z",
+          },
+        },
+      }, key),
+      env: {
+        CALENDLY_WEBHOOK_SIGNING_KEY: key,
+        FUNNEL_SIGNING_KEY: "funnel-test-key",
+        CALENDLY_EVENT_TYPE_URI,
+        LEADS_DB: d1Sqlite(sqlite),
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(
+      sqlite.prepare("SELECT status FROM leads WHERE lead_ref = ?1").get(leadRef).status,
+      "boost_live"
+    );
+    assert.equal(
+      sqlite.prepare("SELECT COUNT(*) AS count FROM integration_jobs").get().count,
+      0
+    );
+  } finally {
+    sqlite.close();
+  }
+});
+
+test("Boost Live rejects leads outside the booked lifecycle state", async () => {
+  const sqlite = migratedSqlite();
+  try {
+    for (const [index, status] of ["qualified", "booking_canceled", "no_show"].entries()) {
+      const email = `state-${index}@example.test`;
+      sqlite.prepare(
+        `INSERT INTO leads (lead_ref, email, status, qualified)
+         VALUES (?1, ?2, ?3, 1)`
+      ).run(`lead-state-${index}`, email, status);
+      const response = await boostLivePost({
+        request: new Request("https://example.test/api/boost-live", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer boost-test-key",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }),
+        env: {
+          BOOST_ADMIN_TOKEN: "boost-test-key",
+          LEADS_DB: d1Sqlite(sqlite),
+        },
+      });
+      assert.equal(response.status, 409);
+      assert.deepEqual(await response.json(), { error: "invalid_lifecycle_state" });
+    }
+    assert.equal(
+      sqlite.prepare("SELECT COUNT(*) AS count FROM integration_jobs").get().count,
+      0
+    );
+  } finally {
+    sqlite.close();
+  }
+});
+
+test("Boost Live atomically records lifecycle state and provider jobs", async () => {
+  const db = recordingDb([], {
+    id: 9,
+    lead_ref: "lead-test-9",
+    name: "Test Lawyer",
+    phone: "+15555550109",
+    email: "lawyer@example.test",
+    domain: "example.test",
+    top_keywords: JSON.stringify([
+      { keyword: "how long does an injury case take" },
+      { keyword: "injury lawyer test" },
+    ]),
+    status: "booked",
+    boost_live_at: null,
+  });
+  const waits = [];
+  const response = await boostLivePost({
+    request: new Request("https://example.test/api/boost-live", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer boost-test-key",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: "lawyer@example.test" }),
+    }),
+    env: {
+      BOOST_ADMIN_TOKEN: "boost-test-key",
+      LEADS_DB: db,
+    },
+    waitUntil(promise) {
+      waits.push(promise);
+    },
+  });
+  await Promise.all(waits);
+
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.keyword, "injury lawyer test");
+  assert.deepEqual(data.queued, [
+    "kit.upsert_tag",
+    "kit.upsert_tag",
+    "roezan.sms",
+    "slack.webhook",
+  ]);
+  assert.match(db.batches[0][0].sql, /boost_live_at/);
+  assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), data.queued);
+  assert.deepEqual(
+    queuedJobs(db)
+      .filter(({ kind }) => kind === "kit.upsert_tag")
+      .map(({ payload }) => payload.tag_id),
+    [22494644, 22511246]
+  );
+  const storedJobs = db.batches[0].slice(1);
+  const bookedKey = "boost-live:lead-test-9:kit-booked";
+  assert.equal(storedJobs[0].args[4], null);
+  assert.ok(storedJobs.slice(1).every((statement) => statement.args[4] === bookedKey));
+});

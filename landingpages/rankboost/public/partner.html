@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partner Rank Lookup · Three Stripes Digital</title>
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#0A1628" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .pt-wrap { max-width: 720px; margin: 0 auto; padding: 2.5rem 1rem 6rem; }
+    .pt-badge {
+      display: inline-block; font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-light);
+      border: 1px solid var(--line-strong); border-radius: 999px;
+      padding: 0.3rem 0.7rem; margin-bottom: 0.9rem;
+    }
+    .pt-form { display: grid; gap: 0.8rem; margin: 1.4rem 0 0; text-align: left; }
+    .pt-form label {
+      display: block; font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2);
+      margin-bottom: 0.3rem;
+    }
+    .pt-form input {
+      width: 100%; padding: 0.85rem 0.95rem; font-size: 1rem; color: var(--white);
+      background: #0e1725; border: 1px solid var(--line-strong); border-radius: 10px;
+    }
+    .pt-form input:focus { outline: none; border-color: var(--gold); }
+    .pt-btn {
+      width: 100%; padding: 0.95rem 1rem; font-size: 1rem; font-weight: 800;
+      color: #0A1628; background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      border: none; border-radius: 10px; cursor: pointer;
+    }
+    .pt-btn[disabled] { opacity: 0.6; cursor: default; }
+    .pt-err { color: #F87171; font-size: 0.85rem; margin: 0.6rem 0 0; min-height: 1.2em; }
+    .pt-hint { color: var(--muted-2); font-size: 0.72rem; margin: 0.5rem 0 0; }
+    .pt-out { margin-top: 2rem; }
+
+    .pt-history { margin-top: 2.5rem; text-align: left; }
+    .pt-h2 {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted-2); margin: 0 0 0.7rem;
+      max-width: none;
+    }
+    .pt-hist-list {
+      border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    }
+    .pt-row {
+      display: grid; grid-template-columns: 1fr auto auto;
+      gap: 0.9rem; align-items: baseline;
+      padding: 0.7rem 0.9rem; border-top: 1px solid var(--line);
+      font-size: 0.82rem;
+    }
+    .pt-row:first-child { border-top: none; }
+    .pt-row:hover { background: rgba(212, 185, 106, 0.04); }
+    .pt-dom { color: var(--white); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+    .pt-dom span {
+      display: block; font-family: var(--mono); font-size: 0.62rem;
+      color: var(--muted-2); font-weight: 400; margin-top: 0.12rem;
+    }
+    .pt-val { color: var(--gold-light); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pt-no { color: var(--muted-2); font-weight: 600; white-space: nowrap; }
+    .pt-when { color: var(--muted-2); font-family: var(--mono); font-size: 0.66rem; white-space: nowrap; }
+    .pt-empty { padding: 1rem 0.9rem; color: var(--muted-2); font-size: 0.85rem; }
+    @media (max-width: 560px) {
+      .pt-row { grid-template-columns: 1fr auto; }
+      .pt-when { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body class="step-body">
+  <header class="step-header">
+    <span class="wordmark">Three Stripes <span>Digital</span></span>
+  </header>
+
+  <main class="pt-wrap">
+    <div class="step-result">
+      <span class="pt-badge">Partner · rank lookup</span>
+      <h1 class="step-h">Check a firm's rankings.</h1>
+      <p class="res-sub">Paste a law firm's website. You get the same money-keyword breakdown and
+        opportunity math the prospect would see. No contact details needed, nothing is emailed,
+        nothing enters the funnel.</p>
+
+      <form class="pt-form" id="pt-form" autocomplete="off">
+        <div>
+          <label for="pt-code">Access code</label>
+          <input type="password" id="pt-code" name="code" required autocomplete="current-password" />
+        </div>
+        <div>
+          <label for="pt-url">Firm website</label>
+          <input type="text" id="pt-url" name="website_url" placeholder="smithlawfirm.com" required />
+        </div>
+        <button class="pt-btn" type="submit" id="pt-submit">Check rankings</button>
+        <p class="pt-err" id="pt-err" role="alert"></p>
+        <p class="pt-hint">The code is remembered only until you close this browser tab.</p>
+      </form>
+
+      <div class="pt-out" id="pt-out"></div>
+
+      <section class="pt-history" id="pt-history" hidden>
+        <h2 class="pt-h2">Your previous lookups</h2>
+        <div class="pt-hist-list" id="pt-hist-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="step-footer">
+    <p>Protected partner tool · Three Stripes Digital · <a href="privacy.html">Privacy</a> · <a href="https://threestripesdigital.com/terms-of-service/">Terms</a> · <a href="https://threestripesdigital.com/contact/">Contact</a></p>
+  </footer>
+
+  <script src="partner.js"></script>
+</body>
+</html>

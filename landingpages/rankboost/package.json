@@ -1,0 +1,15 @@
+{
+  "name": "rankboost-funnel",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "migrate:remote": "CLOUDFLARE_ACCOUNT_ID=17f7c095d40a8771cf3568fdcae11770 wrangler d1 migrations apply rankboost-leads --remote",
+    "deploy:pages": "npm run migrate:remote && CLOUDFLARE_ACCOUNT_ID=17f7c095d40a8771cf3568fdcae11770 wrangler pages deploy public --project-name tsd-law-firm-rank-boost --branch preview --commit-dirty=false",
+    "deploy:router": "wrangler deploy --config router/wrangler.toml",
+    "deploy": "npm run deploy:pages && npm run deploy:router"
+  },
+  "devDependencies": {
+    "wrangler": "4.124.0"
+  }
+}
