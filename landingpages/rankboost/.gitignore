@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.wrangler/
+_worker.bundle
+.env
+.env.*
+*.key
+*.pem
+credentials.json

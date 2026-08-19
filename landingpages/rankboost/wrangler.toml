@@ -1,0 +1,8 @@
+name = "tsd-law-firm-rank-boost"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "LEADS_DB"
+database_name = "rankboost-leads"
+database_id = "072ff1b9-a238-424d-9c03-6ae26ecf74a1"

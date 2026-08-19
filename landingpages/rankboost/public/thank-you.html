@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Confirming Your Call · Three Stripes Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#0A1628" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Optional Meta measurement loads only after an explicit visitor choice. -->
+  <script src="consent.js"></script>
+  <style>
+    .ty { max-width: 1140px; margin: 0 auto; padding: 4rem 1.25rem 5rem; text-align: center; }
+    .ty-core { max-width: 680px; margin: 0 auto; }
+
+    /* Step 1 + Step 2 side by side on desktop */
+    .ty-actions { display: grid; gap: 1.5rem; margin: 0 0 2.5rem; }
+    .ty-actions[hidden] { display: none !important; }
+    .ty-actions .ty-sms { margin: 0; }
+    @media (min-width: 900px) {
+      .ty-actions { grid-template-columns: 1fr 1fr; align-items: stretch; }
+    }
+
+    /* Confetti burst from the headline */
+    .ty-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 70; overflow: hidden; }
+    .ty-confetti i {
+      position: absolute; width: 9px; height: 14px; border-radius: 2px;
+      will-change: transform, opacity;
+    }
+    .ty-badge {
+      width: 66px; height: 66px; border-radius: 50%; margin: 0 auto 1.4rem;
+      display: grid; place-items: center;
+      background: rgba(52, 211, 153, 0.12); border: 2px solid rgba(52, 211, 153, 0.5);
+      color: var(--success); font-size: 1.9rem; font-weight: 700;
+    }
+    .ty h1 { font-size: clamp(1.9rem, 4vw, 2.5rem); margin-bottom: 0.7rem; max-width: none; }
+    .ty .lead { margin: 0 auto 2.5rem; }
+    .ty-steps { text-align: left; display: grid; gap: 0; margin: 0 auto 2.5rem; max-width: 420px; }
+    .ty-step { display: grid; grid-template-columns: 40px 1fr; gap: 1rem; position: relative; padding-bottom: 1.6rem; }
+    .ty-step:last-child { padding-bottom: 0; }
+    .ty-step::before {
+      content: ""; position: absolute; left: 19px; top: 40px; bottom: 0;
+      width: 2px; background: var(--line);
+    }
+    .ty-step:last-child::before { display: none; }
+    .ty-n {
+      width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(var(--gold-dim), var(--gold-dim)), #10141f;
+      border: 1px solid var(--line-strong);
+      font-family: var(--mono); font-weight: 700; color: var(--gold-light); font-size: 0.9rem;
+    }
+    .ty-step h3 { margin: 0.45rem 0 0.3rem; font-size: 1.02rem; }
+    .ty-step p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
+    /* horizontal steps on wider screens */
+    @media (min-width: 681px) {
+      .ty-steps {
+        grid-template-columns: repeat(4, 1fr); gap: 1.2rem;
+        position: relative; text-align: center; margin-bottom: 3rem;
+        max-width: none;
+      }
+      .ty-steps::before {
+        content: ""; position: absolute; top: 20px; left: 12.5%; right: 12.5%;
+        height: 2px; background: var(--line-strong);
+      }
+      .ty-step { display: block; padding-bottom: 0; }
+      .ty-step::before { display: none; }
+      .ty-n { margin: 0 auto 0.9rem; position: relative; z-index: 1; }
+      .ty-step h3 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 650; white-space: nowrap; }
+      .ty-step p { margin: 0 auto; max-width: 24ch; font-size: 0.85rem; line-height: 1.5; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .ty-step { opacity: 0; animation: ty-step-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+      .ty-step:nth-child(1) { animation-delay: 0.2s; }
+      .ty-step:nth-child(2) { animation-delay: 0.45s; }
+      .ty-step:nth-child(3) { animation-delay: 0.7s; }
+      .ty-step:nth-child(4) { animation-delay: 0.95s; }
+      .ty-step .ty-n { animation: ty-n-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+      .ty-step:nth-child(1) .ty-n { animation-delay: 0.3s; }
+      .ty-step:nth-child(2) .ty-n { animation-delay: 0.55s; }
+      .ty-step:nth-child(3) .ty-n { animation-delay: 0.8s; }
+      .ty-step:nth-child(4) .ty-n { animation-delay: 1.05s; }
+      .ty-steps::before { transform: scaleX(0); transform-origin: left; animation: ty-line 1.1s ease 0.25s forwards; }
+    }
+    @keyframes ty-step-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes ty-n-pop { from { transform: scale(0.55); } to { transform: scale(1); } }
+    @keyframes ty-line { to { transform: scaleX(1); } }
+
+    /* before/after slider, framed like the win cards with firm + keyword */
+    .ba-card {
+      background: #0f1626; border: 1px solid var(--line); border-radius: 16px;
+      padding: 1rem 1rem 1.1rem;
+    }
+    .ba-title {
+      font-size: 0.92rem; font-weight: 600; text-align: center;
+      margin: 0 0 0.8rem; color: var(--white);
+    }
+    .ba {
+      position: relative; overflow: hidden; border-radius: 10px;
+      touch-action: none; cursor: ew-resize;
+      --ba: 60%;
+    }
+    .ba:focus-visible { outline: 3px solid var(--gold-light); outline-offset: 3px; }
+    .ba img { width: 100%; height: auto; display: block; user-select: none; pointer-events: none; border: none; border-radius: 0; }
+    .ba-over { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--ba)) 0 0); }
+    .ba-handle {
+      position: absolute; top: 0; bottom: 0; left: var(--ba); width: 2px;
+      background: #fff; transform: translateX(-1px);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+    .ba-knob {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #333;
+      display: grid; place-items: center; font-size: 0.72rem; letter-spacing: 0.05em;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    }
+    .ba-state {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      font-family: var(--mono); font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.12em; padding: 0.32rem 0.85rem; border-radius: 8px;
+      color: #fff; background: rgba(22, 101, 52, 0.92);
+      transition: background 0.2s ease; pointer-events: none;
+    }
+    .ba.is-before .ba-state { background: rgba(153, 27, 27, 0.92); }
+    .ba-pill {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 0.66rem;
+      font-family: var(--mono); padding: 0.32rem 0.75rem; border-radius: 999px;
+      letter-spacing: 0.06em; white-space: nowrap;
+    }
+
+    /* lightbox */
+    .ty-wall figure > img, .ty-wide-figure img { cursor: zoom-in; }
+    .ty-lightbox {
+      position: fixed; inset: 0; z-index: 60; background: rgba(4, 6, 10, 0.96);
+      display: none; overflow: auto; -webkit-overflow-scrolling: touch; cursor: zoom-out;
+    }
+    .ty-lightbox.is-open { display: block; }
+    .ty-lb-inner {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100%; min-width: 100%; width: max-content; padding: 2.5rem 1rem;
+    }
+    .ty-lightbox img {
+      display: block; max-width: min(94vw, 1100px); max-height: 88vh;
+      width: auto; height: auto; border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); cursor: default;
+    }
+    .ty-lb-close {
+      position: fixed; top: 0.85rem; right: 0.95rem; z-index: 61;
+      width: 42px; height: 42px; border-radius: 50%; border: none;
+      background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 1.15rem;
+      cursor: pointer; display: none; place-items: center; line-height: 1;
+    }
+    .ty-lightbox.is-open .ty-lb-close { display: grid; }
+    @media (max-width: 699px) {
+      /* Readable width with drag-to-pan instead of shrink-to-fit */
+      .ty-lightbox img { width: 860px; max-width: none; max-height: none; }
+    }
+    .ty-note { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-2); margin-top: 2rem; }
+
+    /* SMS priming */
+    .ty-sms {
+      background: var(--gold-dim); border: 1px solid var(--line-strong);
+      border-radius: 12px; padding: 1.5rem 1.25rem 1.6rem; margin: 0 0 2.5rem;
+    }
+    .ty-sms-label {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 700; color: var(--white);
+      margin: 0 0 0.6rem;
+    }
+    .ty-step-badge {
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--gold); color: #14181f;
+      padding: 0.28rem 0.65rem; border-radius: 999px; flex: none;
+    }
+    .ty-sms-number {
+      font-family: var(--mono); font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+      font-weight: 700; color: var(--white); margin: 0 0 0.4rem; letter-spacing: 0.02em;
+    }
+    .ty-sms p.ty-sms-why { color: var(--muted); font-size: 0.92rem; margin: 0 0 1.4rem; }
+
+    /* Calendly confirmation email mock (Gmail dark mode, like the real one) */
+    .ty-email {
+      --em-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 420px; margin: 0 auto; background: #0b0b0d; border-radius: 18px;
+      border: 1px solid #2c2c2e; padding: 1.1rem 1.1rem 1.15rem; text-align: left;
+      font-family: var(--em-font); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+      color: #e8eaed;
+    }
+    .ty-email-head { font-size: 0.92rem; font-weight: 500; line-height: 1.4; margin: 0; color: #e8eaed; }
+    .ty-email-head .inbox-chip {
+      display: inline-block; font-size: 0.58rem; border: 1px solid #5f6368; border-radius: 4px;
+      padding: 0.05rem 0.32rem; color: #9aa0a6; margin-left: 0.35rem; vertical-align: 2px;
+    }
+    .ty-email-card { background: #1e2022; border-radius: 12px; padding: 0.95rem 1rem 1.05rem; margin: 0.85rem 0 0.9rem; }
+    .ty-ec-when { font-size: 0.73rem; color: #9aa0a6; margin: 0 0 0.4rem; }
+    .ty-ec-title { font-size: 1.22rem; font-weight: 600; color: #fff; margin: 0 0 0.75rem; line-height: 1.25; }
+    .ty-ec-row { display: flex; gap: 0.55rem; font-size: 0.76rem; color: #bdc1c6; margin: 0.35rem 0; align-items: baseline; }
+    .ty-ec-row .ic { flex: none; width: 1.1em; text-align: center; }
+    .ty-ec-row small { display: block; color: #9aa0a6; }
+    .ty-ec-btns { display: flex; gap: 0.6rem; margin-top: 0.85rem; }
+    .ty-ec-btns[hidden] { display: none; }
+    a.ty-ec-btn { text-decoration: none; display: inline-block; }
+    .ty-ec-btn {
+      font-family: var(--em-font); border: none; border-radius: 999px;
+      padding: 0.5rem 1.15rem; font-size: 0.8rem; font-weight: 600;
+      background: #a8c7fa; color: #062e6f;
+    }
+    .ty-em-from { display: flex; align-items: center; gap: 0.6rem; border-top: 1px solid #2c2c2e; padding-top: 0.85rem; }
+    .ty-em-logo {
+      width: 32px; height: 32px; border-radius: 50%; background: #016bff; color: #fff;
+      display: grid; place-items: center; font-weight: 700; font-size: 0.95rem; flex: none;
+    }
+    .ty-em-fromtext { font-size: 0.78rem; color: #e8eaed; line-height: 1.35; }
+    .ty-em-fromtext .vf { color: #8ab4f8; }
+    .ty-em-fromtext small { display: block; color: #9aa0a6; font-size: 0.7rem; }
+    .ty-em-snippet { font-size: 0.75rem; color: #9aa0a6; margin: 0.55rem 0 0; }
+
+    /* iMessage mock: styled as a real light-mode iPhone Messages screenshot */
+    .ty-imsg {
+      --imsg-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      max-width: 400px; margin: 0 auto; background: #fff; border-radius: 26px;
+      padding: 1.1rem 1rem 1.25rem; text-align: center;
+      font-family: var(--imsg-font);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+    .ty-imsg-head { display: grid; justify-items: center; gap: 0.35rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e5e5ea; }
+    .ty-imsg-avatar {
+      width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block;
+    }
+    .ty-imsg-name { color: #1c1c1e; font-size: 0.82rem; margin: 0; font-weight: 500; }
+    .ty-imsg-name span { color: #8a8a8e; font-weight: 400; }
+    .ty-imsg-stamp { color: #8a8a8e; font-size: 0.7rem; margin: 0.7rem 0 0.6rem; }
+    .ty-imsg-thread { display: grid; gap: 0.4rem; text-align: left; }
+    .ty-imsg .bubble {
+      padding: 0.6rem 0.85rem; border-radius: 20px; font-size: 0.98rem; line-height: 1.35;
+      max-width: 84%; letter-spacing: -0.01em;
+    }
+    .ty-imsg .bubble.in { background: #e9e9eb; color: #000; border-bottom-left-radius: 6px; justify-self: start; }
+    .ty-imsg .bubble.out { background: #0a84ff; color: #fff; border-bottom-right-radius: 6px; justify-self: end; }
+    .ty-imsg-delivered { color: #8a8a8e; font-size: 0.68rem; justify-self: end; margin: 0.05rem 0.35rem 0 0; font-weight: 500; }
+    .ty-chat-hint {
+      display: flex; align-items: center; gap: 0.45rem; justify-content: center;
+      font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--gold-light); margin-top: 0.9rem;
+    }
+    .ty-chat-hint::before { content: "\2191"; font-size: 0.9rem; }
+
+    /* proof section: wide, OG-style two-column staggered wall */
+    .ty-proof { margin: 3.5rem 0 2.5rem; text-align: left; }
+    .ty-proof h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; max-width: none; text-align: center; }
+    .ty-proof-sub { color: var(--muted); font-size: 0.98rem; text-align: center; margin: 0 0 2rem; }
+    .ty-proof h3 {
+      font-size: clamp(1.15rem, 2.4vw, 1.45rem); margin: 3.2rem 0 0.4rem; text-align: center;
+    }
+    .ty-proof .video-grid { margin-top: 1.6rem; }
+    .ty-wall {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      align-items: start; margin-top: 1.8rem;
+    }
+    .ty-wall-col { display: grid; gap: 1.5rem; }
+    .ty-wall figure { margin: 0; }
+    .ty-wall img {
+      width: 100%; height: auto; display: block; border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+    .ty-wall figcaption {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--muted-2);
+      text-align: center; margin-top: 0.5rem; letter-spacing: 0.04em;
+    }
+    .ty-wide-figure { max-width: 900px; margin: 1.5rem auto 0; }
+    .ty-wide-figure img {
+      width: 100%; height: auto; display: block; border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+    .ty-wide-figure figcaption {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--muted-2);
+      text-align: center; margin-top: 0.5rem; letter-spacing: 0.04em;
+    }
+    @media (max-width: 680px) {
+      .ty-wall { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <!-- Deliberately not a link: they have booked, nothing to click back to. -->
+      <span class="wordmark">Three Stripes <span>Digital</span></span>
+    </div>
+  </header>
+
+  <main class="ty">
+    <div class="ty-core">
+    <h1 id="ty-title">Confirming your call…</h1>
+    <p class="lead" id="ty-lead" role="status" aria-live="polite">
+      Checking your Calendly booking details.
+    </p>
+    </div>
+
+    <div class="ty-actions" id="booking-actions" hidden>
+    <div class="ty-sms">
+      <p class="ty-sms-label"><span class="ty-step-badge">Step 1</span> Accept the calendar invite</p>
+      <p class="ty-sms-why">The invitation is already in your inbox. Hit <strong>Accept</strong> (Yes in Gmail, Accept in Outlook or Apple Calendar) so the call locks to your calendar and I know you’re coming. Check spam if it’s not there.</p>
+      <div class="ty-email" aria-label="Example Calendly confirmation email">
+        <p class="ty-email-head">Confirmed: Bilal Amin has added you to Three Stripes Digital Rank Boost on Tuesday, August 18, 2026 <span class="inbox-chip">Inbox</span></p>
+        <div class="ty-email-card">
+          <p class="ty-ec-when">Tue, Aug 18 · 2:30 PM – 3:00 PM</p>
+          <p class="ty-ec-title">Three Stripes Digital Rank Boost with Bilal Amin</p>
+          <div class="ty-ec-row"><span class="ic">📍</span><span>Web conference · details included</span></div>
+          <div class="ty-ec-row"><span class="ic">👥</span><span>Bilal Amin – Organizer<small>bilal@threestripesdigital.ca</small></span></div>
+          <div class="ty-ec-btns" aria-hidden="true"><span class="ty-ec-btn">Add to Calendar</span></div>
+        </div>
+        <div class="ty-em-from">
+          <span class="ty-em-logo">C</span>
+          <p class="ty-em-fromtext">Calendly <span class="vf">✓</span><small>to me</small></p>
+        </div>
+        <p class="ty-em-snippet">Bilal Amin has added you to Three Stripes Digital Rank Boost. Event details below.</p>
+      </div>
+      <p class="ty-chat-hint">Accept the invite in your inbox</p>
+    </div>
+
+    <div class="ty-sms">
+      <p class="ty-sms-label"><span class="ty-step-badge">Step 2</span> Save this number</p>
+      <p class="ty-sms-number">+1 (833) 380-3706</p>
+      <p class="ty-sms-why">That’s Bilal. Your confirmation text comes from this number in the next few minutes.</p>
+      <div class="ty-imsg" aria-label="Example text conversation">
+        <div class="ty-imsg-head">
+          <img class="ty-imsg-avatar" src="photos/bilal.png" alt="Bilal Amin" width="56" height="56" />
+          <p class="ty-imsg-name">Bilal <span>· Three Stripes</span></p>
+        </div>
+        <p class="ty-imsg-stamp">Text Message · Today 2:49 PM</p>
+        <div class="ty-imsg-thread">
+          <div class="bubble in">Hey John, it’s Bilal from Three Stripes Digital. You’re locked in for Tuesday at 2:30. Reply YES to confirm and I’ll have your firm’s keyword list ready before we talk.</div>
+          <div class="bubble out">YES</div>
+          <p class="ty-imsg-delivered">Delivered</p>
+        </div>
+      </div>
+      <p class="ty-chat-hint">Reply to lock your spot</p>
+    </div>
+    </div>
+
+    <div class="ty-steps">
+      <div class="ty-step">
+        <div class="ty-n">1</div>
+        <div>
+          <h3>The call</h3>
+          <p>Your keyword list, live. You approve what we boost. 30 minutes.</p>
+        </div>
+      </div>
+      <div class="ty-step">
+        <div class="ty-n">2</div>
+        <div>
+          <h3>The boost runs</h3>
+          <p>Free. No card, no contract, no site access.</p>
+        </div>
+      </div>
+      <div class="ty-step">
+        <div class="ty-n">3</div>
+        <div>
+          <h3>We measure the result</h3>
+          <p>Timing and movement vary; we check the live Google result.</p>
+        </div>
+      </div>
+      <div class="ty-step">
+        <div class="ty-n">4</div>
+        <div>
+          <h3>The follow-up</h3>
+          <p>Pre-booked. We review the before and after together.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ty-proof">
+      <h2>While you wait: what happens when Google starts working</h2>
+      <p class="ty-proof-sub">Firms that took this same call, in their own words, with the rankings to back it up.</p>
+
+      <div class="ty-wall">
+        <div class="ty-wall-col">
+          <article class="video-card" data-m="4">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">+1,238% more calls</p>
+              <p class="video-role">Divorce &amp; Family Law · Rockford, IL</p>
+              <p class="video-quote">“I have so many leads I can barely service the business. I've gotten rid of my paid leads entirely.”</p>
+            </div>
+          </article>
+          <figure data-m="2">
+            <img src="proof/anon/email-okc-google.webp" alt="Client email: a consult found the firm on Google, up to 6th for a divorce lawyer search" loading="lazy" width="1320" height="1038" />
+            <figcaption>“He said Google.” Up to 6th and climbing · names anonymized</figcaption>
+          </figure>
+          <figure data-m="5">
+            <img src="proof/anon/email-10-clients.webp" alt="Client email: 10 new clients added in 6 weeks, hiring a new paralegal" loading="lazy" width="1320" height="1366" />
+            <figcaption>10 clients in 6 weeks, hiring a paralegal to keep up · names anonymized</figcaption>
+          </figure>
+          <article class="video-card" data-m="7">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/cruz-gold/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/cruz-gold/CruzGold.mp4#t=8" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">#1 on Google</p>
+              <p class="video-role">Immigration Law · New Jersey</p>
+              <p class="video-quote">“In just 3 months, we jumped to number one. Phone calls and leads exploded.”</p>
+            </div>
+          </article>
+          <figure data-m="8">
+            <img src="proof/anon/email-posted-x.webp" alt="Client email: getting regular calls and hits from the website" loading="lazy" width="1313" height="752" />
+            <figcaption>“Regular calls and hits from our website, and I love it.”</figcaption>
+          </figure>
+          <figure data-m="9">
+            <img src="proof/anon/proof-text-top3.png" alt="Text message from a client: a consult said the firm showed top 3 in a Google search" loading="lazy" />
+            <figcaption>“Came up top 3 from a search” · texted mid-consult</figcaption>
+          </figure>
+          <figure data-m="11">
+            <div class="ba-card">
+              <p class="ba-title">Cruz Gold Rankings for “Immigration Lawyer New Jersey”</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-before-sm.jpg" alt="Before: rank tracking grid for immigration lawyer New Jersey, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-after-sm.jpg" alt="After: rank tracking grid for immigration lawyer New Jersey, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+          <figure data-m="14">
+            <img src="wins/traffic-ticket-lawyer-los-angeles.webp" alt="Google rank improvement for &quot;traffic ticket lawyer los angeles&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="16">
+            <img src="wins/traffic-ticket-lawyer-san-diego.webp" alt="Google rank improvement for &quot;traffic ticket lawyer san diego&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="18">
+            <img src="wins/divorce-lawyer-westlake-village.webp" alt="Google rank improvement for &quot;divorce lawyer westlake village&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="20">
+            <img src="wins/omaha-personal-injury-lawyer.webp" alt="Google rank improvement for &quot;omaha personal injury lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="22">
+            <img src="wins/divorce-lawyer-rockford.webp" alt="Google rank improvement for &quot;divorce lawyer rockford&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="24">
+            <img src="wins/omaha-car-accident-lawyer.webp" alt="Google rank improvement for &quot;omaha car accident lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="26">
+            <img src="wins/okc-divorce-lawyer.webp" alt="Google rank improvement for &quot;okc divorce lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="28">
+            <img src="wins/medical-malpractice-lawyer-omaha.webp" alt="Google rank improvement for &quot;medical malpractice lawyer omaha&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="30">
+            <img src="wins/criminal-defense-attorney-vancouver-wa.webp" alt="Google rank improvement for &quot;criminal defense attorney vancouver wa&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="32">
+            <img src="wins/motorcycle-accident-lawyer-omaha.webp" alt="Google rank improvement for &quot;motorcycle accident lawyer omaha&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="34">
+            <img src="wins/nebraska-truck-accident-lawyer.webp" alt="Google rank improvement for &quot;nebraska truck accident lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="36">
+            <img src="wins/wrongful-death-lawyer-omaha.webp" alt="Google rank improvement for &quot;wrongful death lawyer omaha&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="38">
+            <img src="wins/family-law-attorney-thousand-oaks.webp" alt="Google rank improvement for &quot;family law attorney thousand oaks&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="40">
+            <img src="wins/divorce-attorney-macomb-county.webp" alt="Google rank improvement for &quot;divorce attorney macomb county&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="42">
+            <img src="wins/divorce-attorney-agoura-hills.webp" alt="Google rank improvement for &quot;divorce attorney agoura hills&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="44">
+            <img src="wins/criminal-defense-attorney-clark-county.webp" alt="Google rank improvement for &quot;criminal defense attorney clark county&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+        </div>
+        <div class="ty-wall-col">
+          <article class="video-card" data-m="1">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/ticket-crushers/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/testimonial.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">$540K saved / year</p>
+              <p class="video-role">Ticket Crushers · Traffic Law · California</p>
+              <p class="video-quote">“We were able to turn off all paid marketing and rely entirely on his SEO.”</p>
+            </div>
+          </article>
+          <figure data-m="3">
+            <img src="proof/anon/email-exactly-hoping.webp" alt="Client email: this is exactly what we were hoping you could do" loading="lazy" width="1320" height="845" />
+            <figcaption>“Exactly what we were hoping you could do.” · reacting to a rank update</figcaption>
+          </figure>
+          <figure data-m="6">
+            <img src="proof/anon/email-reviews-uptick.webp" alt="Client email: an uptick in calls and referrals through the website" loading="lazy" width="1320" height="1122" />
+            <figcaption>“An uptick in calls and referrals through the website. I can see it working.”</figcaption>
+          </figure>
+          <article class="video-card" data-m="10">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata">
+                <source src="https://threestripesdigital.com/case-studies/assets/wisconsin-immigration/testimonial.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">Statewide visibility</p>
+              <p class="video-role">Immigration Law · Wisconsin</p>
+              <p class="video-quote">“Three Stripes Digital transformed our online presence completely.”</p>
+            </div>
+          </article>
+          <figure data-m="12">
+            <div class="ba-card">
+              <p class="ba-title">Vernsten Law Rankings for “Divorce Lawyer Rockford”</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-before-sm.jpg" alt="Before: rank tracking grid for divorce lawyer Rockford, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-after-sm.jpg" alt="After: rank tracking grid for divorce lawyer Rockford, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+          <figure data-m="13">
+            <div class="ba-card">
+              <p class="ba-title">Ticket Crushers Local Rankings · San Francisco</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-before.jpg" alt="Before: San Francisco traffic law rank grid, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-after.jpg" alt="After: San Francisco traffic law rank grid, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+          <figure data-m="15">
+            <img src="wins/traffic-ticket-lawyer-san-francisco.webp" alt="Google rank improvement for &quot;traffic ticket lawyer san francisco&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="17">
+            <img src="wins/immigration-lawyer-philadelphia.webp" alt="Google rank improvement for &quot;immigration lawyer philadelphia&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="19">
+            <img src="wins/washington-dui-attorney.webp" alt="Google rank improvement for &quot;washington dui attorney&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="21">
+            <img src="wins/washington-criminal-defense-attorney.webp" alt="Google rank improvement for &quot;washington criminal defense attorney&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="23">
+            <img src="wins/dui-lawyer-vancouver-wa.webp" alt="Google rank improvement for &quot;dui lawyer vancouver wa&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="25">
+            <img src="wins/divorce-lawyer-rockford-il.webp" alt="Google rank improvement for &quot;divorce lawyer rockford il&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="27">
+            <img src="wins/okc-criminal-lawyer.webp" alt="Google rank improvement for &quot;okc criminal lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="29">
+            <img src="wins/nebraska-personal-injury-lawyer.webp" alt="Google rank improvement for &quot;nebraska personal injury lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="31">
+            <img src="wins/truck-accident-lawyer-omaha.webp" alt="Google rank improvement for &quot;truck accident lawyer omaha&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="33">
+            <img src="wins/family-law-attorney-westlake-village.webp" alt="Google rank improvement for &quot;family law attorney westlake village&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="35">
+            <img src="wins/family-law-attorney-macomb-county.webp" alt="Google rank improvement for &quot;family law attorney macomb county&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="37">
+            <img src="wins/divorce-lawyer-thousand-oaks.webp" alt="Google rank improvement for &quot;divorce lawyer thousand oaks&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="39">
+            <img src="wins/macomb-county-divorce-lawyer.webp" alt="Google rank improvement for &quot;macomb county divorce lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="41">
+            <img src="wins/domestic-violence-attorney-vancouver-wa.webp" alt="Google rank improvement for &quot;domestic violence attorney vancouver wa&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+          <figure data-m="43">
+            <img src="wins/omaha-pedestrian-accident-lawyer.webp" alt="Google rank improvement for &quot;omaha pedestrian accident lawyer&quot;" loading="lazy" width="900" height="900" />
+          </figure>
+        </div>
+      </div>
+
+      <figure class="ty-wide-figure">
+        <picture>
+          <source media="(max-width: 699px)" srcset="proof/anon/proof-leads-inbox-mobile.png" />
+          <img src="proof/anon/proof-leads-inbox.png" alt="Anonymized inbox of law firm lead form submissions across family, divorce, and criminal law" loading="lazy" />
+        </picture>
+        <figcaption>One firm’s lead-form inbox · family / divorce / criminal · ~2 weeks</figcaption>
+      </figure>
+    </div>
+
+    <div class="ty-core">
+      <a class="btn btn-primary btn-lg" href="./">Back to the page</a>
+      <p class="ty-note">One firm per niche per city · Your spot is held</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">Three Stripes Digital</div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="privacy">Privacy</a>
+        <a href="https://threestripesdigital.com/terms-of-service/">Terms</a>
+        <a href="https://threestripesdigital.com/contact/">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="ty-lightbox" id="ty-lightbox" role="dialog" aria-modal="true" aria-label="Expanded proof image" aria-hidden="true">
+    <div class="ty-lb-inner"><img alt="" /></div>
+    <button class="ty-lb-close" id="ty-lb-close" type="button" aria-label="Close image">✕</button>
+  </div>
+
+  <script>
+    (function () {
+      // On phones the two wall columns would stack whole-column-at-a-time,
+      // burying column B's strongest proof. Flatten into one column sorted
+      // by each item's data-m impact rank instead.
+      if (window.matchMedia && matchMedia("(max-width: 679px)").matches) {
+        var wall = document.querySelector(".ty-wall");
+        if (wall) {
+          var cols = wall.querySelectorAll(".ty-wall-col");
+          if (cols.length === 2) {
+            var items = Array.prototype.slice.call(wall.querySelectorAll("[data-m]"));
+            items.sort(function (a, b) { return (+a.dataset.m) - (+b.dataset.m); });
+            items.forEach(function (el) { cols[0].appendChild(el); });
+            cols[1].remove();
+          }
+        }
+      }
+
+      // Before/after sliders
+      document.querySelectorAll("[data-ba]").forEach(function (el) {
+        var state = el.querySelector(".ba-state");
+        var current = 60;
+        el.setAttribute("role", "slider");
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("aria-label", "Compare before and after rankings");
+        el.setAttribute("aria-valuemin", "0");
+        el.setAttribute("aria-valuemax", "100");
+        function setPercent(value) {
+          current = Math.max(0, Math.min(100, value));
+          el.style.setProperty("--ba", current + "%");
+          el.setAttribute("aria-valuenow", String(Math.round(current)));
+          el.setAttribute(
+            "aria-valuetext",
+            Math.round(current) + "% of the after result visible"
+          );
+          if (state) {
+            var before = current < 50;
+            el.classList.toggle("is-before", before);
+            state.textContent = before ? "BEFORE" : "AFTER";
+          }
+        }
+        function setFromPointer(e) {
+          var r = el.getBoundingClientRect();
+          var x = ((e.clientX - r.left) / r.width) * 100;
+          setPercent(x);
+        }
+        setPercent(current);
+        el.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+          el.focus();
+          el.setPointerCapture(e.pointerId);
+          setFromPointer(e);
+          function move(ev) { setFromPointer(ev); }
+          function stop() {
+            el.removeEventListener("pointermove", move);
+            el.removeEventListener("pointerup", stop);
+            el.removeEventListener("pointercancel", stop);
+          }
+          el.addEventListener("pointermove", move);
+          el.addEventListener("pointerup", stop);
+          el.addEventListener("pointercancel", stop);
+        });
+        el.addEventListener("keydown", function (e) {
+          var next = current;
+          if (e.key === "ArrowLeft" || e.key === "ArrowDown") next -= 5;
+          else if (e.key === "ArrowRight" || e.key === "ArrowUp") next += 5;
+          else if (e.key === "PageDown") next -= 10;
+          else if (e.key === "PageUp") next += 10;
+          else if (e.key === "Home") next = 0;
+          else if (e.key === "End") next = 100;
+          else return;
+          e.preventDefault();
+          setPercent(next);
+        });
+      });
+
+      // Lightbox for proof images
+      var box = document.getElementById("ty-lightbox");
+      var boxImg = box.querySelector("img");
+      var closeButton = document.getElementById("ty-lb-close");
+      var lightboxTrigger = null;
+      function close() {
+        if (!box.classList.contains("is-open")) return;
+        box.classList.remove("is-open");
+        box.setAttribute("aria-hidden", "true");
+        boxImg.src = "";
+        if (lightboxTrigger) lightboxTrigger.focus();
+        lightboxTrigger = null;
+      }
+      function open(img) {
+        lightboxTrigger = img;
+        boxImg.src = img.currentSrc || img.src;
+        boxImg.alt = img.alt || "";
+        box.classList.add("is-open");
+        box.setAttribute("aria-hidden", "false");
+        closeButton.focus();
+      }
+      document.querySelectorAll(".ty-wall figure > img, .ty-wide-figure img").forEach(function (img) {
+        img.setAttribute("role", "button");
+        img.setAttribute("tabindex", "0");
+        img.setAttribute("aria-haspopup", "dialog");
+        img.setAttribute("aria-label", "Open larger view: " + (img.alt || "proof image"));
+        img.addEventListener("click", function () { open(img); });
+        img.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          e.preventDefault();
+          open(img);
+        });
+      });
+      box.addEventListener("click", function (e) {
+        if (e.target === box || e.target.classList.contains("ty-lb-inner")) close();
+      });
+      closeButton.addEventListener("click", close);
+      document.addEventListener("keydown", function (e) {
+        if (!box.classList.contains("is-open")) return;
+        if (e.key === "Escape") {
+          e.preventDefault();
+          close();
+        } else if (e.key === "Tab") {
+          e.preventDefault();
+          closeButton.focus();
+        }
+      });
+
+      // Show the booking state only after the signed lead and exact Rank Boost
+      // event have been verified by the server. Calendly query times are never
+      // trusted as confirmation evidence.
+      (function () {
+        var trackKey = "tsd_rb_pending_track";
+        function retryPendingTrack(attempt) {
+          var pending = null;
+          try { pending = JSON.parse(sessionStorage.getItem(trackKey) || "null"); } catch (e) {}
+          if (!pending) return;
+          fetch("api/track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            keepalive: true,
+            body: JSON.stringify(pending)
+          }).then(function (response) {
+            if (response.ok) {
+              try { sessionStorage.removeItem(trackKey); } catch (e) {}
+              return;
+            }
+            if (attempt < 3) setTimeout(function () { retryPendingTrack(attempt + 1); }, 800);
+          }).catch(function () {
+            if (attempt < 3) setTimeout(function () { retryPendingTrack(attempt + 1); }, 800);
+          });
+        }
+        retryPendingTrack(0);
+
+        var q = new URLSearchParams(location.search);
+        var token = q.get("lead_token") || q.get("utm_content") || "";
+        if (!token) {
+          try { token = sessionStorage.getItem("tsd_rb_lead_token") || ""; } catch (e) {}
+        }
+
+        function cleanTokenState() {
+          try { sessionStorage.removeItem("tsd_rb_lead_token"); } catch (e) {}
+          q.delete("lead_token");
+          q.delete("utm_content");
+          var cleanQuery = q.toString();
+          history.replaceState(
+            null,
+            "",
+            location.pathname + (cleanQuery ? "?" + cleanQuery : "") + location.hash
+          );
+        }
+
+        function apply(booking) {
+          var startIso = booking && booking.start;
+          var start = new Date(startIso);
+          if (isNaN(start)) return false;
+          var end = new Date(start.getTime() + 30 * 60000);
+          var dateLong = start.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+          var dateShort = start.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+          var t = function (d) { return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }); };
+
+          var head = document.querySelector(".ty-email-head");
+          if (head) {
+            head.textContent = "Confirmed: Bilal Amin has added you to Three Stripes Digital Rank Boost on " +
+              dateLong + " ";
+            var inboxChip = document.createElement("span");
+            inboxChip.className = "inbox-chip";
+            inboxChip.textContent = "Inbox";
+            head.appendChild(inboxChip);
+          }
+          var when = document.querySelector(".ty-ec-when");
+          if (when) when.textContent = dateShort + " · " + t(start) + " – " + t(end);
+          var m = document.querySelector(".ty-email-date .m");
+          var d2 = document.querySelector(".ty-email-date .d");
+          if (m) m.textContent = start.toLocaleDateString(undefined, { month: "short" }).toUpperCase();
+          if (d2) d2.textContent = String(start.getDate());
+
+          var title = document.getElementById("ty-title");
+          var lead = document.getElementById("ty-lead");
+          var actions = document.getElementById("booking-actions");
+          if (title) title.textContent = "Your call is booked.";
+          if (lead) lead.textContent = "Two quick things below and you’re set. You don’t need to prepare anything.";
+          if (actions) actions.hidden = false;
+          var retryButton = document.getElementById("retry-booking-verification");
+          if (retryButton) retryButton.remove();
+          cleanTokenState();
+          document.title = "You’re Booked · Three Stripes Digital";
+          var inviteeId = String(booking.invitee || "").split("/").pop();
+          if (window.tsdMetaConsent === "granted" && window.fbq && inviteeId) {
+            fbq(
+              "track",
+              "Schedule",
+              { content_name: "rank-boost-call" },
+              { eventID: "sched-" + inviteeId }
+            );
+          }
+          document.dispatchEvent(new Event("rankboost:booking-verified"));
+          return true;
+
+        }
+
+        function showUnconfirmed(message) {
+          var title = document.getElementById("ty-title");
+          var lead = document.getElementById("ty-lead");
+          if (title) title.textContent = "We couldn’t confirm your booking yet.";
+          if (lead) lead.textContent = message ||
+            "Check your inbox for the Calendly confirmation, then try verification again.";
+          var button = document.getElementById("retry-booking-verification");
+          if (!button && lead) {
+            button = document.createElement("button");
+            button.id = "retry-booking-verification";
+            button.type = "button";
+            button.className = "btn btn-ghost";
+            button.textContent = "Verify booking again";
+            button.addEventListener("click", function () {
+              button.disabled = true;
+              if (title) title.textContent = "Confirming your call…";
+              if (lead) lead.textContent = "Checking your Calendly booking details.";
+              verify(0);
+            });
+            lead.insertAdjacentElement("afterend", button);
+          }
+          if (button) button.disabled = false;
+        }
+
+        function verify(attempt) {
+          if (!token) {
+            showUnconfirmed(
+              "Return to your results and choose the booking time again so we can verify it securely."
+            );
+            return;
+          }
+          fetch("api/booking", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json"
+            },
+            body: JSON.stringify({
+              token: token,
+              invitee: q.get("invitee_uuid") || q.get("invitee") || "",
+              event: q.get("booking") || q.get("event_uuid") || q.get("event") || ""
+            })
+          }).then(function (response) {
+            if (response.ok) return response.json();
+            if (response.status === 404 && attempt < 7) {
+              setTimeout(function () { verify(attempt + 1); }, 1000 + attempt * 750);
+              return null;
+            }
+            if (response.status === 401) throw new Error("expired");
+            throw new Error("unverified");
+          }).then(function (booking) {
+            if (!booking) return;
+            if (!booking.verified || !apply(booking)) throw new Error("unverified");
+          }).catch(function (error) {
+            showUnconfirmed(
+              error && error.message === "expired"
+                ? "Your secure link expired. Return to your results and choose the booking time again."
+                : "Check your inbox for the Calendly confirmation, then try verification again."
+            );
+          });
+        }
+
+        verify(0);
+      })();
+
+      // Confetti burst only after server verification succeeds.
+      document.addEventListener("rankboost:booking-verified", function () {
+      if (
+        document.getElementById("ty-title").textContent === "Your call is booked." &&
+        !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)
+      ) {
+        var title = document.getElementById("ty-title");
+        // Only burst when the headline is actually on screen (browsers can
+        // restore a mid-page scroll position on reload).
+        if (title && title.getBoundingClientRect().bottom > 0) {
+          var overlay = document.createElement("div");
+          overlay.className = "ty-confetti";
+          overlay.setAttribute("aria-hidden", "true");
+          document.body.appendChild(overlay);
+          var rect = title.getBoundingClientRect();
+          var cx = rect.left + rect.width / 2;
+          var cy = rect.top + rect.height / 2;
+          var colors = ["#d9a943", "#e6c36a", "#4ecb8f", "#8ab4f8", "#ffffff", "#d93025"];
+          var parts = [];
+          for (var i = 0; i < 90; i++) {
+            var el = document.createElement("i");
+            el.style.background = colors[i % colors.length];
+            overlay.appendChild(el);
+            parts.push({
+              el: el,
+              x: cx + (Math.random() - 0.5) * rect.width * 0.6,
+              y: cy + (Math.random() - 0.5) * 20,
+              vx: (Math.random() - 0.5) * 16,
+              vy: -(4 + Math.random() * 11),
+              rot: Math.random() * 360,
+              vr: (Math.random() - 0.5) * 24,
+              scale: 0.6 + Math.random() * 0.9
+            });
+          }
+          var start = null;
+          var DURATION = 2600;
+          function tick(ts) {
+            if (!start) start = ts;
+            var t = ts - start;
+            for (var j = 0; j < parts.length; j++) {
+              var p = parts[j];
+              p.vy += 0.28;
+              p.vx *= 0.99;
+              p.x += p.vx;
+              p.y += p.vy;
+              p.rot += p.vr;
+              p.el.style.transform =
+                "translate(" + p.x + "px," + p.y + "px) rotate(" + p.rot + "deg) scale(" + p.scale + ")";
+              p.el.style.opacity = t > DURATION - 600 ? String((DURATION - t) / 600) : "1";
+            }
+            if (t < DURATION) requestAnimationFrame(tick);
+            else overlay.remove();
+          }
+          requestAnimationFrame(tick);
+        }
+      }
+      }, { once: true });
+    })();
+  </script>
+</body>
+</html>
