@@ -45,7 +45,7 @@ for q in 'How fast will I see movement?' 'What does it cost?' 'Will this help me
 done
 n=$(grep -c 'class="win-card' "$IDX"); [ "$n" -eq 31 ] && ok "win-card count == 31" || bad "win-card count == $n (expected 31)"
 n=$(grep -c 'data-video-slot=' "$IDX"); [ "$n" -eq 4 ] && ok "video testimonial cards == 4" || bad "video testimonial cards == $n (expected 4)"
-n=$(grep -c 'class="marquee-item"' "$IDX"); [ "$n" -eq 26 ] && ok "marquee items == 26" || bad "marquee items == $n (expected 26)"
+n=$(grep -c 'class="marquee-item"' "$IDX"); [ "$n" -eq 28 ] && ok "marquee items == 28" || bad "marquee items == $n (expected 28)"
 n=$(grep -c 'fbq(' "$IDX"); [ "$n" -eq 4 ] && ok "fbq( lines == 4" || bad "fbq( lines == $n (expected 4)"
 n=$(grep -c '<wistia-player' "$IDX"); [ "$n" -eq 1 ] && ok "exactly one wistia-player" || bad "wistia-player count == $n (expected 1)"
 n=$(grep -c '<section' "$IDX"); [ "$n" -eq 8 ] && ok "<section> count == 8 (hero, hero-vsl, qualify, trusted, wins, partners, faq, final)" || bad "<section> count == $n (expected 8)"

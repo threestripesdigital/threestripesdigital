@@ -32,7 +32,7 @@ grep -qF -- 'Straight answers before you apply' "$IDX" && ok "faq h2 unchanged" 
 grep -q 'google.com/s2/favicons' "$IDX" && bad "google favicon hot-links remain" || ok "no google favicon hot-links"
 grep -q 'senorticket.com' "$IDX" && bad "senorticket.com hot-link remains" || ok "no senorticket.com hot-link"
 grep -q 'marquee-logo' "$IDX" "$CSS" && bad "marquee-logo (rectangle) still used" || ok "marquee-logo rectangle removed"
-n=$(grep -c 'class="marquee-item"' "$IDX"); [ "$n" -eq 26 ] && ok "marquee items == 26" || bad "marquee items == $n (expected 26)"
+n=$(grep -c 'class="marquee-item"' "$IDX"); [ "$n" -eq 28 ] && ok "marquee items == 28" || bad "marquee items == $n (expected 28)"
 for name in 'Cruz Gold &amp; Associates' 'Señor Ticket' 'Mahdavi &amp; Mahdavi Family Law' 'Wisconsin Immigration Lawyers' 'Thyberg Family Law' 'Macomb County Divorce Lawyer' 'Brar Tamber Rigby Badham' 'VanWa Legal' 'Rensch &amp; Rensch' 'Vernsten Law' 'Ticket Crushers' 'Priest Criminal Defense' 'Hopson Law'; do
   c=$(grep -c -F -- "<span>$name</span>" "$IDX"); [ "$c" -eq 2 ] && ok "name x2: $name" || bad "name '$name' appears $c times (expected 2)"
 done
@@ -44,7 +44,7 @@ for src in $(grep -o 'class="marquee-item"><img src="[^"]*"' "$IDX" | sed 's/.*s
   case "$src" in logos/*) [ -f "public/$src" ] || { bad "logo file missing: $src"; missing=1; } ;; *) bad "marquee img not local: $src"; missing=1 ;; esac
 done
 [ "$missing" -eq 0 ] && ok "every marquee img is a local existing logos/ file"
-n=$(grep -c 'class="marquee-item"><img src="logos/[^"]*" alt="" width="64" height="64">' "$IDX"); [ "$n" -eq 26 ] && ok "all 26 marquee imgs use the uniform attributes" || bad "$n/26 marquee imgs use the uniform attributes"
+n=$(grep -c 'class="marquee-item"><img src="logos/[^"]*" alt="" width="64" height="64">' "$IDX"); [ "$n" -eq 28 ] && ok "all 28 marquee imgs use the uniform attributes" || bad "$n/28 marquee imgs use the uniform attributes"
 
 # 5. Stray output + landing verifier (includes npm test and out-of-bounds check)
 for f in "$IDX" "$CSS" test/endpoints.test.js; do grep -q -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f" && bad "stray shell output in $f" || ok "no stray shell output in $f"; done

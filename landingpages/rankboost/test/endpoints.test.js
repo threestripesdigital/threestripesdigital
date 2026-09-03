@@ -391,6 +391,7 @@ test("landing page keeps the simplified VSL structure", async () => {
   assert.doesNotMatch(index, /senorticket\.com/);
   assert.ok(index.includes("Cruz Gold &amp; Associates"));
   assert.ok(index.includes("Señor Ticket"));
+  assert.ok(index.includes("Stuart Allen Law Firm"));
   assert.ok(index.includes("If your best law-firm keywords are stuck between positions 2 and 50, you’ll see movement in under 48 hours."));
   const sectionIds = [...index.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>/g)].map(
     (match) => match[1]
@@ -499,6 +500,9 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
   const withoutComments = source.replace(/<!--[\s\S]*?-->/g, "");
   assert.doesNotMatch(withoutComments, /<wistia-player\b/);
   assert.doesNotMatch(source, /src="wins\//);
+  const footer = source.slice(source.indexOf("<footer"), source.indexOf("</footer>"));
+  assert.doesNotMatch(footer, /<a\s/);
+  assert.ok(!footer.includes("footer-links"));
 });
 
 test("lead form validation mirrors server limits and exposes accessible errors", async () => {
