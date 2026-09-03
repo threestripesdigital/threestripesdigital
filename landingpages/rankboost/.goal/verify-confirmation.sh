@@ -30,7 +30,7 @@ n=$(perl -0pe 's/<!--.*?-->//gs' "$TY" | grep -c '<wistia-player '); [ "$n" -eq 
 # 3. Landmark order
 pos() { grep -n -F -m1 -- "$1" "$TY" | cut -d: -f1; }
 prev=0; prevname=start
-for mark in 'class="site-header"' 'id="ty-title"' 'id="ty-urgency"' 'data-video-slot="founder-urgency"' 'id="ty-breakouts"' 'data-video-slot="breakout-white-hat"' 'data-video-slot="breakout-existing-rankings"' 'data-video-slot="breakout-if-it-doesnt-work"' 'data-video-slot="breakout-competitors"' 'id="ty-testimonials"' 'data-video-slot="vernsten"' 'id="ty-next-steps"' 'id="booking-actions"' 'Step 1</span>' 'Step 2</span>' 'class="ty-steps"' 'class="site-footer"' 'id="ty-lightbox"'; do
+for mark in 'class="site-header"' 'id="ty-title"' 'id="ty-urgency"' 'data-video-slot="founder-urgency"' 'id="ty-breakouts"' 'data-video-slot="breakout-white-hat"' 'data-video-slot="breakout-existing-rankings"' 'data-video-slot="breakout-if-it-doesnt-work"' 'data-video-slot="breakout-competitors"' 'id="ty-testimonials"' 'data-video-slot="vernsten"' 'id="ty-next-steps"' 'id="booking-actions"' 'Step 1</span>' 'Step 2</span>' 'class="ty-steps"' 'id="ty-lightbox"'; do
   p=$(pos "$mark"); [ -z "$p" ] && p=0
   if [ "$p" -gt "$prev" ]; then ok "order: ${prevname:0:40} < ${mark:0:40}"; else bad "order: $mark (line $p) is not after $prevname (line $prev)"; fi
   prev=$p; prevname=$mark

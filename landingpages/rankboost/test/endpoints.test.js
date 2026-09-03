@@ -386,6 +386,7 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
 
 test("landing page keeps the simplified VSL structure", async () => {
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.doesNotMatch(index, /<footer/);
   assert.doesNotMatch(index, /footer-links/);
   assert.doesNotMatch(index, /google\.com\/s2\/favicons/);
   assert.doesNotMatch(index, /senorticket\.com/);
@@ -397,6 +398,9 @@ test("landing page keeps the simplified VSL structure", async () => {
     (match) => match[1]
   );
   assert.deepEqual(sectionIds, ["top", "qualify", "trusted", "wins", "partners", "faq", "final"]);
+  const finalSection = index.slice(index.indexOf('id="final"'), index.indexOf("</section>", index.indexOf('id="final"')));
+  assert.match(finalSection, /id="year"/);
+  assert.match(finalSection, /That’s why we qualify first\./);
   for (const removedId of ["problem", "how", "different", "inbox-proof", "gserp"]) {
     assert.doesNotMatch(index, new RegExp(`id="${removedId}"`));
   }
@@ -500,9 +504,7 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
   const withoutComments = source.replace(/<!--[\s\S]*?-->/g, "");
   assert.doesNotMatch(withoutComments, /<wistia-player\b/);
   assert.doesNotMatch(source, /src="wins\//);
-  const footer = source.slice(source.indexOf("<footer"), source.indexOf("</footer>"));
-  assert.doesNotMatch(footer, /<a\s/);
-  assert.ok(!footer.includes("footer-links"));
+  assert.doesNotMatch(source, /<footer/);
 });
 
 test("lead form validation mirrors server limits and exposes accessible errors", async () => {

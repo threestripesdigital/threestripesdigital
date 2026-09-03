@@ -1724,31 +1724,15 @@ section.qualify.hero-qualify {
   color: var(--muted-2);
 }
 
-/* ——— Footer ——— */
-.site-footer {
+.final-copy {
+  max-width: 62rem;
+  margin: 2.5rem auto 0;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--line);
-  padding: 1.5rem 0 1.75rem;
-  background: #070F1C;
-}
-
-.footer-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.footer-brand {
-  font-family: var(--display);
-  color: var(--white-pure);
-  font-size: 1rem;
-}
-
-.footer-copy {
-  width: 100%;
-  margin: 0;
-  color: var(--muted-2);
+  color: var(--muted);
   font-size: 0.78rem;
+  line-height: 1.55;
+  text-align: center;
 }
 
 /* ——— Utils ——— */
@@ -1895,6 +1879,10 @@ section.qualify.hero-qualify {
 }
 
 @media (max-width: 720px) {
+  .final-cta {
+    padding-bottom: calc(clamp(2rem, 4.5vw, 3.5rem) + 4.2rem + env(safe-area-inset-bottom));
+  }
+
   .sticky-cta {
     display: block;
     position: fixed;

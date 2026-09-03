@@ -20,11 +20,7 @@ c=$(printf '%s' "$right" | grep -c -F 'Stuart Allen Law Firm'); [ "$c" -eq 2 ] &
 left=$(sed -n '/marquee-track marquee-left/,/marquee-track marquee-right/p' "$IDX")
 printf '%s' "$left" | grep -q -F 'Stuart Allen' && bad "Stuart Allen also appears in the left track" || ok "left track unchanged"
 
-footer=$(sed -n '/<footer class="site-footer">/,/<\/footer>/p' "$TY")
-[ -n "$footer" ] && ok "thank-you footer found" || bad "thank-you footer not found"
-printf '%s' "$footer" | grep -q '<a ' && bad "thank-you footer still contains a link" || ok "thank-you footer contains no <a>"
 grep -q 'footer-links' "$TY" && bad "footer-links still in thank-you.html" || ok "footer-links removed from thank-you.html"
-grep -q -F 'class="footer-brand"' "$TY" && ok "thank-you footer brand kept" || bad "thank-you footer brand lost"
 
 for f in "$IDX" "$TY" test/endpoints.test.js; do grep -q -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f" && bad "stray shell output in $f" || ok "no stray shell output in $f"; done
 

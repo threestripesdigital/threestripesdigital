@@ -23,13 +23,13 @@ done
 
 # 3. Kept blocks intact
 pos() { grep -n -F -m1 -- "$1" "$IDX" | cut -d: -f1; }
-for keep in 'class="site-header"' '<h1>We move law-firm keywords from <span class="hl-num">page 2–5</span> to <span class="hl-num">page 1</span> in under 48 hours.</h1>' '<wistia-player media-id="8uioqg3047" aspect="1.7777777777777777"></wistia-player>' '<script src="https://fast.wistia.com/player.js" async></script>' '<script src="https://fast.wistia.com/embed/8uioqg3047.js" async type="module"></script>' '<script src="meta.js"></script>' 'id="hero-vsl-title"' 'class="hero-vsl-caption hero-subcopy"' 'id="qualify-form-toggle"' '<form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>' 'Check my current rankings · free' 'class="marquee-section" id="trusted"' 'id="win-grid"' 'id="win-toggle"' 'class="video-grid"' 'id="faq"' 'id="final"' 'id="sticky-cta"' 'class="site-footer"' 'fbq("trackCustom", "LeadFormOpened"' 'window.location.href = "results";'; do
+for keep in 'class="site-header"' '<h1>We move law-firm keywords from <span class="hl-num">page 2–5</span> to <span class="hl-num">page 1</span> in under 48 hours.</h1>' '<wistia-player media-id="8uioqg3047" aspect="1.7777777777777777"></wistia-player>' '<script src="https://fast.wistia.com/player.js" async></script>' '<script src="https://fast.wistia.com/embed/8uioqg3047.js" async type="module"></script>' '<script src="meta.js"></script>' 'id="hero-vsl-title"' 'class="hero-vsl-caption hero-subcopy"' 'id="qualify-form-toggle"' '<form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>' 'Check my current rankings · free' 'class="marquee-section" id="trusted"' 'id="win-grid"' 'id="win-toggle"' 'class="video-grid"' 'id="faq"' 'id="final"' 'id="sticky-cta"' 'fbq("trackCustom", "LeadFormOpened"' 'window.location.href = "results";'; do
   grep -qF -- "$keep" "$IDX" && ok "kept: ${keep:0:60}" || bad "missing: $keep"
 done
 
 # Landmark order
 prev=0; prevname=start
-for mark in 'class="site-header"' '<h1>We move' '<wistia-player media-id' 'id="qualify-form-toggle"' 'id="trusted"' 'id="wins"' 'id="partners"' 'id="faq"' 'id="final"' 'id="sticky-cta"' 'class="site-footer"'; do
+for mark in 'class="site-header"' '<h1>We move' '<wistia-player media-id' 'id="qualify-form-toggle"' 'id="trusted"' 'id="wins"' 'id="partners"' 'id="faq"' 'id="final"' 'id="sticky-cta"'; do
   p=$(pos "$mark"); [ -z "$p" ] && p=0
   if [ "$p" -gt "$prev" ]; then ok "order: $prevname < $mark"; else bad "order: $mark (line $p) is not after $prevname (line $prev)"; fi
   prev=$p; prevname=$mark
