@@ -1705,6 +1705,7 @@ section.qualify.hero-qualify {
 
 .final-cta h2 {
   margin-inline: auto;
+  max-width: none;
 }
 
 .final-cta .lead {

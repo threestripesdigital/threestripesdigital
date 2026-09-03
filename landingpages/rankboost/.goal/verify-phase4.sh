@@ -22,7 +22,7 @@ for keep in 'class="footer-brand"' 'class="footer-copy"' 'id="year"'; do grep -q
 grep -qF -- 'See whether a rank-boost test fits your firm.' "$IDX" && ok "final h2 unchanged" || bad "final h2 text changed"
 grep -qF -- 'If your best law-firm keywords are stuck between positions 2 and 50, you’ll see movement in under 48 hours.' "$IDX" && ok "new final lead present" || bad "new final lead missing"
 grep -qF -- 'positions 11 and 50' "$IDX" && bad "old final lead still present" || ok "old final lead removed"
-awk '/^\.final-cta h2 \{/,/\}/' "$CSS" | grep -q 'max-width' && bad ".final-cta h2 still has max-width" || ok ".final-cta h2 has no max-width (full width)"
+awk '/^\.final-cta h2 \{/,/\}/' "$CSS" | grep -q 'max-width: none' && ok ".final-cta h2 overrides the global 22ch cap with max-width: none" || bad ".final-cta h2 must set max-width: none (global h2 rule caps it at 22ch otherwise)"
 
 # 3. FAQ heading
 awk '/^\.section-head-center h2 \{/,/\}/' "$CSS" | grep -q 'max-width' && bad ".section-head-center h2 still has max-width" || ok ".section-head-center h2 has no max-width (full width)"
