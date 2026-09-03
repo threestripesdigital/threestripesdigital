@@ -386,6 +386,12 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
 
 test("landing page keeps the simplified VSL structure", async () => {
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.doesNotMatch(index, /footer-links/);
+  assert.doesNotMatch(index, /google\.com\/s2\/favicons/);
+  assert.doesNotMatch(index, /senorticket\.com/);
+  assert.ok(index.includes("Cruz Gold &amp; Associates"));
+  assert.ok(index.includes("Señor Ticket"));
+  assert.ok(index.includes("If your best law-firm keywords are stuck between positions 2 and 50, you’ll see movement in under 48 hours."));
   const sectionIds = [...index.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>/g)].map(
     (match) => match[1]
   );

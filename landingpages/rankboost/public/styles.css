@@ -1704,13 +1704,12 @@ section.qualify.hero-qualify {
 }
 
 .final-cta h2 {
-  max-width: 18ch;
   margin-inline: auto;
 }
 
 .final-cta .lead {
   margin-inline: auto;
-  max-width: 52ch;
+  max-width: none;
 }
 
 .final-cta .btn { margin-top: 1.75rem; }
@@ -1733,10 +1732,9 @@ section.qualify.hero-qualify {
 
 .footer-inner {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 2rem;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .footer-brand {
@@ -1745,20 +1743,9 @@ section.qualify.hero-qualify {
   font-size: 1rem;
 }
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 1.5rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.footer-links a { color: var(--muted); }
-.footer-links a:hover { color: var(--gold-light); }
-
 .footer-copy {
   width: 100%;
-  margin: 0.5rem 0 0;
+  margin: 0;
   color: var(--muted-2);
   font-size: 0.78rem;
 }
@@ -1960,7 +1947,6 @@ section.qualify.hero-qualify {
 }
 
 .section-head-center h2 {
-  max-width: 22ch;
   margin-inline: auto;
 }
 
@@ -2105,10 +2091,6 @@ section.qualify.hero-qualify {
 .marquee-item img {
   width: 24px; height: 24px; border-radius: 50%;
   object-fit: cover; background: #fff;
-}
-.marquee-item img.marquee-logo {
-  width: 64px; height: 24px; object-fit: contain;
-  border-radius: 4px; padding: 1px 3px;
 }
 .marquee-item span {
   color: var(--white); font-size: 0.9rem; font-weight: 600;
