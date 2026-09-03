@@ -465,6 +465,36 @@ test("thank-you UI waits for booking evidence before confirmation", async () => 
   assert.doesNotMatch(source, /apply\(q\.get\("event_start_time"/);
 });
 
+test("thank-you page orders urgency video, breakouts, testimonials, next steps", async () => {
+  const source = await readFile(new URL("../public/thank-you.html", import.meta.url), "utf8");
+  const sectionIds = Array.from(
+    source.matchAll(/<section\b[^>]*\bid="([^"]+)"/g),
+    (match) => match[1]
+  );
+  assert.deepEqual(sectionIds, [
+    "ty-urgency",
+    "ty-breakouts",
+    "ty-testimonials",
+    "ty-next-steps",
+  ]);
+
+  for (const slot of [
+    "founder-urgency",
+    "breakout-white-hat",
+    "breakout-existing-rankings",
+    "breakout-if-it-doesnt-work",
+    "breakout-competitors",
+  ]) {
+    assert.match(source, new RegExp(`data-video-slot="${slot}"`));
+  }
+
+  assert.equal((source.match(/data-max-minutes="3"/g) || []).length, 4);
+  assert.ok(source.indexOf('id="booking-actions" hidden') > source.indexOf('id="ty-next-steps"'));
+  const withoutComments = source.replace(/<!--[\s\S]*?-->/g, "");
+  assert.doesNotMatch(withoutComments, /<wistia-player\b/);
+  assert.doesNotMatch(source, /src="wins\//);
+});
+
 test("lead form validation mirrors server limits and exposes accessible errors", async () => {
   const source = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   assert.match(source, /maxlength="120" aria-describedby="name-error"/);

@@ -25,7 +25,7 @@ n=$(grep -c 'ty-video-placeholder' "$TY"); [ "$n" -ge 5 ] && ok "placeholder cla
 for t in 'Is this white hat?' 'Will this hurt my existing rankings?' 'What happens if it doesn’t work?' 'Do you work with my competitors?' 'Video coming soon' 'wistia-player media-id="' 'Under 3 minutes'; do
   grep -qF -- "$t" "$TY" && ok "copy present: $t" || bad "copy missing: $t"
 done
-n=$(grep -c '<wistia-player ' "$TY"); [ "$n" -eq 0 ] && ok "no live wistia-player element yet (placeholders only)" || bad "found $n live <wistia-player> elements; expected 0 until videos exist"
+n=$(perl -0pe 's/<!--.*?-->//gs' "$TY" | grep -c '<wistia-player '); [ "$n" -eq 0 ] && ok "no live wistia-player element yet (placeholders only)" || bad "found $n live <wistia-player> elements; expected 0 until videos exist"
 
 # 3. Landmark order
 pos() { grep -n -F -m1 -- "$1" "$TY" | cut -d: -f1; }
