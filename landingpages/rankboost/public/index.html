@@ -33,8 +33,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Optional Meta measurement loads only after an explicit visitor choice. -->
-  <script src="consent.js"></script>
+  <!-- Browser-based Meta measurement. -->
+  <script src="meta.js"></script>
+  <!-- Wistia player for the hero VSL. -->
+  <script src="https://fast.wistia.com/player.js" async></script>
+  <script src="https://fast.wistia.com/embed/8uioqg3047.js" async type="module"></script>
+
+
 
   <style>
     /* Inline Calendly embed on the qualified screen */
@@ -69,28 +74,86 @@
     <!-- 1. Hero -->
     <section class="hero" id="top">
       <div class="container hero-grid">
-        <div>
-          <p class="eyebrow">Free organic rank boost · Law firms only</p>
-          <h1>A past client keyword moved from <span class="hl-num">#18</span> to <span class="hl-num">#1</span> in 2 days.</h1>
-          <p class="lead">
-            We identify law-firm keywords stuck on pages 2–5 and run a targeted test intended to improve visibility.
-            Completely free if your firm qualifies: no credit card, no contract,
-            no site access. Results and timing vary by keyword, market, competition, and website.
-          </p>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="#qualify">Get my free rank boost</a>
-            <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
-          </div>
-
-          <ul class="hero-checks">
-            <li><span class="tk" aria-hidden="true">✓</span> Completely free, no credit card required</li>
-            <li><span class="tk" aria-hidden="true">✓</span> Some past tests moved within ~48 hours; results vary</li>
-            <li><span class="tk" aria-hidden="true">✓</span> No site access · no logins</li>
-            <li><span class="tk" aria-hidden="true">✓</span> Built by a former FAANG engineer</li>
-            <li><span class="tk" aria-hidden="true">✓</span> We don’t work with your competitors</li>
-          </ul>
+        <div class="hero-intro">
+          <h1>We move law-firm keywords from <span class="hl-num">page 2–5</span> to <span class="hl-num">page 1</span> in under 48 hours.</h1>
         </div>
+
+        <section class="hero-vsl" aria-labelledby="hero-vsl-title">
+          <div class="hero-vsl-frame">
+            <h2 id="hero-vsl-title" class="sr-only">5-minute Rank Boost demo</h2>
+            <style>wistia-player[media-id='8uioqg3047']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/8uioqg3047/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style>
+            <wistia-player media-id="8uioqg3047" aspect="1.7777777777777777"></wistia-player>
+          </div>
+          <p class="hero-vsl-caption hero-subcopy">Watch the 5-minute demo to see exactly how the boost works, then apply below. If your firm qualifies, your first boost is free. No credit card, no site access, no contract.</p>
+        </section>
+
+        <!-- Kept intact so the existing validation, API, consent, and result UI retain their bindings. -->
+        <section class="section qualify hero-qualify" id="qualify">
+          <div class="container">
+            <div class="form-shell">
+              <div class="form-result" id="form-result" role="status" aria-live="polite"></div>
+
+              <button class="btn btn-primary btn-lg btn-block qualify-form-toggle" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">
+                GET MY FREE BOOST NOW
+              </button>
+
+              <form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>
+                <div class="form-row two">
+                  <div class="field" data-field="name">
+                    <label for="name">Full name <span class="req" aria-hidden="true">*</span></label>
+                    <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="name-error" placeholder="Jordan Lee" />
+                    <span class="field-error" id="name-error" role="alert">Enter your name.</span>
+                  </div>
+                  <div class="field" data-field="phone">
+                    <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
+                    <input id="phone" name="phone" type="tel" autocomplete="tel" required maxlength="40" aria-describedby="phone-error" placeholder="(555) 123-4567" />
+                    <span class="field-error" id="phone-error" role="alert">Enter a phone number with 7–15 digits.</span>
+                  </div>
+                </div>
+
+                <div class="field field-url" data-field="website_url">
+                  <label for="website_url">Website URL <span class="req" aria-hidden="true">*</span></label>
+                  <input
+                    id="website_url"
+                    name="website_url"
+                    type="url"
+                    inputmode="url"
+                    autocomplete="url"
+                    required
+                    aria-describedby="website-error"
+                    placeholder="https://yourfirm.com"
+                  />
+                  <div class="domain-preview" id="domain-preview" aria-live="polite">
+                    <span>We’ll check rankings for</span> <strong id="domain-preview-value">…</strong>
+                  </div>
+                  <span class="field-error" id="website-error" role="alert">Enter a public website URL (e.g. https://yourfirm.com).</span>
+                </div>
+
+                <div class="field" data-field="email">
+                  <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                  <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="email-error" placeholder="you@yourfirm.com" required />
+                  <span class="field-error" id="email-error" role="alert">Enter a valid email.</span>
+                </div>
+
+                <div class="field hp-field" aria-hidden="true">
+                  <label for="company">Company</label>
+                  <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <button class="btn btn-primary btn-lg btn-block" type="submit">
+                  Check my current rankings · free
+                </button>
+
+                <p class="form-consent">
+                  By submitting, you agree Three Stripes Digital may contact you by phone, text, and
+                  email about your ranking check and our services. Consent is not a condition of purchase;
+                  message/data rates may apply; reply STOP to opt out.
+                  See our <a href="privacy">Privacy Policy</a>.
+                </p>
+              </form>
+            </div>
+          </div>
+        </section>
 
         <aside class="gserp" id="gserp" aria-label="Animated Google SERP climb">
           <div class="gserp-search" aria-hidden="true">
@@ -668,83 +731,6 @@
         </div>
       </div>
     </section>
-    <!-- 9. Qualify form -->
-    <section class="section qualify" id="qualify">
-      <div class="container">
-        <div class="form-shell">
-          <div class="section-head">
-            <p class="eyebrow">Free 60-second check</p>
-            <h2>See if your firm qualifies</h2>
-            <p class="lead">
-              Enter your firm’s website. We check your real rankings for money keywords stuck
-              at #11–#50 and tell you straight whether the free boost fits. No site access, ever.
-            </p>
-          </div>
-
-          <div class="form-result" id="form-result" role="status" aria-live="polite"></div>
-
-          <form class="qualify-form" id="qualify-form" action="#" method="post" novalidate>
-            <div class="form-row two">
-              <div class="field" data-field="name">
-                <label for="name">Full name <span class="req" aria-hidden="true">*</span></label>
-                <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="name-error" placeholder="Jordan Lee" />
-                <span class="field-error" id="name-error" role="alert">Enter your name.</span>
-              </div>
-              <div class="field" data-field="phone">
-                <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
-                <input id="phone" name="phone" type="tel" autocomplete="tel" required maxlength="40" aria-describedby="phone-error" placeholder="(555) 123-4567" />
-                <span class="field-error" id="phone-error" role="alert">Enter a phone number with 7–15 digits.</span>
-              </div>
-            </div>
-
-            <div class="field" data-field="email">
-              <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
-              <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="email-error" placeholder="you@yourfirm.com" required />
-              <span class="field-error" id="email-error" role="alert">Enter a valid email.</span>
-            </div>
-
-            <div class="field hp-field" aria-hidden="true">
-              <label for="company">Company</label>
-              <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <div class="field field-url" data-field="website_url">
-              <label for="website_url">Website URL <span class="req" aria-hidden="true">*</span></label>
-              <input
-                id="website_url"
-                name="website_url"
-                type="url"
-                inputmode="url"
-                autocomplete="url"
-                required
-                aria-describedby="website-hint website-error"
-                placeholder="https://yourfirm.com"
-              />
-              <div class="domain-preview" id="domain-preview" aria-live="polite">
-                <span>We’ll check rankings for</span> <strong id="domain-preview-value">…</strong>
-              </div>
-              <p class="field-hint" id="website-hint">Paste your full URL. We’ll normalize to the bare domain for the ranking check.</p>
-              <span class="field-error" id="website-error" role="alert">Enter a public website URL (e.g. https://yourfirm.com).</span>
-            </div>
-
-            <button class="btn btn-primary btn-lg btn-block" type="submit">
-              Check my current rankings · free
-            </button>
-
-            <p class="form-note">
-              If you qualify, you’ll see your keywords and book your call right here, on the spot.
-              If not, we’ll tell you straight. No pressure, no spam. We never ask for site access or logins.
-            </p>
-            <p class="form-consent">
-              By submitting, you agree Three Stripes Digital may contact you by phone, text, and
-              email about your ranking check and our services. Consent is not a condition of purchase;
-              message/data rates may apply; reply STOP to opt out.
-              See our <a href="privacy">Privacy Policy</a>.
-            </p>
-          </form>
-        </div>
-      </div>
-    </section>
 
     <!-- 11. FAQ -->
     <section class="section faq" id="faq">
@@ -937,6 +923,27 @@
 
       var form = document.getElementById("qualify-form");
       var resultEl = document.getElementById("form-result");
+      var formToggle = document.getElementById("qualify-form-toggle");
+      var formOpened = false;
+
+      if (formToggle && form) {
+        formToggle.addEventListener("click", function () {
+          if (!form.hidden) return;
+          form.hidden = false;
+          formToggle.setAttribute("aria-expanded", "true");
+          formToggle.hidden = true;
+
+          if (!formOpened) {
+            formOpened = true;
+            if (window.tsdMetaTrackingEnabled === true && window.fbq) {
+              fbq("trackCustom", "LeadFormOpened", { content_name: "rank-boost-qualification" });
+            }
+          }
+
+          var nameInput = document.getElementById("name");
+          if (nameInput) nameInput.focus();
+        });
+      }
 
       // Calendly event link, shown on the qualified screen. Prefill mapping:
       // name/email are built-ins; a1 = Phone Number, a2 = Website URL
@@ -992,7 +999,7 @@
 
       function privateBookingStarted(payload, leadToken, attempt) {
         var eventId = "bs-" + payload.event_id;
-        if (attempt === 0 && window.tsdMetaConsent === "granted" && window.fbq) {
+        if (attempt === 0 && window.tsdMetaTrackingEnabled === true && window.fbq) {
           fbq("trackCustom", "BookingStarted", { content_name: "rank-boost-call" }, { eventID: eventId });
         }
         return fetch("api/track", {
@@ -1067,8 +1074,7 @@
 
           lastLead = { name: name, phone: phone, email: email, domain: domain };
 
-          // Meta attribution is collected only after the optional browser
-          // measurement choice has been granted.
+          // Meta attribution is collected for automatic browser-based measurement.
           var eventId = (window.crypto && crypto.randomUUID)
             ? crypto.randomUUID()
             : "ev-" + Date.now() + "-" + Math.random().toString(36).slice(2);
@@ -1076,7 +1082,7 @@
             var m = document.cookie.match(new RegExp("(?:^|; )" + k + "=([^;]*)"));
             return m ? decodeURIComponent(m[1]) : "";
           }
-          var metaAllowed = window.tsdMetaConsent === "granted";
+          var metaAllowed = window.tsdMetaTrackingEnabled === true;
           var fbp = metaAllowed ? readCookie("_fbp") : "";
           var fbc = metaAllowed ? readCookie("_fbc") : "";
           if (metaAllowed && !fbc) {
@@ -1138,7 +1144,7 @@
                   );
                   return;
                 }
-                if (window.tsdMetaConsent === "granted" && window.fbq &&
+                if (window.tsdMetaTrackingEnabled === true && window.fbq &&
                     res.data && res.data.lead_token && res.data.error !== "rate_limited") {
                   fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
                   if (res.ok && res.data.qualified === true) {

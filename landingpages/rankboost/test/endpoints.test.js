@@ -322,22 +322,66 @@ test("booking UI preserves consent and returns to the real form anchor", async (
   assert.match(page, /target="_blank" rel="noopener noreferrer"/);
 });
 
-test("optional Meta measurement requires an explicit visitor choice", async () => {
-  const pageNames = ["index.html", "results.html", "book.html", "thank-you.html"];
+test("browser-based Meta measurement loads automatically without a consent banner", async () => {
+  const pageNames = ["index.html", "results.html", "book.html", "thank-you.html", "privacy.html"];
   for (const pageName of pageNames) {
     const page = await readFile(new URL("../public/" + pageName, import.meta.url), "utf8");
-    assert.match(page, /<script src="consent\.js"><\/script>/);
-    assert.doesNotMatch(page, /connect\.facebook\.net/);
-    assert.doesNotMatch(page, /facebook\.com\/tr\?/);
+    assert.match(page, /<script src="meta\.js"><\/script>/);
+    assert.doesNotMatch(page, /consent\.js/);
+    assert.doesNotMatch(page, /meta-consent/);
+    assert.doesNotMatch(page, /Continue without/);
+    assert.doesNotMatch(page, /Allow measurement/);
   }
-  const consent = await readFile(new URL("../public/consent.js", import.meta.url), "utf8");
-  assert.match(consent, /if \(choice === "granted"\)/);
-  assert.match(consent, /Continue without/);
-  assert.match(consent, /Allow measurement/);
-  assert.match(consent, /createElement\(e\)/);
+  const meta = await readFile(new URL("../public/meta.js", import.meta.url), "utf8");
+  assert.match(meta, /https:\/\/connect\.facebook\.net\/en_US\/fbevents\.js/);
+  assert.match(meta, /1015693118133434/);
+  assert.match(meta, /PageView/);
+  assert.match(meta, /tsd_ext_id/);
+  assert.doesNotMatch(meta, /createElement\("section"\)/);
+  assert.doesNotMatch(meta, /Continue without/);
+  assert.doesNotMatch(meta, /Allow measurement/);
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
-  assert.match(index, /window\.tsdMetaConsent === "granted"/);
+  assert.match(index, /window\.tsdMetaTrackingEnabled === true/);
   assert.match(index, /var fbp = metaAllowed \? readCookie\("_fbp"\) : ""/);
+});
+
+test("qualification form uses a one-way accessible disclosure trigger", async () => {
+  const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../public/styles.css", import.meta.url), "utf8");
+  const qualifyStart = index.indexOf("hero-qualify");
+  const qualifyEnd = index.indexOf("gserp", qualifyStart);
+  assert.notEqual(qualifyStart, -1);
+  assert.notEqual(qualifyEnd, -1);
+  const qualification = index.slice(qualifyStart, qualifyEnd);
+  const vslPosition = index.indexOf("hero-vsl-caption");
+  assert.notEqual(vslPosition, -1);
+  assert.ok(index.slice(vslPosition).includes("qualify-form-toggle"));
+  const trigger = /<button class="[^"]*qualify-form-toggle[^"]*" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">\s*GET MY FREE BOOST NOW\s*<\/button>/;
+  assert.match(index, trigger);
+  assert.match(qualification, trigger);
+  assert.match(qualification, /novalidate hidden/);
+  assert.match(index, /if \(!form\.hidden\) return;/);
+  assert.match(index, /form\.hidden = false/);
+  assert.match(index, /formToggle\.setAttribute\("aria-expanded", "true"\)/);
+  assert.match(index, /formToggle\.hidden = true/);
+  assert.doesNotMatch(index, /qualify-toggle-note/);
+  assert.doesNotMatch(index, /We never ask for site access or logins\./);
+  assert.doesNotMatch(index, /form\.hidden = !opening/);
+  assert.doesNotMatch(index, /aria-expanded", opening \? "true" : "false"/);
+  assert.match(styles, /\.hero-qualify \.qualify-form-toggle\[hidden\] \{\s*display: none !important;\s*\}/);
+  assert.doesNotMatch(qualification, /Free 60-second check/);
+  assert.doesNotMatch(qualification, /See if your firm qualifies/);
+  assert.doesNotMatch(qualification, /Enter your firm’s website/);
+  assert.doesNotMatch(qualification, /section-head/);
+  assert.match(qualification, /Check my current rankings · free/);
+  assert.match(index, /<form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>/);
+  assert.doesNotMatch(index, /Paste your full URL. We’ll normalize to the bare domain for the ranking check./);
+  assert.doesNotMatch(index, /website-hint/);
+  assert.match(index, /window\.tsdMetaTrackingEnabled === true && window\.fbq/);
+  assert.ok(index.includes("fbq(\"trackCustom\", \"LeadFormOpened\", { content_name: \"rank-boost-qualification\" });"));
+  assert.ok(index.indexOf("data-field=\"name\"") < index.indexOf("data-field=\"phone\""));
+  assert.ok(index.indexOf("data-field=\"phone\"") < index.indexOf("data-field=\"website_url\""));
+  assert.ok(index.indexOf("data-field=\"website_url\"") < index.indexOf("data-field=\"email\""));
 });
 
 test("partner access code is session-only", async () => {
@@ -420,14 +464,56 @@ test("lead form validation mirrors server limits and exposes accessible errors",
 
 test("static responses enforce transport and browser security policy", async () => {
   const headers = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
+  const middlewareResponse = await functionMiddleware({
+    request: new Request("https://example.test/"),
+    next: async function () { return new Response("ok"); },
+  });
+  const middlewarePolicy = middlewareResponse.headers.get("Content-Security-Policy");
+  const requiredPolicies = [
+    "form-action 'self' https://www.facebook.com https://*.facebook.com",
+    "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com https://static.cloudflareinsights.com",
+    "frame-src https://www.facebook.com https://*.facebook.com https://calendly.com https://*.calendly.com",
+    "connect-src 'self' https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://calendly.com https://*.calendly.com https://cloudflareinsights.com https://*.cloudflareinsights.com",
+  ];
   assert.match(headers, /Content-Security-Policy:/);
   assert.match(headers, /frame-ancestors 'none'/);
+  for (const policy of requiredPolicies) {
+    assert.ok(headers.includes(policy), "public/_headers missing " + policy);
+    assert.ok(middlewarePolicy && middlewarePolicy.includes(policy), "middleware CSP missing " + policy);
+  }
   assert.match(headers, /Strict-Transport-Security: max-age=31536000/);
   assert.match(headers, /X-Content-Type-Options: nosniff/);
   assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
   assert.match(headers, /\/\*\.html[\s\S]*Cache-Control: no-cache/);
   assert.match(headers, /\/\*\.js[\s\S]*Cache-Control: no-cache/);
   assert.match(headers, /\/\*\.css[\s\S]*Cache-Control: no-cache/);
+});
+
+test("hero VSL renders the Wistia embed and the CSP allows it", async () => {
+  const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.ok(index.includes('<wistia-player media-id="8uioqg3047" aspect="1.7777777777777777"></wistia-player>'));
+  assert.ok(index.includes("https://fast.wistia.com/player.js"));
+  assert.ok(index.includes("https://fast.wistia.com/embed/8uioqg3047.js"));
+  assert.doesNotMatch(index, /hero-vsl-placeholder/);
+  assert.ok(index.indexOf('<script src="meta.js"></script>') < index.indexOf("fast.wistia.com/player.js"));
+
+  const headers = await readFile(new URL("../public/_headers", import.meta.url), "utf8");
+  const middlewareResponse = await functionMiddleware({
+    request: new Request("https://example.test/"),
+    next: async function () { return new Response("ok"); },
+  });
+  const middlewarePolicy = middlewareResponse.headers.get("Content-Security-Policy");
+  const requiredPolicies = [
+    /script-src[^;]*https:\/\/\*\.wistia\.com/,
+    /connect-src[^;]*https:\/\/\*\.wistia\.com/,
+    /media-src[^;]*https:\/\/\*\.wistia\.com/,
+    /frame-src[^;]*https:\/\/fast\.wistia\.com/,
+    /worker-src 'self' blob:/,
+  ];
+  for (const policy of requiredPolicies) {
+    assert.match(headers, policy);
+    assert.match(middlewarePolicy, policy);
+  }
 });
 
 test("Function responses receive the same security baseline", async () => {

@@ -15,8 +15,10 @@
   <meta name="theme-color" content="#0A1628" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Optional Meta measurement loads only after an explicit visitor choice. -->
-  <script src="consent.js"></script>
+  <!-- Browser-based Meta measurement. -->
+  <script src="meta.js"></script>
+
+
   <style>
     .ty { max-width: 1140px; margin: 0 auto; padding: 4rem 1.25rem 5rem; text-align: center; }
     .ty-core { max-width: 680px; margin: 0 auto; }
@@ -827,7 +829,7 @@
           cleanTokenState();
           document.title = "You’re Booked · Three Stripes Digital";
           var inviteeId = String(booking.invitee || "").split("/").pop();
-          if (window.tsdMetaConsent === "granted" && window.fbq && inviteeId) {
+          if (window.tsdMetaTrackingEnabled === true && window.fbq && inviteeId) {
             fbq(
               "track",
               "Schedule",
