@@ -349,14 +349,14 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const styles = await readFile(new URL("../public/styles.css", import.meta.url), "utf8");
   const qualifyStart = index.indexOf("hero-qualify");
-  const qualifyEnd = index.indexOf("gserp", qualifyStart);
+  const qualifyEnd = index.indexOf('id="trusted"', qualifyStart);
   assert.notEqual(qualifyStart, -1);
   assert.notEqual(qualifyEnd, -1);
   const qualification = index.slice(qualifyStart, qualifyEnd);
   const vslPosition = index.indexOf("hero-vsl-caption");
   assert.notEqual(vslPosition, -1);
   assert.ok(index.slice(vslPosition).includes("qualify-form-toggle"));
-  const trigger = /<button class="[^"]*qualify-form-toggle[^"]*" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">\s*GET MY FREE BOOST NOW\s*<\/button>/;
+  const trigger = /<button class="[^"]*qualify-form-toggle[^"]*" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">\s*Get my free boost\s*<\/button>/;
   assert.match(index, trigger);
   assert.match(qualification, trigger);
   assert.match(qualification, /novalidate hidden/);
@@ -382,6 +382,20 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
   assert.ok(index.indexOf("data-field=\"name\"") < index.indexOf("data-field=\"phone\""));
   assert.ok(index.indexOf("data-field=\"phone\"") < index.indexOf("data-field=\"website_url\""));
   assert.ok(index.indexOf("data-field=\"website_url\"") < index.indexOf("data-field=\"email\""));
+});
+
+test("landing page keeps the simplified VSL structure", async () => {
+  const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  const sectionIds = [...index.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>/g)].map(
+    (match) => match[1]
+  );
+  assert.deepEqual(sectionIds, ["top", "qualify", "trusted", "wins", "partners", "faq", "final"]);
+  for (const removedId of ["problem", "how", "different", "inbox-proof", "gserp"]) {
+    assert.doesNotMatch(index, new RegExp(`id="${removedId}"`));
+  }
+  const faqCount = (index.match(/<details class="faq-item"/g) || []).length;
+  assert.ok(faqCount >= 5 && faqCount <= 6);
+  assert.doesNotMatch(index, /GET MY FREE BOOST NOW/);
 });
 
 test("partner access code is session-only", async () => {
@@ -420,7 +434,6 @@ test("results UI distinguishes durable fallback from unsaved failures", async ()
   assert.doesNotMatch(source, /<h2 class="step-h">/);
   assert.match(page, /aria-live="polite" aria-atomic="false"/);
   assert.match(styles, /\.marquee-section \{[\s\S]*overflow-x: clip;[\s\S]*contain: paint;/);
-  assert.match(styles, /\.problem-card \{[\s\S]*min-width: 0;[\s\S]*overflow: hidden;/);
 });
 
 test("thank-you UI waits for booking evidence before confirmation", async () => {

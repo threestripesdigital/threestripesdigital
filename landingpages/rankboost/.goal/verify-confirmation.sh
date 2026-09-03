@@ -48,6 +48,11 @@ n=$(grep -c 'src="wins/' "$TY"); [ "$n" -eq 0 ] && ok "rank-tracker wins cards r
 n=$(grep -c 'src="proof/anon/' "$TY"); [ "$n" -ge 4 ] && ok "email/text proof figures kept ($n)" || bad "proof/anon figures == $n (expected >= 4)"
 grep -qF -- 'You don’t need to prepare anything.' "$TY" && bad "lead copy still says nothing to prepare (contradicts the urgency video framing)" || ok "lead copy no longer says nothing to prepare"
 
+# 4b. No stray shell/git output pasted into source files
+for f in "$TY" "$CSS" test/endpoints.test.js; do
+  if grep -q -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f"; then bad "stray shell output in $f:"; grep -n -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f"; else ok "no stray shell output in $f"; fi
+done
+
 # 5. No new undefined classes
 node .goal/class-coverage.mjs "$TY" "$CSS" | sort > .goal/classes-missing-thankyou.txt
 if [ -f .goal/classes-missing-thankyou-baseline.txt ]; then

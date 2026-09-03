@@ -56,6 +56,11 @@ for old in 'GET MY FREE BOOST NOW' 'Get my free rank boost' 'Claim my free rank 
 done
 n=$(grep -c 'Get my free boost' "$IDX"); [ "$n" -ge 4 ] && ok "'Get my free boost' used $n times" || bad "'Get my free boost' used only $n times (expected header, toggle, final, sticky at least)"
 
+# 5b. No stray shell/git output pasted into source files
+for f in "$IDX" "$CSS" test/endpoints.test.js; do
+  if grep -q -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f"; then bad "stray shell output in $f:"; grep -n -E '^(fatal|hint|error|warning|usage|zsh|bash|npm ERR):' "$f"; else ok "no stray shell output in $f"; fi
+done
+
 # 6. CSS: removed-section rules gone, kept rules present, no new undefined classes
 for sel in '.problem-card {' '.problem {' '.steps {' '.how {' '.cmp {' '.cmp-col' '.why-wall' '.why-stat' '.proof-grid' '.proof-wall' '.gserp {' '.gserp-row' '.tsd-stripes' '.faang-logo' '.video-ph' '.video-play'; do
   grep -qF -- "$sel" "$CSS" && bad "dead CSS still present: $sel" || ok "dead CSS removed: $sel"
