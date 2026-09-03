@@ -1,0 +1,14 @@
+ M DESIGN.md
+ M functions/_middleware.js
+ M public/_headers
+ M public/book.html
+ D public/consent.js
+ M public/index.html
+ M public/privacy.html
+ M public/results.html
+ M public/results.js
+ M public/styles.css
+ M public/thank-you.html
+ M test/endpoints.test.js
+?? .goal/
+?? public/meta.js

@@ -1,0 +1,5 @@
+*.log
+archive/*.log
+archive/md5-*.txt
+archive/status-before.txt
+classes-missing-*.txt
