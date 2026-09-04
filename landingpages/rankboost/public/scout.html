@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Keyword Scout · Three Stripes Digital</title>
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#0A1628" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .sc-wrap { max-width: 1040px; margin: 0 auto; padding: 2.5rem 1rem 6rem; }
+    .sc-intro { max-width: 720px; margin: 0 auto; }
+    .sc-badge {
+      display: inline-block; font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-light);
+      border: 1px solid var(--line-strong); border-radius: 999px;
+      padding: 0.3rem 0.7rem; margin-bottom: 0.9rem;
+    }
+    .sc-form { display: grid; gap: 0.8rem; margin: 1.4rem 0 0; text-align: left; }
+    .sc-form label {
+      display: block; font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2);
+      margin-bottom: 0.3rem;
+    }
+    .sc-form input, .sc-form select {
+      width: 100%; padding: 0.85rem 0.95rem; font-size: 1rem; color: var(--white);
+      background: #0e1725; border: 1px solid var(--line-strong); border-radius: 10px;
+      font-family: var(--font);
+    }
+    .sc-form select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+    .sc-form input:focus, .sc-form select:focus { outline: none; border-color: var(--gold); }
+    .sc-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .sc-check {
+      display: flex; align-items: center; gap: 0.5rem; color: var(--muted);
+      font-size: 0.8rem; text-transform: none; letter-spacing: 0; font-family: var(--font);
+    }
+    .sc-check input { width: auto; padding: 0; accent-color: var(--gold); }
+    .sc-btn {
+      width: 100%; padding: 0.95rem 1rem; font-size: 1rem; font-weight: 800;
+      color: #0A1628; background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      border: none; border-radius: 10px; cursor: pointer;
+    }
+    .sc-btn[disabled] { opacity: 0.6; cursor: default; }
+    .sc-err { color: #F87171; font-size: 0.85rem; margin: 0.6rem 0 0; min-height: 1.2em; }
+    .sc-hint { color: var(--muted-2); font-size: 0.72rem; margin: 0.5rem 0 0; }
+
+    .sc-out { margin-top: 2.5rem; text-align: left; }
+    .sc-out .step-result { margin-bottom: 1.4rem; }
+    .sc-summary {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8rem; margin: 1.4rem 0 1.2rem;
+    }
+    .sc-stat {
+      border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem 1rem;
+      background: rgba(15, 31, 53, 0.6);
+    }
+    .sc-stat.gold { border-color: var(--line-strong); background: rgba(196, 163, 90, 0.08); }
+    .sc-stat .l {
+      display: block; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted-2); margin-bottom: 0.3rem;
+    }
+    .sc-stat .v { font-size: 1.5rem; font-weight: 800; color: var(--white); font-variant-numeric: tabular-nums; }
+    .sc-stat.gold .v { color: var(--gold-light); }
+    .sc-stat .s { display: block; font-size: 0.72rem; color: var(--muted-2); margin-top: 0.15rem; }
+
+    .sc-tools {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;
+      margin: 0 0 0.9rem;
+    }
+    .sc-tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .sc-tab {
+      background: transparent; border: none; color: var(--muted); font-size: 0.78rem;
+      font-weight: 600; padding: 0.5rem 0.9rem; cursor: pointer; font-family: var(--font);
+    }
+    .sc-tab.on { background: var(--gold-dim); color: var(--gold-light); }
+    .sc-tools select, .sc-tools input[type="search"] {
+      background: #0e1725; border: 1px solid var(--line); color: var(--white);
+      border-radius: 999px; padding: 0.5rem 0.9rem; font-size: 0.78rem; font-family: var(--font);
+    }
+    .sc-tools input[type="search"] { min-width: 160px; }
+    .sc-tools .right { margin-left: auto; display: flex; gap: 0.5rem; }
+    .sc-mini {
+      background: transparent; border: 1px solid var(--line-strong); color: var(--gold-light);
+      border-radius: 999px; padding: 0.5rem 0.9rem; font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; font-family: var(--font);
+    }
+    .sc-mini:hover { background: var(--gold-dim); }
+
+    .sc-table-wrap {
+      border: 1px solid var(--line); border-radius: 14px; overflow-x: auto;
+      background: rgba(15, 31, 53, 0.4);
+    }
+    table.sc-table { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 0.84rem; }
+    .sc-table th {
+      text-align: left; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted-2); padding: 0.75rem 0.8rem;
+      border-bottom: 1px solid var(--line); white-space: nowrap; font-weight: 500;
+      cursor: pointer; user-select: none;
+    }
+    .sc-table th.on { color: var(--gold-light); }
+    .sc-table td {
+      padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--line); vertical-align: top;
+      color: var(--muted);
+    }
+    .sc-table tr:last-child td { border-bottom: none; }
+    .sc-table tr:hover td { background: rgba(212, 185, 106, 0.04); }
+    .sc-table tr.boost td { background: rgba(196, 163, 90, 0.07); }
+    .sc-table tr.boost:hover td { background: rgba(196, 163, 90, 0.11); }
+    .sc-table tr.boost td:first-child { box-shadow: inset 3px 0 0 var(--gold); }
+    .sc-table tr.brand td { opacity: 0.55; }
+    .sc-n { color: var(--muted-2); font-family: var(--mono); font-size: 0.7rem; width: 2rem; }
+    .sc-kw { color: var(--white); font-weight: 600; }
+    .sc-kw .u {
+      display: block; font-family: var(--mono); font-size: 0.62rem; color: var(--muted-2);
+      font-weight: 400; margin-top: 0.15rem; word-break: break-all;
+    }
+    .sc-kw .u a { color: inherit; text-decoration: none; }
+    .sc-kw .u a:hover { color: var(--gold-light); }
+    .sc-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pos {
+      display: inline-block; font-family: var(--mono); font-weight: 700; font-size: 0.78rem;
+      padding: 0.18rem 0.5rem; border-radius: 6px; border: 1px solid transparent;
+    }
+    .pos.one { color: var(--success); border-color: rgba(52, 211, 153, 0.35); }
+    .pos.boost { color: #0A1628; background: linear-gradient(180deg, var(--gold-light), var(--gold)); }
+    .pos.far { color: var(--muted-2); border-color: var(--line); }
+    .pos.none { color: var(--muted-2); }
+    .tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.2rem 0.45rem; border-radius: 999px;
+      border: 1px solid var(--line); color: var(--muted); white-space: nowrap;
+    }
+    .tag.transactional { color: var(--success); border-color: rgba(52, 211, 153, 0.35); }
+    .tag.commercial { color: var(--gold-light); border-color: var(--line-strong); }
+    .tag.navigational { color: var(--muted); }
+    .tag.informational { color: var(--muted-2); }
+    .tag.boostlbl { color: #0A1628; background: var(--gold-light); border-color: var(--gold-light); margin-left: 0.35rem; }
+    .score { display: flex; align-items: center; gap: 0.5rem; min-width: 110px; }
+    .score .bar { flex: 1; height: 6px; border-radius: 999px; background: rgba(148, 163, 184, 0.15); overflow: hidden; }
+    .score .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .score b { font-family: var(--mono); font-size: 0.74rem; color: var(--white); width: 2ch; text-align: right; }
+    .sc-why { display: block; font-size: 0.64rem; color: var(--muted-2); margin-top: 0.2rem; }
+    .sc-empty { padding: 1.4rem 1rem; color: var(--muted-2); font-size: 0.85rem; text-align: center; }
+
+    .sc-history { margin-top: 2.8rem; text-align: left; max-width: 720px; margin-left: auto; margin-right: auto; }
+    .sc-h2 {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted-2); margin: 0 0 0.7rem; max-width: none;
+    }
+    .sc-hist-list { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .sc-row {
+      display: grid; grid-template-columns: 1fr auto auto; gap: 0.9rem; align-items: baseline;
+      padding: 0.7rem 0.9rem; border-top: 1px solid var(--line); font-size: 0.82rem;
+      cursor: pointer; width: 100%; background: transparent; border-left: none; border-right: none;
+      border-bottom: none; text-align: left; font-family: var(--font); color: inherit;
+    }
+    .sc-row:first-child { border-top: none; }
+    .sc-row:hover { background: rgba(212, 185, 106, 0.04); }
+    .sc-dom { color: var(--white); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+    .sc-dom span {
+      display: block; font-family: var(--mono); font-size: 0.62rem; color: var(--muted-2);
+      font-weight: 400; margin-top: 0.12rem;
+    }
+    .sc-val { color: var(--gold-light); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .sc-no { color: var(--muted-2); font-weight: 600; white-space: nowrap; }
+    .sc-when { color: var(--muted-2); font-family: var(--mono); font-size: 0.66rem; white-space: nowrap; }
+    @media (max-width: 560px) {
+      .sc-two { grid-template-columns: 1fr; }
+      .sc-row { grid-template-columns: 1fr auto; }
+      .sc-when { grid-column: 1 / -1; }
+      .sc-tools .right { margin-left: 0; }
+    }
+  </style>
+</head>
+<body class="step-body">
+  <header class="step-header">
+    <span class="wordmark">Three Stripes <span>Digital</span></span>
+  </header>
+
+  <main class="sc-wrap">
+    <div class="step-result sc-intro">
+      <span class="sc-badge">Internal · keyword scout</span>
+      <h1 class="step-h">Find rank-boost keywords on any site.</h1>
+      <p class="res-sub">Paste any website on earth. You get its top 100 organic keywords by search
+        volume, ordered by how commercial the intent looks. Anything sitting in positions 2–50 is
+        highlighted as a potential rank boost. Nothing here enters the funnel.</p>
+
+      <form class="sc-form" id="sc-form" autocomplete="off">
+        <div>
+          <label for="sc-code">Access code</label>
+          <input type="password" id="sc-code" name="code" required autocomplete="current-password" />
+        </div>
+        <div class="sc-two">
+          <div>
+            <label for="sc-url">Website</label>
+            <input type="text" id="sc-url" name="website_url" placeholder="example.com or https://example.com/page" required />
+          </div>
+          <div>
+            <label for="sc-loc">Google market</label>
+            <select id="sc-loc" name="location"></select>
+          </div>
+        </div>
+        <label class="sc-check"><input type="checkbox" id="sc-fresh" /> Force a fresh pull (skip today's stored result)</label>
+        <button class="sc-btn" type="submit" id="sc-submit">Pull keywords</button>
+        <p class="sc-err" id="sc-err" role="alert"></p>
+        <p class="sc-hint">The code is remembered only until you close this browser tab. Each fresh pull
+          is one DataForSEO Labs call; repeat lookups of the same site within a day are served from storage.</p>
+      </form>
+    </div>
+
+    <div class="sc-out" id="sc-out"></div>
+
+    <section class="sc-history" id="sc-history" hidden>
+      <h2 class="sc-h2">Previous lookups · tap to reopen without re-billing</h2>
+      <div class="sc-hist-list" id="sc-hist-list"></div>
+    </section>
+  </main>
+
+  <footer class="step-footer">
+    <p>Protected internal tool · Three Stripes Digital · <a href="privacy.html">Privacy</a> · <a href="https://threestripesdigital.com/contact/">Contact</a></p>
+  </footer>
+
+  <script src="scout.js"></script>
+</body>
+</html>

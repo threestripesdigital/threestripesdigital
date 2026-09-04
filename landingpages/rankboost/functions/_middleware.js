@@ -15,14 +15,67 @@ const CONTENT_SECURITY_POLICY = [
   "upgrade-insecure-requests",
 ].join("; ");
 
+// The internal Keyword Scout lives on its own hostname (a custom domain on
+// this Pages project). On that host the root serves scout.html and only the
+// files the page needs are reachable; on every other host the scout files
+// do not exist, so the tool never shows up under the law-firm funnel URL.
+export const DEFAULT_SCOUT_HOST = "rb.threestripesdigital.com";
+const SCOUT_ONLY_PATHS = new Set(["/scout", "/scout.html", "/scout.js", "/api/scout"]);
+const SCOUT_HOST_ALLOWED = new Set([
+  "/scout.js",
+  "/styles.css",
+  "/favicon.svg",
+  "/favicon-16.png",
+  "/favicon-32.png",
+  "/apple-touch-icon.png",
+  "/privacy.html",
+  "/api/scout",
+]);
+
+function scoutHostFor(env) {
+  return (env && env.SCOUT_HOST) || DEFAULT_SCOUT_HOST;
+}
+
+function notFound() {
+  return new Response("Not found", {
+    status: 404,
+    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+  });
+}
+
+async function route(context, url) {
+  const onScoutHost = url.hostname === scoutHostFor(context.env);
+  const path = url.pathname;
+
+  if (!onScoutHost) {
+    if (SCOUT_ONLY_PATHS.has(path)) return notFound();
+    return context.next();
+  }
+
+  // One canonical URL for the tool: the root of its host.
+  if (path === "/scout" || path === "/scout.html" || path === "/index.html") {
+    return Response.redirect(url.origin + "/" + url.search, 301);
+  }
+  if (path === "/") {
+    const assets = context.env && context.env.ASSETS;
+    if (!assets) return notFound();
+    const scoutUrl = new URL("/scout", url);
+    return assets.fetch(new Request(scoutUrl.toString(), context.request));
+  }
+  if (SCOUT_HOST_ALLOWED.has(path)) return context.next();
+  return notFound();
+}
+
 export async function onRequest(context) {
-  const response = await context.next();
+  const url = context.request ? new URL(context.request.url) : null;
+  const response = url ? await route(context, url) : await context.next();
   const headers = new Headers(response.headers);
-  const pathname = context.request
-    ? new URL(context.request.url).pathname
-    : "";
+  const pathname = url ? url.pathname : "";
   if (/(^|\/)api(?:\/|$)/.test(pathname)) {
     headers.set("Cache-Control", "no-store");
+  }
+  if (url && url.hostname === scoutHostFor(context.env)) {
+    headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   }
   headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
   headers.set("Cross-Origin-Opener-Policy", "same-origin-allow-popups");

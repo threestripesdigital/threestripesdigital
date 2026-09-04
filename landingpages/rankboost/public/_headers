@@ -19,3 +19,10 @@
 
 /*.css
   Cache-Control: no-cache
+
+# Internal keyword scout: never indexed, even if a link leaks.
+/scout
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/scout.html
+  X-Robots-Tag: noindex, nofollow, noarchive
