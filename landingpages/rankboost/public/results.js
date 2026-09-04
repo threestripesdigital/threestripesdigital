@@ -321,7 +321,7 @@
       var eventId = (window.crypto && crypto.randomUUID)
         ? crypto.randomUUID()
         : "bs-" + Date.now() + "-" + Math.random().toString(36).slice(2);
-      if (window.tsdMetaConsent === "granted" && window.fbq) {
+      if (window.tsdMetaTrackingEnabled === true && window.fbq) {
         fbq("trackCustom", "BookingStarted", { content_name: "rank-boost-call" }, { eventID: eventId });
       }
       pending = {
@@ -368,7 +368,7 @@
 
   requestCheck(0)
     .then(function (res) {
-      if (window.tsdMetaConsent === "granted" && window.fbq &&
+      if (window.tsdMetaTrackingEnabled === true && window.fbq &&
           res.data && res.data.lead_token && res.data.error !== "rate_limited") {
         fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
         if (res.ok && res.data && res.data.qualified === true) {

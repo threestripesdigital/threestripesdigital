@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https://threestripesdigital.com; frame-src https://calendly.com https://*.calendly.com; connect-src 'self' https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://calendly.com https://*.calendly.com; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://www.facebook.com https://*.facebook.com; script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com https://static.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://src.litix.io https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com blob: https://fast.wistia.com; font-src 'self' data: https://fonts.gstatic.com https://*.wistia.com; img-src 'self' data: https:; media-src 'self' https://threestripesdigital.com blob: data: https://*.wistia.com https://*.wistia.net; worker-src 'self' blob:; frame-src https://www.facebook.com https://*.facebook.com https://calendly.com https://*.calendly.com https://fast.wistia.com https://fast.wistia.net; connect-src 'self' https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://calendly.com https://*.calendly.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://*.litix.io; upgrade-insecure-requests
   Cross-Origin-Opener-Policy: same-origin-allow-popups
   Permissions-Policy: camera=(), geolocation=(), microphone=(), payment=(), usb=()
   Referrer-Policy: strict-origin-when-cross-origin
@@ -19,3 +19,10 @@
 
 /*.css
   Cache-Control: no-cache
+
+# Internal keyword scout: never indexed, even if a link leaks.
+/scout
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/scout.html
+  X-Robots-Tag: noindex, nofollow, noarchive

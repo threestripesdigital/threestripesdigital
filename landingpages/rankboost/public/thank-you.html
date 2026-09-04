@@ -15,8 +15,10 @@
   <meta name="theme-color" content="#0A1628" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Optional Meta measurement loads only after an explicit visitor choice. -->
-  <script src="consent.js"></script>
+  <!-- Browser-based Meta measurement. -->
+  <script src="meta.js"></script>
+
+
   <style>
     .ty { max-width: 1140px; margin: 0 auto; padding: 4rem 1.25rem 5rem; text-align: center; }
     .ty-core { max-width: 680px; margin: 0 auto; }
@@ -255,10 +257,27 @@
     }
     .ty-chat-hint::before { content: "\2191"; font-size: 0.9rem; }
 
+    /* Page blocks and video placeholders */
+    .ty-block { margin-top: 3rem; }
+    .ty-block h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; max-width: none; text-align: center; }
+    .ty-block-sub { color: var(--muted); font-size: 0.98rem; text-align: center; margin: 0 0 2rem; }
+    .ty-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .ty-video { margin: 0; text-align: left; }
+    .ty-video-founder { max-width: 860px; margin: 1.5rem auto 0; }
+    .ty-video-placeholder .ty-video-frame {
+      aspect-ratio: 16 / 9; display: grid; place-items: center;
+      background: var(--navy-2); border: 1px solid var(--line-strong); border-radius: 16px;
+    }
+    .ty-video-badge {
+      padding: 0.45rem 0.8rem; border: 1px solid var(--gold); border-radius: 999px;
+      color: var(--gold-light); font-family: var(--mono); font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .ty-video h3 { margin: 0.85rem 0 0.25rem; font-size: 1rem; }
+    .ty-video-meta { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
     /* proof section: wide, OG-style two-column staggered wall */
-    .ty-proof { margin: 3.5rem 0 2.5rem; text-align: left; }
-    .ty-proof h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; max-width: none; text-align: center; }
-    .ty-proof-sub { color: var(--muted); font-size: 0.98rem; text-align: center; margin: 0 0 2rem; }
+    .ty-proof { text-align: left; }
     .ty-proof h3 {
       font-size: clamp(1.15rem, 2.4vw, 1.45rem); margin: 3.2rem 0 0.4rem; text-align: center;
     }
@@ -287,6 +306,7 @@
       text-align: center; margin-top: 0.5rem; letter-spacing: 0.04em;
     }
     @media (max-width: 680px) {
+      .ty-video-grid { grid-template-columns: 1fr; }
       .ty-wall { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
     }
   </style>
@@ -307,6 +327,204 @@
     </p>
     </div>
 
+    <section class="ty-block" id="ty-urgency" aria-labelledby="ty-urgency-h">
+      <h2 id="ty-urgency-h">A quick word from Bilal before your call</h2>
+<article class="ty-video ty-video-placeholder ty-video-founder" data-video-slot="founder-urgency">
+  <div class="ty-video-frame" role="img" aria-label="Video coming soon: What we’ll cover on the call, and what to have ready">
+    <!-- To go live, replace this .ty-video-frame div with:
+         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
+         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
+         The CSP already allows Wistia. -->
+    <span class="ty-video-badge">Video coming soon</span>
+  </div>
+  <h3>What we’ll cover on the call, and what to have ready</h3>
+  <p class="ty-video-meta">A short video from Bilal Amin, founder · coming soon</p>
+</article>
+    </section>
+
+    <section class="ty-block" id="ty-breakouts" aria-labelledby="ty-breakouts-h">
+      <h2 id="ty-breakouts-h">Questions lawyers ask before the call</h2>
+      <p class="ty-block-sub">Each one is under three minutes.</p>
+      <div class="ty-video-grid">
+<article class="ty-video ty-video-placeholder" data-video-slot="breakout-white-hat" data-max-minutes="3">
+  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Is this white hat?">
+    <!-- To go live, replace this .ty-video-frame div with:
+         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
+         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
+         The CSP already allows Wistia. Keep this video under 3 minutes. -->
+    <span class="ty-video-badge">Video coming soon</span>
+  </div>
+  <h3>Is this white hat?</h3>
+  <p class="ty-video-meta">Under 3 minutes</p>
+</article>
+<article class="ty-video ty-video-placeholder" data-video-slot="breakout-existing-rankings" data-max-minutes="3">
+  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Will this hurt my existing rankings?">
+    <!-- To go live, replace this .ty-video-frame div with:
+         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
+         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
+         The CSP already allows Wistia. Keep this video under 3 minutes. -->
+    <span class="ty-video-badge">Video coming soon</span>
+  </div>
+  <h3>Will this hurt my existing rankings?</h3>
+  <p class="ty-video-meta">Under 3 minutes</p>
+</article>
+<article class="ty-video ty-video-placeholder" data-video-slot="breakout-if-it-doesnt-work" data-max-minutes="3">
+  <div class="ty-video-frame" role="img" aria-label="Video coming soon: What happens if it doesn’t work?">
+    <!-- To go live, replace this .ty-video-frame div with:
+         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
+         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
+         The CSP already allows Wistia. Keep this video under 3 minutes. -->
+    <span class="ty-video-badge">Video coming soon</span>
+  </div>
+  <h3>What happens if it doesn’t work?</h3>
+  <p class="ty-video-meta">Under 3 minutes</p>
+</article>
+<article class="ty-video ty-video-placeholder" data-video-slot="breakout-competitors" data-max-minutes="3">
+  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Do you work with my competitors?">
+    <!-- To go live, replace this .ty-video-frame div with:
+         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
+         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
+         The CSP already allows Wistia. Keep this video under 3 minutes. -->
+    <span class="ty-video-badge">Video coming soon</span>
+  </div>
+  <h3>Do you work with my competitors?</h3>
+  <p class="ty-video-meta">Under 3 minutes</p>
+</article>
+      </div>
+    </section>
+
+    <section class="ty-block" id="ty-testimonials" aria-labelledby="ty-testimonials-h">
+      <div class="ty-proof">
+      <h2 id="ty-testimonials-h">While you wait: what happens when Google starts working</h2>
+      <p class="ty-block-sub">Firms that took this same call, in their own words, with the rankings to back it up.</p>
+
+      <div class="ty-wall">
+        <div class="ty-wall-col">
+          <article class="video-card" data-video-slot="vernsten" data-m="4">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">+1,238% more calls</p>
+              <p class="video-role">Divorce &amp; Family Law · Rockford, IL</p>
+              <p class="video-quote">“I have so many leads I can barely service the business. I've gotten rid of my paid leads entirely.”</p>
+            </div>
+          </article>
+          <figure data-m="2">
+            <img src="proof/anon/email-okc-google.webp" alt="Client email: a consult found the firm on Google, up to 6th for a divorce lawyer search" loading="lazy" width="1320" height="1038" />
+            <figcaption>“He said Google.” Up to 6th and climbing · names anonymized</figcaption>
+          </figure>
+          <figure data-m="5">
+            <img src="proof/anon/email-10-clients.webp" alt="Client email: 10 new clients added in 6 weeks, hiring a new paralegal" loading="lazy" width="1320" height="1366" />
+            <figcaption>10 clients in 6 weeks, hiring a paralegal to keep up · names anonymized</figcaption>
+          </figure>
+          <article class="video-card" data-video-slot="cruzgold" data-m="7">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/cruz-gold/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/cruz-gold/CruzGold.mp4#t=8" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">#1 on Google</p>
+              <p class="video-role">Immigration Law · New Jersey</p>
+              <p class="video-quote">“In just 3 months, we jumped to number one. Phone calls and leads exploded.”</p>
+            </div>
+          </article>
+          <figure data-m="8">
+            <img src="proof/anon/email-posted-x.webp" alt="Client email: getting regular calls and hits from the website" loading="lazy" width="1313" height="752" />
+            <figcaption>“Regular calls and hits from our website, and I love it.”</figcaption>
+          </figure>
+          <figure data-m="9">
+            <img src="proof/anon/proof-text-top3.png" alt="Text message from a client: a consult said the firm showed top 3 in a Google search" loading="lazy" />
+            <figcaption>“Came up top 3 from a search” · texted mid-consult</figcaption>
+          </figure>
+          <figure data-m="11">
+            <div class="ba-card">
+              <p class="ba-title">Cruz Gold Rankings for “Immigration Lawyer New Jersey”</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-before-sm.jpg" alt="Before: rank tracking grid for immigration lawyer New Jersey, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-after-sm.jpg" alt="After: rank tracking grid for immigration lawyer New Jersey, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <div class="ty-wall-col">
+          <article class="video-card" data-video-slot="ticketcrushers" data-m="1">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/ticket-crushers/poster.jpg">
+                <source src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/testimonial.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">$540K saved / year</p>
+              <p class="video-role">Ticket Crushers · Traffic Law · California</p>
+              <p class="video-quote">“We were able to turn off all paid marketing and rely entirely on his SEO.”</p>
+            </div>
+          </article>
+          <figure data-m="3">
+            <img src="proof/anon/email-exactly-hoping.webp" alt="Client email: this is exactly what we were hoping you could do" loading="lazy" width="1320" height="845" />
+            <figcaption>“Exactly what we were hoping you could do.” · reacting to a rank update</figcaption>
+          </figure>
+          <figure data-m="6">
+            <img src="proof/anon/email-reviews-uptick.webp" alt="Client email: an uptick in calls and referrals through the website" loading="lazy" width="1320" height="1122" />
+            <figcaption>“An uptick in calls and referrals through the website. I can see it working.”</figcaption>
+          </figure>
+          <article class="video-card" data-video-slot="wisconsinimmigration" data-m="10">
+            <div class="video-frame">
+              <video controls playsinline preload="metadata">
+                <source src="https://threestripesdigital.com/case-studies/assets/wisconsin-immigration/testimonial.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="video-meta">
+              <p class="video-stat">Statewide visibility</p>
+              <p class="video-role">Immigration Law · Wisconsin</p>
+              <p class="video-quote">“Three Stripes Digital transformed our online presence completely.”</p>
+            </div>
+          </article>
+          <figure data-m="12">
+            <div class="ba-card">
+              <p class="ba-title">Vernsten Law Rankings for “Divorce Lawyer Rockford”</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-before-sm.jpg" alt="Before: rank tracking grid for divorce lawyer Rockford, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-after-sm.jpg" alt="After: rank tracking grid for divorce lawyer Rockford, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+          <figure data-m="13">
+            <div class="ba-card">
+              <p class="ba-title">Ticket Crushers Local Rankings · San Francisco</p>
+              <div class="ba" data-ba>
+                <img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-before.jpg" alt="Before: San Francisco traffic law rank grid, mostly red" loading="lazy" />
+                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-after.jpg" alt="After: San Francisco traffic law rank grid, mostly green top-3" loading="lazy" /></div>
+                <span class="ba-state">AFTER</span>
+                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
+                <span class="ba-pill">Slide to compare</span>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </div>
+
+      <figure class="ty-wide-figure">
+        <picture>
+          <source media="(max-width: 699px)" srcset="proof/anon/proof-leads-inbox-mobile.png" />
+          <img src="proof/anon/proof-leads-inbox.png" alt="Anonymized inbox of law firm lead form submissions across family, divorce, and criminal law" loading="lazy" />
+        </picture>
+        <figcaption>One firm’s lead-form inbox · family / divorce / criminal · ~2 weeks</figcaption>
+      </figure>
+      </div>
+    </section>
+    <section class="ty-block" id="ty-next-steps" aria-labelledby="ty-next-steps-h">
+      <h2 id="ty-next-steps-h">Your next steps</h2>
+      <p class="ty-block-sub">Two quick things now, then here’s how the boost unfolds.</p>
     <div class="ty-actions" id="booking-actions" hidden>
     <div class="ty-sms">
       <p class="ty-sms-label"><span class="ty-step-badge">Step 1</span> Accept the calendar invite</p>
@@ -380,243 +598,12 @@
       </div>
     </div>
 
-    <div class="ty-proof">
-      <h2>While you wait: what happens when Google starts working</h2>
-      <p class="ty-proof-sub">Firms that took this same call, in their own words, with the rankings to back it up.</p>
-
-      <div class="ty-wall">
-        <div class="ty-wall-col">
-          <article class="video-card" data-m="4">
-            <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg">
-                <source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="video-meta">
-              <p class="video-stat">+1,238% more calls</p>
-              <p class="video-role">Divorce &amp; Family Law · Rockford, IL</p>
-              <p class="video-quote">“I have so many leads I can barely service the business. I've gotten rid of my paid leads entirely.”</p>
-            </div>
-          </article>
-          <figure data-m="2">
-            <img src="proof/anon/email-okc-google.webp" alt="Client email: a consult found the firm on Google, up to 6th for a divorce lawyer search" loading="lazy" width="1320" height="1038" />
-            <figcaption>“He said Google.” Up to 6th and climbing · names anonymized</figcaption>
-          </figure>
-          <figure data-m="5">
-            <img src="proof/anon/email-10-clients.webp" alt="Client email: 10 new clients added in 6 weeks, hiring a new paralegal" loading="lazy" width="1320" height="1366" />
-            <figcaption>10 clients in 6 weeks, hiring a paralegal to keep up · names anonymized</figcaption>
-          </figure>
-          <article class="video-card" data-m="7">
-            <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/cruz-gold/poster.jpg">
-                <source src="https://threestripesdigital.com/case-studies/assets/cruz-gold/CruzGold.mp4#t=8" type="video/mp4" />
-              </video>
-            </div>
-            <div class="video-meta">
-              <p class="video-stat">#1 on Google</p>
-              <p class="video-role">Immigration Law · New Jersey</p>
-              <p class="video-quote">“In just 3 months, we jumped to number one. Phone calls and leads exploded.”</p>
-            </div>
-          </article>
-          <figure data-m="8">
-            <img src="proof/anon/email-posted-x.webp" alt="Client email: getting regular calls and hits from the website" loading="lazy" width="1313" height="752" />
-            <figcaption>“Regular calls and hits from our website, and I love it.”</figcaption>
-          </figure>
-          <figure data-m="9">
-            <img src="proof/anon/proof-text-top3.png" alt="Text message from a client: a consult said the firm showed top 3 in a Google search" loading="lazy" />
-            <figcaption>“Came up top 3 from a search” · texted mid-consult</figcaption>
-          </figure>
-          <figure data-m="11">
-            <div class="ba-card">
-              <p class="ba-title">Cruz Gold Rankings for “Immigration Lawyer New Jersey”</p>
-              <div class="ba" data-ba>
-                <img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-before-sm.jpg" alt="Before: rank tracking grid for immigration lawyer New Jersey, mostly red" loading="lazy" />
-                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-after-sm.jpg" alt="After: rank tracking grid for immigration lawyer New Jersey, mostly green top-3" loading="lazy" /></div>
-                <span class="ba-state">AFTER</span>
-                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
-                <span class="ba-pill">Slide to compare</span>
-              </div>
-            </div>
-          </figure>
-          <figure data-m="14">
-            <img src="wins/traffic-ticket-lawyer-los-angeles.webp" alt="Google rank improvement for &quot;traffic ticket lawyer los angeles&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="16">
-            <img src="wins/traffic-ticket-lawyer-san-diego.webp" alt="Google rank improvement for &quot;traffic ticket lawyer san diego&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="18">
-            <img src="wins/divorce-lawyer-westlake-village.webp" alt="Google rank improvement for &quot;divorce lawyer westlake village&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="20">
-            <img src="wins/omaha-personal-injury-lawyer.webp" alt="Google rank improvement for &quot;omaha personal injury lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="22">
-            <img src="wins/divorce-lawyer-rockford.webp" alt="Google rank improvement for &quot;divorce lawyer rockford&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="24">
-            <img src="wins/omaha-car-accident-lawyer.webp" alt="Google rank improvement for &quot;omaha car accident lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="26">
-            <img src="wins/okc-divorce-lawyer.webp" alt="Google rank improvement for &quot;okc divorce lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="28">
-            <img src="wins/medical-malpractice-lawyer-omaha.webp" alt="Google rank improvement for &quot;medical malpractice lawyer omaha&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="30">
-            <img src="wins/criminal-defense-attorney-vancouver-wa.webp" alt="Google rank improvement for &quot;criminal defense attorney vancouver wa&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="32">
-            <img src="wins/motorcycle-accident-lawyer-omaha.webp" alt="Google rank improvement for &quot;motorcycle accident lawyer omaha&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="34">
-            <img src="wins/nebraska-truck-accident-lawyer.webp" alt="Google rank improvement for &quot;nebraska truck accident lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="36">
-            <img src="wins/wrongful-death-lawyer-omaha.webp" alt="Google rank improvement for &quot;wrongful death lawyer omaha&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="38">
-            <img src="wins/family-law-attorney-thousand-oaks.webp" alt="Google rank improvement for &quot;family law attorney thousand oaks&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="40">
-            <img src="wins/divorce-attorney-macomb-county.webp" alt="Google rank improvement for &quot;divorce attorney macomb county&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="42">
-            <img src="wins/divorce-attorney-agoura-hills.webp" alt="Google rank improvement for &quot;divorce attorney agoura hills&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="44">
-            <img src="wins/criminal-defense-attorney-clark-county.webp" alt="Google rank improvement for &quot;criminal defense attorney clark county&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-        </div>
-        <div class="ty-wall-col">
-          <article class="video-card" data-m="1">
-            <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/ticket-crushers/poster.jpg">
-                <source src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/testimonial.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="video-meta">
-              <p class="video-stat">$540K saved / year</p>
-              <p class="video-role">Ticket Crushers · Traffic Law · California</p>
-              <p class="video-quote">“We were able to turn off all paid marketing and rely entirely on his SEO.”</p>
-            </div>
-          </article>
-          <figure data-m="3">
-            <img src="proof/anon/email-exactly-hoping.webp" alt="Client email: this is exactly what we were hoping you could do" loading="lazy" width="1320" height="845" />
-            <figcaption>“Exactly what we were hoping you could do.” · reacting to a rank update</figcaption>
-          </figure>
-          <figure data-m="6">
-            <img src="proof/anon/email-reviews-uptick.webp" alt="Client email: an uptick in calls and referrals through the website" loading="lazy" width="1320" height="1122" />
-            <figcaption>“An uptick in calls and referrals through the website. I can see it working.”</figcaption>
-          </figure>
-          <article class="video-card" data-m="10">
-            <div class="video-frame">
-              <video controls playsinline preload="metadata">
-                <source src="https://threestripesdigital.com/case-studies/assets/wisconsin-immigration/testimonial.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="video-meta">
-              <p class="video-stat">Statewide visibility</p>
-              <p class="video-role">Immigration Law · Wisconsin</p>
-              <p class="video-quote">“Three Stripes Digital transformed our online presence completely.”</p>
-            </div>
-          </article>
-          <figure data-m="12">
-            <div class="ba-card">
-              <p class="ba-title">Vernsten Law Rankings for “Divorce Lawyer Rockford”</p>
-              <div class="ba" data-ba>
-                <img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-before-sm.jpg" alt="Before: rank tracking grid for divorce lawyer Rockford, mostly red" loading="lazy" />
-                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-after-sm.jpg" alt="After: rank tracking grid for divorce lawyer Rockford, mostly green top-3" loading="lazy" /></div>
-                <span class="ba-state">AFTER</span>
-                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
-                <span class="ba-pill">Slide to compare</span>
-              </div>
-            </div>
-          </figure>
-          <figure data-m="13">
-            <div class="ba-card">
-              <p class="ba-title">Ticket Crushers Local Rankings · San Francisco</p>
-              <div class="ba" data-ba>
-                <img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-before.jpg" alt="Before: San Francisco traffic law rank grid, mostly red" loading="lazy" />
-                <div class="ba-over"><img src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-after.jpg" alt="After: San Francisco traffic law rank grid, mostly green top-3" loading="lazy" /></div>
-                <span class="ba-state">AFTER</span>
-                <div class="ba-handle"><span class="ba-knob">◂ ▸</span></div>
-                <span class="ba-pill">Slide to compare</span>
-              </div>
-            </div>
-          </figure>
-          <figure data-m="15">
-            <img src="wins/traffic-ticket-lawyer-san-francisco.webp" alt="Google rank improvement for &quot;traffic ticket lawyer san francisco&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="17">
-            <img src="wins/immigration-lawyer-philadelphia.webp" alt="Google rank improvement for &quot;immigration lawyer philadelphia&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="19">
-            <img src="wins/washington-dui-attorney.webp" alt="Google rank improvement for &quot;washington dui attorney&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="21">
-            <img src="wins/washington-criminal-defense-attorney.webp" alt="Google rank improvement for &quot;washington criminal defense attorney&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="23">
-            <img src="wins/dui-lawyer-vancouver-wa.webp" alt="Google rank improvement for &quot;dui lawyer vancouver wa&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="25">
-            <img src="wins/divorce-lawyer-rockford-il.webp" alt="Google rank improvement for &quot;divorce lawyer rockford il&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="27">
-            <img src="wins/okc-criminal-lawyer.webp" alt="Google rank improvement for &quot;okc criminal lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="29">
-            <img src="wins/nebraska-personal-injury-lawyer.webp" alt="Google rank improvement for &quot;nebraska personal injury lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="31">
-            <img src="wins/truck-accident-lawyer-omaha.webp" alt="Google rank improvement for &quot;truck accident lawyer omaha&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="33">
-            <img src="wins/family-law-attorney-westlake-village.webp" alt="Google rank improvement for &quot;family law attorney westlake village&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="35">
-            <img src="wins/family-law-attorney-macomb-county.webp" alt="Google rank improvement for &quot;family law attorney macomb county&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="37">
-            <img src="wins/divorce-lawyer-thousand-oaks.webp" alt="Google rank improvement for &quot;divorce lawyer thousand oaks&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="39">
-            <img src="wins/macomb-county-divorce-lawyer.webp" alt="Google rank improvement for &quot;macomb county divorce lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="41">
-            <img src="wins/domestic-violence-attorney-vancouver-wa.webp" alt="Google rank improvement for &quot;domestic violence attorney vancouver wa&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-          <figure data-m="43">
-            <img src="wins/omaha-pedestrian-accident-lawyer.webp" alt="Google rank improvement for &quot;omaha pedestrian accident lawyer&quot;" loading="lazy" width="900" height="900" />
-          </figure>
-        </div>
-      </div>
-
-      <figure class="ty-wide-figure">
-        <picture>
-          <source media="(max-width: 699px)" srcset="proof/anon/proof-leads-inbox-mobile.png" />
-          <img src="proof/anon/proof-leads-inbox.png" alt="Anonymized inbox of law firm lead form submissions across family, divorce, and criminal law" loading="lazy" />
-        </picture>
-        <figcaption>One firm’s lead-form inbox · family / divorce / criminal · ~2 weeks</figcaption>
-      </figure>
-    </div>
-
     <div class="ty-core">
       <a class="btn btn-primary btn-lg" href="./">Back to the page</a>
       <p class="ty-note">One firm per niche per city · Your spot is held</p>
     </div>
+    </section>
   </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">Three Stripes Digital</div>
-      <nav class="footer-links" aria-label="Footer">
-        <a href="privacy">Privacy</a>
-        <a href="https://threestripesdigital.com/terms-of-service/">Terms</a>
-        <a href="https://threestripesdigital.com/contact/">Contact</a>
-      </nav>
-    </div>
-  </footer>
 
   <div class="ty-lightbox" id="ty-lightbox" role="dialog" aria-modal="true" aria-label="Expanded proof image" aria-hidden="true">
     <div class="ty-lb-inner"><img alt="" /></div>
@@ -820,14 +807,14 @@
           var lead = document.getElementById("ty-lead");
           var actions = document.getElementById("booking-actions");
           if (title) title.textContent = "Your call is booked.";
-          if (lead) lead.textContent = "Two quick things below and you’re set. You don’t need to prepare anything.";
+          if (lead) lead.textContent = "Watch the short videos below, then finish the two quick steps at the bottom of this page.";
           if (actions) actions.hidden = false;
           var retryButton = document.getElementById("retry-booking-verification");
           if (retryButton) retryButton.remove();
           cleanTokenState();
           document.title = "You’re Booked · Three Stripes Digital";
           var inviteeId = String(booking.invitee || "").split("/").pop();
-          if (window.tsdMetaConsent === "granted" && window.fbq && inviteeId) {
+          if (window.tsdMetaTrackingEnabled === true && window.fbq && inviteeId) {
             fbq(
               "track",
               "Schedule",

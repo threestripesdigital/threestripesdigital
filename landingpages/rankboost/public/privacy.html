@@ -14,7 +14,10 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="theme-color" content="#0A1628" />
   <link rel="stylesheet" href="styles.css" />
-  <script src="consent.js"></script>
+
+  <!-- Browser-based Meta measurement. -->
+  <script src="meta.js"></script>
+
   <style>
     .legal { max-width: 760px; margin: 0 auto; padding: 3.5rem 1.25rem 5rem; }
     .legal h1 { font-size: 2rem; margin-bottom: 0.4rem; }
@@ -36,14 +39,14 @@
 
   <main class="legal">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: August 19, 2026</p>
+    <p class="updated">Last updated: August 28, 2026</p>
 
     <p>This policy explains how <strong>Three Stripes Digital</strong> (“we,” “us”) collects and uses information on this page and through the free ranking check.</p>
 
     <h2>What we collect</h2>
     <ul>
       <li><strong>Information you submit:</strong> your name, phone number, email address, firm website URL, booking details, and answers you provide when scheduling.</li>
-      <li><strong>Information collected automatically:</strong> your IP address, approximate city/region/postal code/country, browser and device information, page URL, and, only when you allow optional advertising measurement, advertising click and Meta pixel/cookie identifiers.</li>
+      <li><strong>Information collected automatically:</strong> your IP address, approximate city/region/postal code/country, browser and device information, page URL, advertising click identifiers, and Meta pixel/cookie identifiers.</li>
     </ul>
 
     <h2>How we use it</h2>
@@ -64,8 +67,7 @@
     <p>We disclose data only as needed to service providers that operate this funnel: <strong>Cloudflare</strong> (hosting, security, and lead storage), <strong>DataForSEO</strong> (ranking data; receives your website domain), <strong>Slack</strong> (internal lead notifications), <strong>Kit</strong> (email subscriber management and follow-up), <strong>Calendly</strong> (booking), <strong>Roezan</strong> (SMS delivery), and <strong>Meta</strong> (advertising measurement and conversion matching). These providers process information under their own terms and privacy policies.</p>
 
     <h2>Advertising and browser storage</h2>
-    <p>The page loads the optional browser-based Meta pixel and creates browser advertising identifiers only after you choose <strong>Allow measurement</strong>. You can continue without it. We store that choice in local storage; separate session storage preserves your progress through the funnel. If you submit the form, we may separately send the disclosed conversion event to Meta to measure the funnel.</p>
-    <p><button class="btn btn-ghost" id="meta-choice-button" type="button">Review optional measurement choice</button></p>
+    <p>The funnel loads the browser-based Meta Pixel and creates or reads advertising identifiers, including Meta pixel and cookie identifiers. We use local storage for the external measurement ID and session storage to preserve your progress through the funnel. If you submit the form, we may also send disclosed conversion events to Meta to measure the funnel.</p>
 
     <h2>How long we keep it</h2>
     <p>Lead, booking, and communication records are retained only while reasonably needed to provide and improve the service, meet legal or operational obligations, resolve disputes, and prevent abuse. We delete or de-identify records when they are no longer needed, and delete them sooner upon a verified request where required.</p>
@@ -91,10 +93,5 @@
       </nav>
     </div>
   </footer>
-  <script>
-    document.getElementById("meta-choice-button").addEventListener("click", function () {
-      if (window.tsdOpenPrivacyChoices) window.tsdOpenPrivacyChoices();
-    });
-  </script>
 </body>
 </html>

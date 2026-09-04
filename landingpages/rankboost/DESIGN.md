@@ -16,8 +16,9 @@
 - Field errors must set `aria-invalid`, reference visible error text, and focus the first invalid control while matching server validation limits.
 - Proof comparisons must expose keyboard-operable slider semantics, and enlarged images must use a labeled modal with focus restoration.
 - Saved failures, capacity limits, and rate limits keep booking closed and explain the next safe action.
-- Third-party consent interfaces must not be suppressed.
-- Optional Meta browser measurement must remain off until the visitor explicitly allows it; declining must not block the funnel.
+- Keep browser-based Meta Pixel tracking enabled across the funnel without consent banners, privacy popups, or inline tracking disclosures; disclose tracking practices in the privacy policy.
+- Place the click-to-open qualification form directly after supporting VSL copy: its one-way full-width trigger reveals the native-hidden form, hides itself and its pre-open reassurance note after opening, keeps entered data intact, focuses the full-name field, and tracks the first open.
+- Keep section headings and subheadings full width and centered within their section container; do not apply this alignment to ordinary card or body copy.
 - The protected partner lookup may expose its login shell publicly, but its access code is session-only and the endpoint remains rate-limited.
 - A canceled booking may trigger operational notice and a single cancellation SMS, but must not enroll the contact in an unbooked or abandonment email sequence.
 - Kit lifecycle routing uses state tags; direct sequence enrollment is unsupported.
