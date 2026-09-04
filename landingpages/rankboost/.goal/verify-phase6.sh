@@ -18,7 +18,8 @@ done
 final=$(sed -n '/<section class="section final-cta" id="final">/,/<\/section>/p' "$IDX")
 [ -n "$final" ] && ok "#final section found" || bad "#final section not found"
 printf '%s' "$final" | grep -q 'id="year"' && ok "#year span lives in #final" || bad "#year span not in #final"
-printf '%s' "$final" | grep -q 'That’s why we qualify first.' && ok "© copy lives in #final" || bad "© copy not in #final"
+printf '%s' "$final" | grep -q 'no specific result is guaranteed.' && ok "© copy lives in #final" || bad "© copy not in #final"
+grep -q 'qualify first' "$IDX" && bad "'qualify first' sentence still present" || ok "'qualify first' sentence removed"
 printf '%s' "$final" | grep -q 'class="final-copy"' && ok "final-copy element present" || bad "final-copy element missing"
 mpos=$(printf '%s\n' "$final" | grep -n 'class="final-micro"' | head -1 | cut -d: -f1); cpos=$(printf '%s\n' "$final" | grep -n 'class="final-copy"' | head -1 | cut -d: -f1)
 [ -n "$mpos" ] && [ -n "$cpos" ] && [ "$cpos" -gt "$mpos" ] && ok "final-copy comes after final-micro" || bad "final-copy is not after final-micro"

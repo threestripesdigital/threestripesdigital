@@ -400,7 +400,7 @@ test("landing page keeps the simplified VSL structure", async () => {
   assert.deepEqual(sectionIds, ["top", "qualify", "trusted", "wins", "partners", "faq", "final"]);
   const finalSection = index.slice(index.indexOf('id="final"'), index.indexOf("</section>", index.indexOf('id="final"')));
   assert.match(finalSection, /id="year"/);
-  assert.match(finalSection, /That’s why we qualify first\./);
+  assert.doesNotMatch(index, /qualify first\./);
   for (const removedId of ["problem", "how", "different", "inbox-proof", "gserp"]) {
     assert.doesNotMatch(index, new RegExp(`id="${removedId}"`));
   }

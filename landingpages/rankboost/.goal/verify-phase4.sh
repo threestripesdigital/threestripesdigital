@@ -13,7 +13,7 @@ CSS=public/styles.css
 # 1. Footer has no links (phase 6 removed the footer entirely; the © line now ends #final)
 grep -q 'footer-links' "$IDX" && bad "footer-links still in index.html" || ok "footer-links removed from index.html"
 grep -q 'footer-links' "$CSS" && bad "footer-links CSS still present" || ok "footer-links CSS removed"
-for keep in 'id="year"' 'That’s why we qualify first.'; do grep -qF -- "$keep" "$IDX" && ok "© line kept: $keep" || bad "© line lost: $keep"; done
+for keep in 'id="year"' 'no specific result is guaranteed.'; do grep -qF -- "$keep" "$IDX" && ok "© line kept: $keep" || bad "© line lost: $keep"; done; grep -q 'qualify first' "$IDX" && bad "'qualify first' sentence still present" || ok "'qualify first' sentence removed"
 
 # 2. Final CTA
 grep -qF -- 'See whether a rank-boost test fits your firm.' "$IDX" && ok "final h2 unchanged" || bad "final h2 text changed"
