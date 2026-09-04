@@ -62,14 +62,26 @@
 
   // --- Result state -------------------------------------------------------
   var current = null;   // last response
-  var view = { filter: "all", sort: "score", q: "" };
+  var view = { filter: "all", sort: { key: "score", dir: "desc" }, q: "" };
 
   var SORTS = {
-    score: function (a, b) { return b.score - a.score || b.volume - a.volume || a.position - b.position; },
-    volume: function (a, b) { return b.volume - a.volume || b.score - a.score; },
-    position: function (a, b) { return (a.position || 999) - (b.position || 999) || b.volume - a.volume; },
-    cpc: function (a, b) { return b.cpc - a.cpc || b.volume - a.volume; }
+    score: function (a, b) { return Number(a.score) - Number(b.score); },
+    keyword: function (a, b) { return String(a.keyword).localeCompare(String(b.keyword), undefined, { sensitivity: "base" }); },
+    boost: function (a, b) { return Number(a.boost) - Number(b.boost); },
+    volume: function (a, b) { return Number(a.volume) - Number(b.volume); },
+    position: function (a, b) {
+      var ap = Number(a.position) || Infinity;
+      var bp = Number(b.position) || Infinity;
+      return ap - bp;
+    },
+    cpc: function (a, b) { return Number(a.cpc) - Number(b.cpc); }
   };
+
+  var FIRST_DIR = { keyword: "asc", boost: "desc", position: "asc", volume: "desc", cpc: "desc" };
+
+  function positionTie(a, b) {
+    return (Number(a.position) || Infinity) - (Number(b.position) || Infinity);
+  }
 
   function visibleRows() {
     var rows = (current && current.keywords) || [];
@@ -82,7 +94,17 @@
           String(k.url || "").toLowerCase().indexOf(q) >= 0;
       });
     }
-    return rows.slice().sort(SORTS[view.sort] || SORTS.score);
+    var key = view.sort.key;
+    var direction = view.sort.dir === "asc" ? 1 : -1;
+    var compare = SORTS[key] || SORTS.score;
+    return rows.slice().sort(function (a, b) {
+      if (key === "position") {
+        var aMissing = !(Number(a.position) > 0);
+        var bMissing = !(Number(b.position) > 0);
+        if (aMissing !== bMissing) return aMissing ? 1 : -1;
+      }
+      return direction * compare(a, b) || Number(b.volume) - Number(a.volume) || positionTie(a, b);
+    });
   }
 
   function posCell(k) {
@@ -100,16 +122,18 @@
         ? '<a href="' + escHtml(href) + '" target="_blank" rel="noopener noreferrer">' + escHtml(displayUrl(k.url)) + '</a>'
         : escHtml(displayUrl(k.url))) + '</span>'
       : '';
-    var why = (k.signals && k.signals.length) ? '<span class="sc-why">' + escHtml(k.signals.join(" · ")) + '</span>' : '';
+    var boostBit = k.boost
+      ? '<td class="sc-boost"><span class="yes" aria-label="Boostable" title="Position 2–50: rank-boost candidate">✓</span></td>'
+      : '<td class="sc-boost"><span class="no" aria-label="Not boostable" title="Outside positions 2–50">✕</span></td>';
     var cls = (k.boost ? "boost" : "") + (k.brand ? " brand" : "");
     return '<tr class="' + cls.trim() + '">' +
       '<td class="sc-n">' + (i + 1) + '</td>' +
-      '<td class="sc-kw">' + escHtml(k.keyword) + (k.boost ? '<span class="tag boostlbl">boost</span>' : '') + urlBit + '</td>' +
+      '<td class="sc-kw">' + escHtml(k.keyword) + urlBit + '</td>' +
+      boostBit +
       '<td class="sc-num">' + posCell(k) + '</td>' +
       '<td class="sc-num">' + num(k.volume) + '</td>' +
       '<td class="sc-num">' + (k.cpc ? usd(k.cpc) : '<span style="color:var(--muted-2)">—</span>') + '</td>' +
       '<td><span class="tag ' + escHtml(k.intent) + '">' + escHtml(k.intent) + '</span></td>' +
-      '<td><div class="score"><span class="bar"><i style="width:' + Math.max(2, Number(k.score) || 0) + '%"></i></span><b>' + (Number(k.score) || 0) + '</b></div>' + why + '</td>' +
       '</tr>';
   }
 
@@ -126,10 +150,16 @@
       t.classList.toggle("on", t.getAttribute("data-filter") === view.filter);
     });
     document.querySelectorAll(".sc-table th[data-sort]").forEach(function (th) {
-      th.classList.toggle("on", th.getAttribute("data-sort") === view.sort);
+      var active = th.getAttribute("data-sort") === view.sort.key;
+      th.classList.toggle("on", active);
+      th.removeAttribute("aria-sort");
+      var arrow = th.querySelector(".sc-arrow");
+      if (arrow) arrow.remove();
+      if (active) {
+        th.setAttribute("aria-sort", view.sort.dir === "asc" ? "ascending" : "descending");
+        th.insertAdjacentHTML("beforeend", '<span class="sc-arrow" aria-hidden="true">' + (view.sort.dir === "asc" ? '▲' : '▼') + '</span>');
+      }
     });
-    var sortEl = document.getElementById("sc-sort");
-    if (sortEl) sortEl.value = view.sort;
   }
 
   function csvOf(rows) {
@@ -173,7 +203,7 @@
 
   function render(data) {
     current = data;
-    view = { filter: data.boost_count ? "boost" : "all", sort: "score", q: "" };
+    view = { filter: data.boost_count ? "boost" : "all", sort: { key: "score", dir: "desc" }, q: "" };
     var kws = data.keywords || [];
     var market = data.location_label || LOC_LABEL[data.location] || data.location || "";
     var tx = kws.filter(function (k) { return k.intent === "transactional" || k.intent === "commercial"; }).length;
@@ -203,7 +233,6 @@
       '<div class="sc-stat gold"><span class="l">Boost candidates</span><span class="v">' + num(data.boost_count) + '</span><span class="s">positions 2–50</span></div>' +
       '<div class="sc-stat"><span class="l">Searches in play</span><span class="v">' + num(boostVol) + '</span><span class="s">monthly volume across boost rows</span></div>' +
       '<div class="sc-stat"><span class="l">Buying intent</span><span class="v">' + num(tx) + '</span><span class="s">transactional or commercial</span></div>' +
-      '<div class="sc-stat"><span class="l">Lookup cost</span><span class="v">$' + Number(data.cost || 0).toFixed(3) + '</span><span class="s">' + (data.cached ? 'no new spend' : 'DataForSEO, this pull') + '</span></div>' +
       '</div>' +
       '<div class="sc-tools">' +
       '<div class="sc-tabs">' +
@@ -211,12 +240,6 @@
       '<button type="button" class="sc-tab" data-filter="all">All (' + num(kws.length) + ')</button>' +
       '<button type="button" class="sc-tab" data-filter="top">Already #1</button>' +
       '</div>' +
-      '<select id="sc-sort" aria-label="Sort">' +
-      '<option value="score">Sort: priority</option>' +
-      '<option value="volume">Sort: volume</option>' +
-      '<option value="position">Sort: position</option>' +
-      '<option value="cpc">Sort: CPC</option>' +
-      '</select>' +
       '<input type="search" id="sc-q" placeholder="Filter keywords…" aria-label="Filter keywords" />' +
       '<div class="right"><span class="sc-hint" id="sc-count" style="margin:0;align-self:center"></span>' +
       '<button type="button" class="sc-mini" id="sc-copy-csv">Copy CSV</button>' +
@@ -225,12 +248,12 @@
       '<div class="sc-table-wrap"><table class="sc-table">' +
       '<thead><tr>' +
       '<th>#</th>' +
-      '<th data-sort="score">Keyword</th>' +
+      '<th data-sort="keyword">Keyword</th>' +
+      '<th data-sort="boost">Boostable</th>' +
       '<th data-sort="position">Position</th>' +
       '<th data-sort="volume">Volume / mo</th>' +
       '<th data-sort="cpc">CPC</th>' +
       '<th>Intent</th>' +
-      '<th data-sort="score">Priority</th>' +
       '</tr></thead><tbody id="sc-tbody"></tbody></table></div>';
 
     out.querySelectorAll(".sc-tab").forEach(function (t) {
@@ -239,17 +262,16 @@
         renderTable();
       });
     });
-    document.getElementById("sc-sort").addEventListener("change", function (e) {
-      view.sort = e.target.value;
-      renderTable();
-    });
     document.getElementById("sc-q").addEventListener("input", function (e) {
       view.q = e.target.value.trim();
       renderTable();
     });
     out.querySelectorAll(".sc-table th[data-sort]").forEach(function (th) {
       th.addEventListener("click", function () {
-        view.sort = th.getAttribute("data-sort");
+        var key = th.getAttribute("data-sort");
+        view.sort = view.sort.key === key
+          ? { key: key, dir: view.sort.dir === "asc" ? "desc" : "asc" }
+          : { key: key, dir: FIRST_DIR[key] };
         renderTable();
       });
     });

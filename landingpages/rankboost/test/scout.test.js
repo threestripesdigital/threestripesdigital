@@ -190,3 +190,16 @@ test("scout page is noindex, session-only, and never enters the funnel", async (
   assert.match(headers, /\/scout\n\s+X-Robots-Tag: noindex, nofollow, noarchive/);
   assert.match(headers, /\/scout\.html\n\s+X-Robots-Tag: noindex, nofollow, noarchive/);
 });
+
+test("scout results use boost status, sortable headers, and sticky table headings", async () => {
+  const source = await readFile(new URL("../public/scout.js", import.meta.url), "utf8");
+  const html = await readFile(new URL("../public/scout.html", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /Lookup cost/);
+  assert.doesNotMatch(source, /<th[^>]*>Priority<\/th>/);
+  for (const key of ["boost", "position", "volume", "cpc", "keyword"]) {
+    assert.match(source, new RegExp('data-sort="' + key + '"'));
+  }
+  assert.match(source, /sc-boost/);
+  assert.match(html, /position:\s*sticky/);
+  assert.doesNotMatch(source, /sc-sort/);
+});
