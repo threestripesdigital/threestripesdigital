@@ -499,16 +499,18 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
     assert.match(source, new RegExp(`data-video-slot="${slot}"`));
   }
 
-  const breakoutSources = [...source.matchAll(/<source src="(videos\/breakouts\/[^"]+\.mp4)"/g)];
-  assert.equal(breakoutSources.length, 5);
-  for (const [, path] of breakoutSources) {
-    const media = await readFile(new URL(`../public/${path}`, import.meta.url));
-    assert.ok(media.length > 0 && media.length < 25 * 1024 * 1024);
+  const embeds = [...source.matchAll(/<wistia-player media-id="([a-z0-9]+)" aspect="0.5625"/g)];
+  assert.equal(embeds.length, 5);
+  assert.equal(new Set(embeds.map((match) => match[1])).size, 5);
+  for (const [, id] of embeds) {
+    assert.ok(source.includes(`src="https://fast.wistia.com/embed/${id}.js"`));
   }
+  assert.equal((source.match(/src="https:\/\/fast.wistia.com\/player.js"/g) || []).length, 1);
+  assert.doesNotMatch(source, /seconds with Bilal|ty-video-meta/);
   assert.doesNotMatch(source, /Video coming soon/);
   assert.ok(source.indexOf('id="booking-actions" hidden') > source.indexOf('id="ty-next-steps"'));
   const withoutComments = source.replace(/<!--[\s\S]*?-->/g, "");
-  assert.doesNotMatch(withoutComments, /<wistia-player\b/);
+  assert.match(withoutComments, /<wistia-player\b/);
   assert.doesNotMatch(source, /src="wins\//);
   assert.doesNotMatch(source, /<footer/);
 });
