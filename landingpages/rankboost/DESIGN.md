@@ -28,6 +28,12 @@
 - Boost Live reasserts the booked tag while stale booking messages remain suppressed.
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
+## Responsive behaviour
+
+- Founder and breakout videos retain their portrait 9:16 framing, use native playback controls, and never autoplay.
+- Cap portrait cards at 380 pixels, with two FAQ columns above 680 pixels and one column on smaller screens. Load video bytes on play and show a lightweight poster first.
+- Publish complete selected takes only. The full agency-difference claim and the free-offer sales-tool explanation remain intact at Bilal’s request.
+
 ## Verification
 
 - Keep design-option galleries under `design/`; only launch-approved assets belong in `public/`.

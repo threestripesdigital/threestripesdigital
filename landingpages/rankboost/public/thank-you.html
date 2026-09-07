@@ -257,22 +257,18 @@
     }
     .ty-chat-hint::before { content: "\2191"; font-size: 0.9rem; }
 
-    /* Page blocks and video placeholders */
+    /* Page blocks and portrait videos */
     .ty-block { margin-top: 3rem; }
     .ty-block h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 0 0 0.5rem; max-width: none; text-align: center; }
     .ty-block-sub { color: var(--muted); font-size: 0.98rem; text-align: center; margin: 0 0 2rem; }
     .ty-video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .ty-video { margin: 0; text-align: left; }
-    .ty-video-founder { max-width: 860px; margin: 1.5rem auto 0; }
-    .ty-video-placeholder .ty-video-frame {
-      aspect-ratio: 16 / 9; display: grid; place-items: center;
+    .ty-video { width: 100%; max-width: 380px; margin: 0 auto; text-align: left; }
+    .ty-video-founder { max-width: 380px; margin: 1.5rem auto 0; }
+    .ty-video-frame {
+      aspect-ratio: 9 / 16; overflow: hidden;
       background: var(--navy-2); border: 1px solid var(--line-strong); border-radius: 16px;
     }
-    .ty-video-badge {
-      padding: 0.45rem 0.8rem; border: 1px solid var(--gold); border-radius: 999px;
-      color: var(--gold-light); font-family: var(--mono); font-size: 0.72rem;
-      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    }
+    .ty-video-frame video { display: block; width: 100%; height: 100%; object-fit: contain; }
     .ty-video h3 { margin: 0.85rem 0 0.25rem; font-size: 1rem; }
     .ty-video-meta { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
@@ -329,66 +325,61 @@
 
     <section class="ty-block" id="ty-urgency" aria-labelledby="ty-urgency-h">
       <h2 id="ty-urgency-h">A quick word from Bilal before your call</h2>
-<article class="ty-video ty-video-placeholder ty-video-founder" data-video-slot="founder-urgency">
-  <div class="ty-video-frame" role="img" aria-label="Video coming soon: What we’ll cover on the call, and what to have ready">
-    <!-- To go live, replace this .ty-video-frame div with:
-         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
-         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
-         The CSP already allows Wistia. -->
-    <span class="ty-video-badge">Video coming soon</span>
+<article class="ty-video ty-video-founder" data-video-slot="founder-urgency">
+  <div class="ty-video-frame">
+    <video controls playsinline preload="none" poster="videos/breakouts/confirmation-next-steps.jpg" aria-label="What to expect and how to prepare for your call">
+      <source src="videos/breakouts/confirmation-next-steps.mp4" type="video/mp4" />
+      <p><a href="videos/breakouts/confirmation-next-steps.mp4">Watch: What to expect and how to prepare for your call</a></p>
+    </video>
   </div>
-  <h3>What we’ll cover on the call, and what to have ready</h3>
-  <p class="ty-video-meta">A short video from Bilal Amin, founder · coming soon</p>
+  <h3>What to expect and how to prepare for your call</h3>
+  <p class="ty-video-meta">53 seconds with Bilal Amin</p>
 </article>
     </section>
 
     <section class="ty-block" id="ty-breakouts" aria-labelledby="ty-breakouts-h">
       <h2 id="ty-breakouts-h">Questions lawyers ask before the call</h2>
-      <p class="ty-block-sub">Each one is under three minutes.</p>
+      <p class="ty-block-sub">Short answers from Bilal. Each video is under a minute.</p>
       <div class="ty-video-grid">
-<article class="ty-video ty-video-placeholder" data-video-slot="breakout-white-hat" data-max-minutes="3">
-  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Is this white hat?">
-    <!-- To go live, replace this .ty-video-frame div with:
-         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
-         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
-         The CSP already allows Wistia. Keep this video under 3 minutes. -->
-    <span class="ty-video-badge">Video coming soon</span>
+<article class="ty-video" data-video-slot="breakout-why-free">
+  <div class="ty-video-frame">
+    <video controls playsinline preload="none" poster="videos/breakouts/why-free-sales-approach.jpg" aria-label="Why is this free? Is it a sales tactic?">
+      <source src="videos/breakouts/why-free-sales-approach.mp4" type="video/mp4" />
+      <p><a href="videos/breakouts/why-free-sales-approach.mp4">Watch: Why is this free? Is it a sales tactic?</a></p>
+    </video>
   </div>
-  <h3>Is this white hat?</h3>
-  <p class="ty-video-meta">Under 3 minutes</p>
+  <h3>Why is this free? Is it a sales tactic?</h3>
+  <p class="ty-video-meta">41 seconds with Bilal Amin</p>
 </article>
-<article class="ty-video ty-video-placeholder" data-video-slot="breakout-existing-rankings" data-max-minutes="3">
-  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Will this hurt my existing rankings?">
-    <!-- To go live, replace this .ty-video-frame div with:
-         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
-         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
-         The CSP already allows Wistia. Keep this video under 3 minutes. -->
-    <span class="ty-video-badge">Video coming soon</span>
+<article class="ty-video" data-video-slot="breakout-difference">
+  <div class="ty-video-frame">
+    <video controls playsinline preload="none" poster="videos/breakouts/what-makes-us-different.jpg" aria-label="What makes us different from other agencies?">
+      <source src="videos/breakouts/what-makes-us-different.mp4" type="video/mp4" />
+      <p><a href="videos/breakouts/what-makes-us-different.mp4">Watch: What makes us different from other agencies?</a></p>
+    </video>
   </div>
-  <h3>Will this hurt my existing rankings?</h3>
-  <p class="ty-video-meta">Under 3 minutes</p>
+  <h3>What makes us different from other agencies?</h3>
+  <p class="ty-video-meta">47 seconds with Bilal Amin</p>
 </article>
-<article class="ty-video ty-video-placeholder" data-video-slot="breakout-if-it-doesnt-work" data-max-minutes="3">
-  <div class="ty-video-frame" role="img" aria-label="Video coming soon: What happens if it doesn’t work?">
-    <!-- To go live, replace this .ty-video-frame div with:
-         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
-         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
-         The CSP already allows Wistia. Keep this video under 3 minutes. -->
-    <span class="ty-video-badge">Video coming soon</span>
+<article class="ty-video" data-video-slot="breakout-free-boost">
+  <div class="ty-video-frame">
+    <video controls playsinline preload="none" poster="videos/breakouts/really-free.jpg" aria-label="Is the boost really free?">
+      <source src="videos/breakouts/really-free.mp4" type="video/mp4" />
+      <p><a href="videos/breakouts/really-free.mp4">Watch: Is the boost really free?</a></p>
+    </video>
   </div>
-  <h3>What happens if it doesn’t work?</h3>
-  <p class="ty-video-meta">Under 3 minutes</p>
+  <h3>Is the boost really free?</h3>
+  <p class="ty-video-meta">11 seconds with Bilal Amin</p>
 </article>
-<article class="ty-video ty-video-placeholder" data-video-slot="breakout-competitors" data-max-minutes="3">
-  <div class="ty-video-frame" role="img" aria-label="Video coming soon: Do you work with my competitors?">
-    <!-- To go live, replace this .ty-video-frame div with:
-         <wistia-player media-id="MEDIA_ID" aspect="1.7777777777777777"></wistia-player>
-         and add the two fast.wistia.com <script> tags from public/index.html <head> once.
-         The CSP already allows Wistia. Keep this video under 3 minutes. -->
-    <span class="ty-video-badge">Video coming soon</span>
+<article class="ty-video" data-video-slot="breakout-competitors">
+  <div class="ty-video-frame">
+    <video controls playsinline preload="none" poster="videos/breakouts/competitor-exclusivity.jpg" aria-label="Do you work with my competitors?">
+      <source src="videos/breakouts/competitor-exclusivity.mp4" type="video/mp4" />
+      <p><a href="videos/breakouts/competitor-exclusivity.mp4">Watch: Do you work with my competitors?</a></p>
+    </video>
   </div>
   <h3>Do you work with my competitors?</h3>
-  <p class="ty-video-meta">Under 3 minutes</p>
+  <p class="ty-video-meta">27 seconds with Bilal Amin</p>
 </article>
       </div>
     </section>

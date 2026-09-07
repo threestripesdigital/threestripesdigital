@@ -491,15 +491,21 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
 
   for (const slot of [
     "founder-urgency",
-    "breakout-white-hat",
-    "breakout-existing-rankings",
-    "breakout-if-it-doesnt-work",
+    "breakout-why-free",
+    "breakout-difference",
+    "breakout-free-boost",
     "breakout-competitors",
   ]) {
     assert.match(source, new RegExp(`data-video-slot="${slot}"`));
   }
 
-  assert.equal((source.match(/data-max-minutes="3"/g) || []).length, 4);
+  const breakoutSources = [...source.matchAll(/<source src="(videos\/breakouts\/[^"]+\.mp4)"/g)];
+  assert.equal(breakoutSources.length, 5);
+  for (const [, path] of breakoutSources) {
+    const media = await readFile(new URL(`../public/${path}`, import.meta.url));
+    assert.ok(media.length > 0 && media.length < 25 * 1024 * 1024);
+  }
+  assert.doesNotMatch(source, /Video coming soon/);
   assert.ok(source.indexOf('id="booking-actions" hidden') > source.indexOf('id="ty-next-steps"'));
   const withoutComments = source.replace(/<!--[\s\S]*?-->/g, "");
   assert.doesNotMatch(withoutComments, /<wistia-player\b/);
