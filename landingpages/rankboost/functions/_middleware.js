@@ -58,7 +58,7 @@ async function route(context, url) {
           ["x-router-token", "authorization", "cookie"].includes(name.toLowerCase())) headers.delete(name);
     }
     return fetch(new Request(PRODUCTION_FUNNEL_ORIGIN + url.pathname, {
-      method: "POST", headers, body: context.request.body, redirect: "manual",
+      method: "POST", headers, body: context.request.body, redirect: "manual", duplex: "half",
     }));
   }
   const onScoutHost = url.hostname === scoutHostFor(context.env);
