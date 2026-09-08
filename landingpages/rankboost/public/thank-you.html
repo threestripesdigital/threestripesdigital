@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>Confirming Your Call · Three Stripes Digital</title>
+  <title>Thanks for Booking · Three Stripes Digital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
@@ -336,9 +336,9 @@
 
   <main class="ty">
     <div class="ty-core">
-    <h1 id="ty-title">Confirming your call…</h1>
+    <h1 id="ty-title">Thanks for booking.</h1>
     <p class="lead" id="ty-lead" role="status" aria-live="polite">
-      Checking your Calendly booking details.
+      Watch the short video, then accept your calendar invitation below.
     </p>
     </div>
 
@@ -807,8 +807,6 @@
           if (actions) actions.hidden = false;
           var calendarDetails = document.getElementById("calendar-details");
           if (calendarDetails) calendarDetails.hidden = false;
-          var retryButton = document.getElementById("retry-booking-verification");
-          if (retryButton) retryButton.remove();
           cleanTokenState();
           document.title = "You’re Booked · Three Stripes Digital";
           var inviteeId = String(booking.invitee || "").split("/").pop();
@@ -825,35 +823,18 @@
 
         }
 
-        function showUnconfirmed(message) {
+        // A missing or delayed lookup must not interrupt the preparation steps.
+        // Personalized details and conversion tracking still require verification.
+        function showBookingWelcome() {
           var title = document.getElementById("ty-title");
           var lead = document.getElementById("ty-lead");
-          if (title) title.textContent = "We couldn’t confirm your booking yet.";
-          if (lead) lead.textContent = message ||
-            "Check your inbox for the Calendly confirmation, then try verification again.";
-          var button = document.getElementById("retry-booking-verification");
-          if (!button && lead) {
-            button = document.createElement("button");
-            button.id = "retry-booking-verification";
-            button.type = "button";
-            button.className = "btn btn-ghost";
-            button.textContent = "Verify booking again";
-            button.addEventListener("click", function () {
-              button.disabled = true;
-              if (title) title.textContent = "Confirming your call…";
-              if (lead) lead.textContent = "Checking your Calendly booking details.";
-              verify(0);
-            });
-            lead.insertAdjacentElement("afterend", button);
-          }
-          if (button) button.disabled = false;
+          if (title) title.textContent = "Thanks for booking.";
+          if (lead) lead.textContent = "Watch the short video, then accept your calendar invitation below.";
         }
 
         function verify(attempt) {
           if (!token) {
-            showUnconfirmed(
-              "Return to your results and choose the booking time again so we can verify it securely."
-            );
+            showBookingWelcome();
             return;
           }
           fetch("api/booking", {
@@ -878,12 +859,8 @@
           }).then(function (booking) {
             if (!booking) return;
             if (!booking.verified || !apply(booking)) throw new Error("unverified");
-          }).catch(function (error) {
-            showUnconfirmed(
-              error && error.message === "expired"
-                ? "Your secure link expired. Return to your results and choose the booking time again."
-                : "Check your inbox for the Calendly confirmation, then try verification again."
-            );
+          }).catch(function () {
+            showBookingWelcome();
           });
         }
 

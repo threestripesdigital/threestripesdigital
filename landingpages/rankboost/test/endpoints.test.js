@@ -447,9 +447,9 @@ test("results UI distinguishes durable fallback from unsaved failures", async ()
   assert.match(styles, /\.marquee-section \{[\s\S]*overflow-x: clip;[\s\S]*contain: paint;/);
 });
 
-test("thank-you UI waits for booking evidence before confirmation", async () => {
+test("thank-you welcomes visitors and verifies personalized booking details", async () => {
   const source = await readFile(new URL("../public/thank-you.html", import.meta.url), "utf8");
-  assert.match(source, /<h1 id="ty-title">Confirming your call…<\/h1>/);
+  assert.match(source, /<h1 id="ty-title">Thanks for booking\.<\/h1>/);
   assert.match(source, /id="booking-actions" hidden/);
   assert.match(source, /\.ty-actions\[hidden\] \{ display: none !important; \}/);
   assert.match(source, /title\.textContent = "Your call is booked\."/);
