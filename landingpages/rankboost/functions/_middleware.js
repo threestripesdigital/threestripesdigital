@@ -6,7 +6,7 @@ const CONTENT_SECURITY_POLICY = [
   "form-action 'self' https://www.facebook.com https://*.facebook.com",
   "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com https://static.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://src.litix.io https://browser.sentry-cdn.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com blob: https://fast.wistia.com",
-  "font-src 'self' data: https://fonts.gstatic.com https://*.wistia.com",
+  "font-src 'self' data: https://fonts.gstatic.com https://*.wistia.com https://fast.wistia.net",
   "img-src 'self' data: https:",
   "media-src 'self' https://threestripesdigital.com blob: data: https://*.wistia.com https://*.wistia.net",
   "worker-src 'self' blob:",
