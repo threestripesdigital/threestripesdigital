@@ -93,6 +93,8 @@ Stripe integration is explicitly deferred. Existing manual financial fields rema
 
 ## Paused September 2026 campaign
 
+At the owner's request, the dashboard browser analytics script is no longer loaded by any of the four funnel pages. Meta and Wistia's existing scripts remain. Meta reporting and server-side booking import remain separate integrations, but new custom visitor, video milestone and session-to-booking attribution is unavailable. Native Wistia analytics are separate; a Wistia Stats API import has not been configured. Do not restore browser collection without the owner's instruction.
+
 The campaign is pinned by ID to `120249029003230545`. All 22 ad sets and 34 ads must remain paused until the owner explicitly authorizes activation. The target daily budget is USD 154, implemented in the CAD ad account as CAD 9.69 per ad set. Reporting retains the strategy's USD thresholds and converts CAD spend using a fixed reference rate of 1 USD = CAD 1.3840 (Bank of Canada, 4 September 2026). The dashboard discloses this estimate. Review the rate before activation and when interpreting subsequent results; it is not live FX or card settlement data.
 
 Prelaunch review and preview sessions are retained as raw diagnostic records but excluded from paid visitor, video, lead, booking and revenue totals. Before activating this campaign, set `LAUNCH_AT` to the actual activation timestamp in UTC and deploy the reporting configuration. If it is omitted, the first detected spend sets the fallback timestamp; that fallback may miss first-hour sessions. Never activate the campaign during preparation.
