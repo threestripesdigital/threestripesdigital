@@ -7,25 +7,19 @@ Private Cloudflare Worker dashboard and D1 analytics backend for Three Stripes D
 - Hourly Cron Trigger at minute 7 imports daily Meta ad-level Insights, with pagination, a 90-day correction lookback, transactional replacement and a sync lease.
 - Campaigns whose names start with `Rank Boost` are discovered automatically. `META_CAMPAIGN_IDS` can instead pin exact comma-separated IDs. Once discovered, renamed campaigns remain tracked.
 - The existing `rankboost-leads` D1 database supplies verified Calendly bookings, cancellation/no-show updates and keyword eligibility. It is read only from this Worker.
-- The funnel's same-origin `/api/analytics` endpoint writes deduplicated visits, hero VSL milestones, application starts and scheduler opens. Application completion and attribution require the existing signed lead token.
+- Direct GA4 and Wistia imports run hourly. The legacy browser analytics endpoint is not loaded by the landing page; custom collection stays disabled.
 - A seven-day observation hold begins at first detected spend. Threshold flags remain visible, routine recommendations say to wait, and technical tracking failures remain actionable. No automatic pauses, budget changes, targeting changes or creative changes exist.
 - Attendance, free-boost execution, sales outcomes and collected revenue are entered in the dashboard. They cannot be inferred reliably from Meta or a calendar reservation.
 
-## Start before campaign launch
+## Before campaign launch
 
-1. Publish the prepared funnel instrumentation as part of the funnel's launch. The source changes are in `landingpages/rankboost`. Its Wrangler config includes the separate `ANALYTICS_DB` binding. The existing lead database must not receive the analytics migrations.
-2. Install a Meta system-user token with `ads_read` and access to ad account `358826439854169`: `npx wrangler secret put META_ACCESS_TOKEN`. Do not use the CAPI token as a reporting token. The credentials available during setup returned permission or expiry errors.
-3. Verify `CURRENCY` and `REPORTING_TIMEZONE` against the ad account. Initial strategy targets assume USD and the config starts at America/New_York. Sync fails visibly on a mismatch, avoiding silently comparing another currency to USD targets. Keep the funnel `REPORTING_TIMEZONE` the same.
-4. Name the campaign beginning with `Rank Boost`, for example `Rank Boost | Lawyers | VSL`. This is an example name, not a campaign created by this project.
-5. Set every ad's URL parameters to:
+1. Keep custom browser collection off. Do not publish the old funnel instrumentation without new instructions from the owner.
+2. Meta, GA4 and Wistia reporting use Worker secrets. Verify successful imports in Connections. Wistia needs only Read detailed stats permission.
+3. Review the dated USD conversion and the America/New_York reporting configuration. Preserve the campaign ID and the approved ad URL parameters already configured in Meta.
+4. Set the actual UTC LAUNCH_AT immediately before an explicitly authorized activation. Nothing in the dashboard activates ads.
+5. Complete the approved application and booking test process. Real bookings can trigger messaging. Provider aggregates do not prove individual visitor-to-ad attribution.
 
-```text
-utm_source=meta&utm_medium=paid_social&utm_campaign={{campaign.name}}&campaign_id={{campaign.id}}&adset_id={{adset.id}}&ad_id={{ad.id}}
-```
-
-6. Verify one visit, a VSL play, an application and a booking end to end before starting paid delivery. Real booking tests may trigger the existing messaging workflow, so use its approved test process.
-
-Data collection begins on the first instrumented paid-ad visit. Meta figures arrive on the hourly sync and are subject to Meta reporting delay; the dashboard is not a second-by-second Meta feed.
+Imports run hourly and retain provider reporting delays. The direct Wistia panel includes all traffic and prelaunch activity for the configured main VSL; it is not a paid campaign retention metric.
 
 ## Local development and verification
 
@@ -75,11 +69,11 @@ Only `public/` is uploaded as dashboard assets. Authentication executes before a
 - [Meta Insights API](https://developers.facebook.com/docs/marketing-api/insights)
 - [Wistia Aurora player events](https://docs.wistia.com/docs/player-events)
 
-The Meta reporting endpoints are implemented against the documented Insights contract but could not be verified with the account until its reporting permission is fixed. Mocked pagination, correction and token-failure paths are covered by focused tests.
+Meta reporting access is verified. Mocked pagination, correction and token-failure paths are covered by focused tests.
 
 ## Wistia and manual call operations
 
-Wistia uses Aurora `percent-watched-change` and `player.percentWatched` (0 to 1), measuring watched media rather than seek position. Retention here means watching at least half the total video, not necessarily the first half continuously. Replays do not add another session milestone. The native video fallback uses unique played ranges. No Wistia account Stats API token is configured or required for these embedded-player events.
+Wistia uses Aurora `percent-watched-change` and `player.percentWatched` (0 to 1), measuring watched media rather than seek position. Retention here means watching at least half the total video, not necessarily the first half continuously. Replays do not add another session milestone. The native video fallback uses unique played ranges. These legacy embedded-player events are disabled. Direct Wistia reporting now uses a separate read-only API token.
 
 Fresh organic/direct visits are excluded from paid tracking. Attribution uses a paid session in the same tab for up to 30 minutes from creation; an untagged return inside that window remains paid. This is not multi-day or cross-device attribution. To exclude your testing browser, open the funnel with `rb_internal=1` in its query string. This persists per origin in localStorage until `rb_internal=0`; repeat for each browser and preview/production origin. It cannot remove earlier test visits. Privacy settings can prevent browser tracking.
 
@@ -97,14 +91,20 @@ Meta Insights also imports landing_page_view and offsite_conversion.fb_pixel_lea
 
 GA4 property 524936646 belongs to Three Stripes Digital Website and uses America/New_York. The worker reads it hourly using the GA4_SERVICE_ACCOUNT secret and the read-only Analytics scope. Only the main site's law firm funnel paths are included. The 1, 7, 30 and 90 day windows are queried independently so unique users are not added across days. All-traffic provider totals stay separate from paid campaign metrics. Failed imports preserve the last snapshot and expose an error and freshness status.
 
-Initial live requests for all four windows succeeded with no rows. The landing page currently has no GA4 tag, so API access alone does not establish collection. No new landing page code was installed. Wistia reporting still requires an API token with Read detailed stats access; its native player continues to collect its own analytics. Available PostHog projects do not belong to Three Stripes, so no unrelated project was connected. PostHog is optional.
+Initial live requests for all four windows succeeded with no rows. The landing page currently has no GA4 tag, so API access alone does not establish collection. No new landing page code was installed. Wistia reporting is connected with a Read detailed stats token; its native player continues to collect its own analytics. Available PostHog projects do not belong to Three Stripes, so no unrelated project was connected. PostHog is optional.
 
 BROWSER_TRACKING_ENABLED=false disables presentation of historical custom events as current funnel performance. Attributed booking and visitor metrics remain unavailable. The existing booking database import and manual call outcome workflow remain available; a direct provider import does not automatically match individual visitors across providers.
 
 ## Paused September 2026 campaign
 
-At the owner's request, the dashboard browser analytics script is no longer loaded by any of the four funnel pages. Meta and Wistia's existing scripts remain. Meta reporting and server-side booking import remain separate integrations, but new custom visitor, video milestone and session-to-booking attribution is unavailable. Native Wistia analytics are separate; a Wistia Stats API import has not been configured. Do not restore browser collection without the owner's instruction.
+At the owner's request, the dashboard browser analytics script is no longer loaded by any of the four funnel pages. Meta and Wistia's existing scripts remain. Meta reporting and server-side booking import remain separate integrations, but new custom visitor, video milestone and session-to-booking attribution is unavailable. Direct Wistia API reports are shown separately from paid campaign attribution. Do not restore browser collection without the owner's instruction.
 
 The campaign is pinned by ID to `120249029003230545`. All 22 ad sets and 34 ads must remain paused until the owner explicitly authorizes activation. The target daily budget is USD 154, implemented in the CAD ad account as CAD 9.69 per ad set. Reporting retains the strategy's USD thresholds and converts CAD spend using a fixed reference rate of 1 USD = CAD 1.3840 (Bank of Canada, 4 September 2026). The dashboard discloses this estimate. Review the rate before activation and when interpreting subsequent results; it is not live FX or card settlement data.
 
 Prelaunch review and preview sessions are retained as raw diagnostic records but excluded from paid visitor, video, lead, booking and revenue totals. Before activating this campaign, set `LAUNCH_AT` to the actual activation timestamp in UTC and deploy the reporting configuration. If it is omitted, the first detected spend sets the fallback timestamp; that fallback may miss first-hour sessions. Never activate the campaign during preparation.
+
+## Direct Wistia import
+
+WISTIA_API_TOKEN is stored as a Worker secret and WISTIA_MEDIA_ID selects the main VSL (8uioqg3047). The modern media analytics endpoint uses API version 2026-07. Each reporting window is queried separately, with an exclusive API end date one day after the displayed end date. Imported fields are plays, unique plays, unique loads, unique visitors, played seconds, play rate and engagement rate. Native fractions become percentages. Missing rates remain unavailable, and malformed or failed responses preserve the prior snapshot.
+
+This report includes every embed location for that media and uses Wistia native date boundaries. It includes prelaunch tests and previews. Average engagement is not the fraction of people watching at least half the video; do not use it as that benchmark or add its visitors to GA4 users.

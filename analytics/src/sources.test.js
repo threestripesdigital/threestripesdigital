@@ -1,7 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ga4Request,ga4Values,sourceReport} from './sources.js';
+import {ga4Request,ga4Values,sourceReport,syncWistia,wistiaValues} from './sources.js';
 import {websiteActions} from './meta.js';
+test('Wistia converts native rates, uses exclusive end dates and preserves snapshots on failure',async()=>{
+ const fixture={plays:3,unique_plays:3,unique_loads:254,unique_visitors:254,played_time:47,play_rate:.01,engagement_rate:.05};
+ assert.equal(wistiaValues(fixture).engagement_rate,5);assert.equal(wistiaValues({...fixture,engagement_rate:null}).engagement_rate,null);
+ assert.throws(()=>wistiaValues({...fixture,plays:undefined}));
+ const state=new Map(),requests=[],old=globalThis.fetch;
+ const e={WISTIA_API_TOKEN:'test-only',WISTIA_MEDIA_ID:'8uioqg3047',REPORTING_TIMEZONE:'America/New_York',DB:{prepare(){return{bind(k,v){return{async run(){state.set(k,v);}};}};}}};
+ try{
+  globalThis.fetch=async url=>{requests.push(new URL(url));return Response.json(fixture);};
+  await syncWistia(e);assert.equal(requests.length,4);
+  const saved=state.get('wistia_snapshot'),report=JSON.parse(saved);
+  assert.equal(Date.parse(requests[0].searchParams.get('end_date'))-Date.parse(report.windows[1].end),86400000);
+  assert.equal(report.windows[7].values.plays,3);assert.equal(state.get('wistia_error'),'');
+  globalThis.fetch=async()=>Response.json({error:'denied'},{status:403});
+  await syncWistia(e);assert.equal(state.get('wistia_snapshot'),saved);assert.match(state.get('wistia_error'),/403/);
+ }finally{globalThis.fetch=old;}
+});
 test('Meta website actions do not add overlapping lead aggregates',()=>{
  assert.deepEqual(websiteActions([{action_type:'landing_page_view',value:'12'},{action_type:'offsite_conversion.fb_pixel_lead',value:'3'},{action_type:'lead',value:'3'},{action_type:'omni_lead',value:'3'}]),{landingPageViews:12,websiteLeads:3});
  assert.deepEqual(websiteActions(),{landingPageViews:0,websiteLeads:0});

@@ -44,7 +44,8 @@
     "LAUNCH_AT": "",
     "META_CAMPAIGN_PREFIX": "Rank Boost",
     "BROWSER_TRACKING_ENABLED": "false",
-    "GA4_PROPERTY_ID": "524936646"
+    "GA4_PROPERTY_ID": "524936646",
+    "WISTIA_MEDIA_ID": "8uioqg3047"
   },
   "account_id": "17f7c095d40a8771cf3568fdcae11770"
 }

@@ -1,12 +1,12 @@
 import {syncMeta,dayIn,setState} from './meta.js';
 import {syncFunnel} from './funnel.js';
-import {syncGA4} from './sources.js';
+import {syncGA4,syncWistia} from './sources.js';
 import {report} from './report.js';
 import {authorized,cookie,equal,limited,readBody} from './auth.js';
 const json=(body,status=200,headers={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store',...headers}});
 async function assets(env,request,path) {const u=new URL(request.url);if(path)u.pathname=path;return env.ASSETS.fetch(new Request(u,request));}
 async function runSync(env) {
- const outcomes=await Promise.allSettled([syncMeta(env),syncFunnel(env),syncGA4(env)]);
+ const outcomes=await Promise.allSettled([syncMeta(env),syncFunnel(env),syncGA4(env),syncWistia(env)]);
  await env.DB.prepare('DELETE FROM rate_limits WHERE expires < ?').bind(Date.now()).run();
  if(outcomes.some(x=>x.status==='rejected')) console.log('reporting_sync_failed');
 }
