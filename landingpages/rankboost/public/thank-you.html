@@ -29,6 +29,10 @@
 
   <style>
     .ty { max-width: 1140px; margin: 0 auto; padding: 4rem 1.25rem 5rem; text-align: center; }
+    .ty-step-kicker { color: var(--gold-light); font-family: var(--mono); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 0.65rem; }
+    .ty-calendar { max-width: 680px; margin-left: auto; margin-right: auto; padding: 1.8rem 1.25rem; background: var(--gold-dim); border: 1px solid var(--line-strong); border-radius: 16px; }
+    .ty-calendar .ty-block-sub { margin-bottom: 1rem; }
+    #booking-actions { max-width: 520px; margin-left: auto; margin-right: auto; grid-template-columns: 1fr; }
     .ty-core { max-width: 680px; margin: 0 auto; }
 
     /* Step 1 + Step 2 side by side on desktop */
@@ -339,13 +343,39 @@
     </div>
 
     <section class="ty-block" id="ty-urgency" aria-labelledby="ty-urgency-h">
-      <h2 id="ty-urgency-h">A quick word from Bilal before your call</h2>
+      <p class="ty-step-kicker">Step 1</p>
+      <h2 id="ty-urgency-h">Watch this before your call</h2>
+      <p class="ty-block-sub">Start with this 53-second video so you know what to expect and how to prepare.</p>
 <article class="ty-video ty-video-founder" data-video-slot="founder-urgency">
   <div class="ty-video-frame">
     <wistia-player media-id="d6f9b1wt8n" aspect="0.5625"></wistia-player>
   </div>
   <h3>What to expect and how to prepare for your call</h3>
 </article>
+    </section>
+
+    <section class="ty-block ty-calendar" id="ty-calendar" aria-labelledby="ty-calendar-h">
+      <p class="ty-step-kicker">Step 2</p>
+      <h2 id="ty-calendar-h">Accept your calendar invitation</h2>
+      <p class="ty-block-sub">Open your Calendly confirmation email and select <strong>Yes</strong> or <strong>Accept</strong> to add the call to your calendar. Check spam if you cannot find it.</p>
+      <div id="calendar-details" hidden>
+      <div class="ty-email" aria-label="Example Calendly confirmation email">
+        <p class="ty-email-head">Confirmed: Bilal Amin has added you to Three Stripes Digital Rank Boost on Tuesday, August 18, 2026 <span class="inbox-chip">Inbox</span></p>
+        <div class="ty-email-card">
+          <p class="ty-ec-when">Tue, Aug 18 · 2:30 PM – 3:00 PM</p>
+          <p class="ty-ec-title">Three Stripes Digital Rank Boost with Bilal Amin</p>
+          <div class="ty-ec-row"><span class="ic">📍</span><span>Web conference · details included</span></div>
+          <div class="ty-ec-row"><span class="ic">👥</span><span>Bilal Amin – Organizer<small>bilal@threestripesdigital.ca</small></span></div>
+          <div class="ty-ec-btns" aria-hidden="true"><span class="ty-ec-btn">Add to Calendar</span></div>
+        </div>
+        <div class="ty-em-from">
+          <span class="ty-em-logo">C</span>
+          <p class="ty-em-fromtext">Calendly <span class="vf">✓</span><small>to me</small></p>
+        </div>
+        <p class="ty-em-snippet">Bilal Amin has added you to Three Stripes Digital Rank Boost. Event details below.</p>
+      </div>
+      </div>
+      <p class="ty-chat-hint">Accept the invite in your inbox</p>
     </section>
 
     <section class="ty-block" id="ty-breakouts" aria-labelledby="ty-breakouts-h">
@@ -510,31 +540,11 @@
     </section>
     <section class="ty-block" id="ty-next-steps" aria-labelledby="ty-next-steps-h">
       <h2 id="ty-next-steps-h">Your next steps</h2>
-      <p class="ty-block-sub">Two quick things now, then here’s how the boost unfolds.</p>
+      <p class="ty-block-sub">Here’s how your boost unfolds.</p>
     <div class="ty-actions" id="booking-actions" hidden>
-    <div class="ty-sms">
-      <p class="ty-sms-label"><span class="ty-step-badge">Step 1</span> Accept the calendar invite</p>
-      <p class="ty-sms-why">The invitation is already in your inbox. Hit <strong>Accept</strong> (Yes in Gmail, Accept in Outlook or Apple Calendar) so the call locks to your calendar and I know you’re coming. Check spam if it’s not there.</p>
-      <div class="ty-email" aria-label="Example Calendly confirmation email">
-        <p class="ty-email-head">Confirmed: Bilal Amin has added you to Three Stripes Digital Rank Boost on Tuesday, August 18, 2026 <span class="inbox-chip">Inbox</span></p>
-        <div class="ty-email-card">
-          <p class="ty-ec-when">Tue, Aug 18 · 2:30 PM – 3:00 PM</p>
-          <p class="ty-ec-title">Three Stripes Digital Rank Boost with Bilal Amin</p>
-          <div class="ty-ec-row"><span class="ic">📍</span><span>Web conference · details included</span></div>
-          <div class="ty-ec-row"><span class="ic">👥</span><span>Bilal Amin – Organizer<small>bilal@threestripesdigital.ca</small></span></div>
-          <div class="ty-ec-btns" aria-hidden="true"><span class="ty-ec-btn">Add to Calendar</span></div>
-        </div>
-        <div class="ty-em-from">
-          <span class="ty-em-logo">C</span>
-          <p class="ty-em-fromtext">Calendly <span class="vf">✓</span><small>to me</small></p>
-        </div>
-        <p class="ty-em-snippet">Bilal Amin has added you to Three Stripes Digital Rank Boost. Event details below.</p>
-      </div>
-      <p class="ty-chat-hint">Accept the invite in your inbox</p>
-    </div>
 
     <div class="ty-sms">
-      <p class="ty-sms-label"><span class="ty-step-badge">Step 2</span> Save this number</p>
+      <p class="ty-sms-label">Save this number</p>
       <p class="ty-sms-number">+1 (833) 380-3706</p>
       <p class="ty-sms-why">That’s Bilal. Your confirmation text comes from this number in the next few minutes.</p>
       <div class="ty-imsg" aria-label="Example text conversation">
@@ -793,8 +803,10 @@
           var lead = document.getElementById("ty-lead");
           var actions = document.getElementById("booking-actions");
           if (title) title.textContent = "Your call is booked.";
-          if (lead) lead.textContent = "Watch the short videos below, then finish the two quick steps at the bottom of this page.";
+          if (lead) lead.textContent = "Watch the short video, then accept your calendar invitation below.";
           if (actions) actions.hidden = false;
+          var calendarDetails = document.getElementById("calendar-details");
+          if (calendarDetails) calendarDetails.hidden = false;
           var retryButton = document.getElementById("retry-booking-verification");
           if (retryButton) retryButton.remove();
           cleanTokenState();

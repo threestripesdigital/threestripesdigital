@@ -484,6 +484,7 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
   );
   assert.deepEqual(sectionIds, [
     "ty-urgency",
+    "ty-calendar",
     "ty-breakouts",
     "ty-testimonials",
     "ty-next-steps",

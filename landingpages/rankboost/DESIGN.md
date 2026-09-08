@@ -43,3 +43,5 @@
 - Run `npm run deploy` so remote D1 migrations complete before Pages and router deployment.
 - Verify desktop and mobile views with screenshots no larger than 1568 pixels on the longest side.
 - Exercise direct-entry, failure, and successful funnel states rather than reviewing only the happy path.
+
+- Lead the confirmation content with Step 1, Watch this before your call, and the founder video. Step 2, Accept your calendar invitation, follows immediately before FAQs. Calendar instructions are always readable; personalized invite details retain the existing verification gate. Keep the remaining FAQs and proof below, with the save-number reminder unnumbered.
