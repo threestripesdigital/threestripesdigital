@@ -5,3 +5,5 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 .badge.provisional{color:var(--amber);background:var(--amber-bg)}.badge.unrated{color:var(--muted);background:#f0f3f1}
+
+.metric{display:flex;flex-direction:column}.metric-top{width:100%}.metric small{margin-top:auto;padding-top:12px}.metric-bands{width:100%}.kpi{min-width:0}.kpi strong{overflow-wrap:anywhere;font-size:clamp(18px,2.1vw,30px)}
