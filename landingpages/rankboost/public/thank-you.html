@@ -15,6 +15,13 @@
   <meta name="theme-color" content="#0A1628" />
   <link rel="stylesheet" href="styles.css" />
 
+  <script src="https://fast.wistia.com/player.js" async></script>
+  <script src="https://fast.wistia.com/embed/d6f9b1wt8n.js" async type="module"></script>
+  <script src="https://fast.wistia.com/embed/2lkpcr57yd.js" async type="module"></script>
+  <script src="https://fast.wistia.com/embed/4lelq9raak.js" async type="module"></script>
+  <script src="https://fast.wistia.com/embed/34b3bqjm9w.js" async type="module"></script>
+  <script src="https://fast.wistia.com/embed/x65rpnouuk.js" async type="module"></script>
+
   <!-- Browser-based Meta measurement. -->
   <script src="meta.js"></script>
 
@@ -268,9 +275,14 @@
       aspect-ratio: 9 / 16; overflow: hidden;
       background: var(--navy-2); border: 1px solid var(--line-strong); border-radius: 16px;
     }
-    .ty-video-frame video { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ty-video-frame wistia-player { display: block; width: 100%; height: 100%; }
+    .ty-video-frame wistia-player:not(:defined) { background-size: contain; background-position: center; background-repeat: no-repeat; }
+    wistia-player[media-id="d6f9b1wt8n"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/d6f9b1wt8n/swatch"); }
+    wistia-player[media-id="2lkpcr57yd"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/2lkpcr57yd/swatch"); }
+    wistia-player[media-id="4lelq9raak"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/4lelq9raak/swatch"); }
+    wistia-player[media-id="34b3bqjm9w"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/34b3bqjm9w/swatch"); }
+    wistia-player[media-id="x65rpnouuk"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/x65rpnouuk/swatch"); }
     .ty-video h3 { margin: 0.85rem 0 0.25rem; font-size: 1rem; }
-    .ty-video-meta { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
     /* proof section: wide, OG-style two-column staggered wall */
     .ty-proof { text-align: left; }
@@ -328,59 +340,39 @@
       <h2 id="ty-urgency-h">A quick word from Bilal before your call</h2>
 <article class="ty-video ty-video-founder" data-video-slot="founder-urgency">
   <div class="ty-video-frame">
-    <video controls playsinline preload="none" poster="videos/breakouts/confirmation-next-steps.jpg" aria-label="What to expect and how to prepare for your call">
-      <source src="videos/breakouts/confirmation-next-steps.mp4" type="video/mp4" />
-      <p><a href="videos/breakouts/confirmation-next-steps.mp4">Watch: What to expect and how to prepare for your call</a></p>
-    </video>
+    <wistia-player media-id="d6f9b1wt8n" aspect="0.5625"></wistia-player>
   </div>
   <h3>What to expect and how to prepare for your call</h3>
-  <p class="ty-video-meta">53 seconds with Bilal Amin</p>
 </article>
     </section>
 
     <section class="ty-block" id="ty-breakouts" aria-labelledby="ty-breakouts-h">
       <h2 id="ty-breakouts-h">Questions lawyers ask before the call</h2>
-      <p class="ty-block-sub">Short answers from Bilal. Each video is under a minute.</p>
+      <p class="ty-block-sub">Answers to your questions before we meet.</p>
       <div class="ty-video-grid">
 <article class="ty-video" data-video-slot="breakout-why-free">
   <div class="ty-video-frame">
-    <video controls playsinline preload="none" poster="videos/breakouts/why-free-sales-approach.jpg" aria-label="Why is this free? Is it a sales tactic?">
-      <source src="videos/breakouts/why-free-sales-approach.mp4" type="video/mp4" />
-      <p><a href="videos/breakouts/why-free-sales-approach.mp4">Watch: Why is this free? Is it a sales tactic?</a></p>
-    </video>
+    <wistia-player media-id="x65rpnouuk" aspect="0.5625"></wistia-player>
   </div>
   <h3>Why is this free? Is it a sales tactic?</h3>
-  <p class="ty-video-meta">41 seconds with Bilal Amin</p>
 </article>
 <article class="ty-video" data-video-slot="breakout-difference">
   <div class="ty-video-frame">
-    <video controls playsinline preload="none" poster="videos/breakouts/what-makes-us-different.jpg" aria-label="What makes us different from other agencies?">
-      <source src="videos/breakouts/what-makes-us-different.mp4" type="video/mp4" />
-      <p><a href="videos/breakouts/what-makes-us-different.mp4">Watch: What makes us different from other agencies?</a></p>
-    </video>
+    <wistia-player media-id="34b3bqjm9w" aspect="0.5625"></wistia-player>
   </div>
   <h3>What makes us different from other agencies?</h3>
-  <p class="ty-video-meta">47 seconds with Bilal Amin</p>
 </article>
 <article class="ty-video" data-video-slot="breakout-free-boost">
   <div class="ty-video-frame">
-    <video controls playsinline preload="none" poster="videos/breakouts/really-free.jpg" aria-label="Is the boost really free?">
-      <source src="videos/breakouts/really-free.mp4" type="video/mp4" />
-      <p><a href="videos/breakouts/really-free.mp4">Watch: Is the boost really free?</a></p>
-    </video>
+    <wistia-player media-id="2lkpcr57yd" aspect="0.5625"></wistia-player>
   </div>
   <h3>Is the boost really free?</h3>
-  <p class="ty-video-meta">11 seconds with Bilal Amin</p>
 </article>
 <article class="ty-video" data-video-slot="breakout-competitors">
   <div class="ty-video-frame">
-    <video controls playsinline preload="none" poster="videos/breakouts/competitor-exclusivity.jpg" aria-label="Do you work with my competitors?">
-      <source src="videos/breakouts/competitor-exclusivity.mp4" type="video/mp4" />
-      <p><a href="videos/breakouts/competitor-exclusivity.mp4">Watch: Do you work with my competitors?</a></p>
-    </video>
+    <wistia-player media-id="4lelq9raak" aspect="0.5625"></wistia-player>
   </div>
   <h3>Do you work with my competitors?</h3>
-  <p class="ty-video-meta">27 seconds with Bilal Amin</p>
 </article>
       </div>
     </section>

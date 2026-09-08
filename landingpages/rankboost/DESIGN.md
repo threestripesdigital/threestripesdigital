@@ -30,9 +30,11 @@
 
 ## Responsive behaviour
 
-- Founder and breakout videos retain their portrait 9:16 framing, use native playback controls, and never autoplay.
-- Cap portrait cards at 380 pixels, with two FAQ columns above 680 pixels and one column on smaller screens. Load video bytes on play and show a lightweight poster first.
+- Founder and breakout videos retain their portrait 9:16 framing, use Wistia playback controls, and never autoplay.
+- Cap portrait cards at 380 pixels, with two FAQ columns above 680 pixels and one column on smaller screens. Show custom navy and gold question thumbnails before playback.
 - Publish complete selected takes only. The full agency-difference claim and the free-offer sales-tool explanation remain intact at Bilal’s request.
+
+- Use Wistia embeds for founder and FAQ videos. Keep question headings and omit duration/byline captions under the players.
 
 ## Verification
 
