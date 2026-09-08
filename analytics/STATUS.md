@@ -4,6 +4,8 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 
 ## Verified
 
+- Direct Wistia main-VSL reporting is connected using a token limited to Read detailed stats. All four date-window requests returned real video metrics. Native tracking remains unchanged.
+
 - Meta landing page view and website Lead actions are imported alongside spend and clicks, using the same ad attribution window. They are labeled separately from unique visitors and Calendly bookings.
 - Meta reporting token, account and selected campaign are connected. Campaign 120249029003230545, all 22 ad sets and all 34 ads remain PAUSED.
 - The existing lead database supplies verified Calendly booking records. No real test booking or customer message was generated during this work.
@@ -13,7 +15,6 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 
 ## Still needed
 
-- A Wistia API token with Read detailed stats access is needed for the direct video reporting integration. No token was found in the available saved credentials; the owner was asked for its saved location. Native Wistia player tracking remains present.
 - Website visit collection requires an existing source that actually receives funnel events. GA4 currently has none. No additional landing page script was installed under the owner's constraint.
 - The available PostHog account has no Three Stripes project. No unrelated project was connected. PostHog is optional.
 - Individual ad, video and booking attribution requires matching identifiers from the source systems. Aggregate reports must not be represented as linked visitor journeys.
@@ -21,4 +22,4 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 
 ## Deployment
 
-Worker version 54cd845e-d918-4e4c-a9e1-ff792b3bf8d6. No database migration or funnel deployment was required.
+Worker version a88437cf-2025-4ad1-a3dc-18fcad4f024f. No database migration or funnel deployment was required.
