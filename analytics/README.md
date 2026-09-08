@@ -91,6 +91,14 @@ Google attendance is not connected. For future automation, enable the Meet and C
 
 Stripe integration is explicitly deferred. Existing manual financial fields remain available, but no payment feed is connected and financial metrics are not verified automatic outcomes.
 
+## Direct source reporting, September 2026
+
+GA4 property 524936646 belongs to Three Stripes Digital Website and uses America/New_York. The worker reads it hourly using the GA4_SERVICE_ACCOUNT secret and the read-only Analytics scope. Only the main site's law firm funnel paths are included. The 1, 7, 30 and 90 day windows are queried independently so unique users are not added across days. All-traffic provider totals stay separate from paid campaign metrics. Failed imports preserve the last snapshot and expose an error and freshness status.
+
+Initial live requests for all four windows succeeded with no rows. The landing page currently has no GA4 tag, so API access alone does not establish collection. No new landing page code was installed. Wistia reporting still requires an API token with Read detailed stats access; its native player continues to collect its own analytics. Available PostHog projects do not belong to Three Stripes, so no unrelated project was connected. PostHog is optional.
+
+BROWSER_TRACKING_ENABLED=false disables presentation of historical custom events as current funnel performance. Attributed booking and visitor metrics remain unavailable. The existing booking database import and manual call outcome workflow remain available; a direct provider import does not automatically match individual visitors across providers.
+
 ## Paused September 2026 campaign
 
 At the owner's request, the dashboard browser analytics script is no longer loaded by any of the four funnel pages. Meta and Wistia's existing scripts remain. Meta reporting and server-side booking import remain separate integrations, but new custom visitor, video milestone and session-to-booking attribution is unavailable. Native Wistia analytics are separate; a Wistia Stats API import has not been configured. Do not restore browser collection without the owner's instruction.

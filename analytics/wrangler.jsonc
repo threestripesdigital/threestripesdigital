@@ -42,7 +42,9 @@
     "META_CAMPAIGN_IDS": "120249029003230545",
     "META_API_VERSION": "v25.0",
     "LAUNCH_AT": "",
-    "META_CAMPAIGN_PREFIX": "Rank Boost"
+    "META_CAMPAIGN_PREFIX": "Rank Boost",
+    "BROWSER_TRACKING_ENABLED": "false",
+    "GA4_PROPERTY_ID": "524936646"
   },
   "account_id": "17f7c095d40a8771cf3568fdcae11770"
 }
