@@ -242,7 +242,18 @@
       );
       try { sessionStorage.setItem(PAYLOAD_KEY, JSON.stringify(payload)); } catch (e) {}
     }
-    if (inline && payload) window.rankBoostFlow.lead = payload;
+    if (inline && payload) {
+      window.rankBoostFlow.lead = payload;
+      var progressBar = document.getElementById("inline-progress-bar");
+      window.rankBoostFlow.rankingsReady = Boolean(res.ok && res.data && res.data.qualified === true);
+      if (window.rankBoostFlow.rankingsReady) {
+        progressBar.style.setProperty("--progress", "66.6667%");
+        progressBar.setAttribute("aria-valuenow", "2");
+        progressBar.setAttribute("aria-valuetext", "Your rankings are ready. Book your call to finish.");
+      } else {
+        progressBar.setAttribute("aria-valuetext", "Ranking check finished. Review the result below.");
+      }
+    }
     if (res.ok && res.data && res.data.qualified === true) renderFit(res.data);
     else if (res.ok && res.data && res.data.qualified === false) renderNoFit(res.data);
     else if (

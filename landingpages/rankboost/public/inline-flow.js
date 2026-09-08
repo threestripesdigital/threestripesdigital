@@ -2,6 +2,8 @@
 (function () {
   var form = document.getElementById("qualify-form");
   if (!form) return;
+  var progress = document.getElementById("inline-progress");
+  var progressBar = document.getElementById("inline-progress-bar");
   var tracker = document.getElementById("inline-track");
   var results = document.getElementById("inline-results");
   var booking = document.getElementById("inline-booking");
@@ -11,10 +13,14 @@
   var keys = ["tsd_rb_payload", "tsd_rb_result", "tsd_rb_pending_track", "tsd_rb_booking_started", "tsd_rb_lead_token"];
 
   function scroll() {
-    tracker.scrollIntoView({ block: "start", behavior: "instant" });
+    (progress.hidden ? form : progress).scrollIntoView({ block: "start", behavior: "instant" });
   }
   function step(number) {
-    tracker.hidden = false;
+    progress.hidden = number === 1;
+    var completed = number === 3 || flow.rankingsReady ? 2 : 1;
+    progressBar.style.setProperty("--progress", (completed / 3 * 100) + "%");
+    progressBar.setAttribute("aria-valuenow", String(completed));
+    progressBar.setAttribute("aria-valuetext", number === 3 ? "Your rankings are ready. Book your call to finish." : "Your details are submitted. Checking your rankings.");
     toggle.hidden = true;
     toggle.setAttribute("aria-expanded", "true");
     form.hidden = number !== 1;
@@ -42,6 +48,7 @@
       busy = true;
       mountedToken = null;
       flow.lead = payload;
+      flow.rankingsReady = false;
       if (!restoring) clearSession();
       try { sessionStorage.setItem("tsd_rb_payload", JSON.stringify(payload)); } catch (e) {}
       step(2);
@@ -62,6 +69,7 @@
       clearSession();
       if (flow.clearBooking) flow.clearBooking();
       flow.lead = null;
+      flow.rankingsReady = false;
       mountedToken = null;
       step(1);
       scroll();

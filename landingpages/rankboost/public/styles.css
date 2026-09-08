@@ -2186,3 +2186,11 @@ section.qualify.hero-qualify {
   .inline-panel .calendly-embed { height: 820px; }
   .inline-track { font-size: 13px; }
 }
+
+/* Progress starts after a valid submission, never when the form opens. */
+.inline-progress[hidden] { display: none !important; }
+.inline-progress { margin: 28px 0 24px; scroll-margin-top: calc(var(--header-h) + 24px); }
+.inline-progress-bar { height: 8px; overflow: hidden; border-radius: 999px; background: #26364b; }
+.inline-progress-bar > span { display: block; height: 100%; width: var(--progress, 33.3333%); border-radius: inherit; background: var(--gold-light); transition: width 0.3s ease; }
+.inline-progress .inline-track { margin: 16px 0 0; }
+@media (prefers-reduced-motion: reduce) { .inline-progress-bar > span { transition: none; } }

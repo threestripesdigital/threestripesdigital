@@ -92,11 +92,14 @@
         <section class="section qualify hero-qualify" id="qualify">
           <div class="container">
             <div class="form-shell">
-              <ol class="step-track inline-track" id="inline-track" aria-label="Your free boost progress" hidden>
+              <div id="inline-progress" class="inline-progress" hidden>
+                <div id="inline-progress-bar" class="inline-progress-bar" role="progressbar" aria-label="Free boost progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1" aria-valuetext="Your details are submitted. Checking your rankings."><span></span></div>
+                <ol class="step-track inline-track" id="inline-track" aria-label="Your free boost progress">
                 <li class="current" aria-current="step"><span class="dot">1</span><span>Your firm</span></li>
                 <li><span class="dot">2</span><span>Your rankings</span></li>
                 <li><span class="dot">3</span><span>Book your call</span></li>
-              </ol>
+                </ol>
+              </div>
               <div id="inline-results" class="inline-panel" hidden>
                 <p class="inline-eyebrow">Step 2 of 3 · Your rankings</p>
                 <div id="step-result" class="step-result" aria-live="polite"></div>
@@ -116,7 +119,6 @@
               </button>
 
               <form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>
-                <p class="inline-eyebrow">Step 1 of 3 · Tell us about your firm</p>
                 <div class="form-row two">
                   <div class="field" data-field="name">
                     <label for="name">Full name <span class="req" aria-hidden="true">*</span></label>
@@ -569,7 +571,6 @@
         formToggle.addEventListener("click", function () {
           if (!form.hidden) return;
           form.hidden = false;
-          document.getElementById("inline-track").hidden = false;
           formToggle.setAttribute("aria-expanded", "true");
           formToggle.hidden = true;
 

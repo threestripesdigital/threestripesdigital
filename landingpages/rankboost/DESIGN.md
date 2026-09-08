@@ -29,7 +29,7 @@
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
 - Qualification inputs use white backgrounds, dark text, and a visible focus ring against the navy section.
-- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Show a three-step progress indicator and explicit step headings. Step 2 has a prominent "Step 3: Book Your Call" action.
+- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 has a prominent "Step 3: Book Your Call" action.
 - Loading text describes the active request without fabricated percentages or timed claims that a particular backend stage has completed. Keep qualification gates, signed booking access, retry behavior, and tracking intact, including when session storage is unavailable.
 
 ## Responsive behaviour
@@ -47,3 +47,5 @@
 - Run `npm run deploy` so remote D1 migrations complete before Pages and router deployment.
 - Verify desktop and mobile views with screenshots no larger than 1568 pixels on the longest side.
 - Exercise direct-entry, failure, and successful funnel states rather than reviewing only the happy path.
+
+- Preview deployments route only the public check, booking, and tracking POST APIs to the configured production funnel through a fixed upstream. Verify real API readiness and replay an existing submission before sharing a preview; mocked browser responses cannot verify environment configuration.
