@@ -14,7 +14,7 @@ function database(migrate=true){
  if(migrate)for(const file of ['0001.sql','0002.sql','0003.sql'])raw.exec(readFileSync(new URL('../../../analytics/migrations/'+file,import.meta.url),'utf8'));
  const api={raw,prepare(sql){let args=[];const stmt={bind(...a){args=a;return stmt;},async run(){const result=raw.prepare(sql).run(...args);return {meta:{changes:Number(result.changes)}};},async first(){return raw.prepare(sql).get(...args)||null;},async all(){return {results:raw.prepare(sql).all(...args)};}};return stmt;},async batch(statements){raw.exec('BEGIN');try{const values=[];for(const s of statements)values.push(await s.run());raw.exec('COMMIT');return values;}catch(e){raw.exec('ROLLBACK');throw e;}}};return api;
 }
-function env(){return {DB:database(),REPORTING_TIMEZONE:'America/New_York',CURRENCY:'USD',DAILY_BUDGET:'100',META_CAMPAIGN_IDS:'111',META_ACCOUNT_ID:'123',META_API_VERSION:'v25.0'};}
+function env(){return {DB:database(),REPORTING_TIMEZONE:'America/New_York',CURRENCY:'USD',DAILY_BUDGET:'100',LAUNCH_AT:'2026-01-01T00:00:00.000Z',META_CAMPAIGN_IDS:'111',META_ACCOUNT_ID:'123',META_API_VERSION:'v25.0'};}
 const sid='10000000-0000-4000-8000-000000000001';
 test('threshold boundaries, midpoints and missing denominators',()=>{const cpm=rules[0];assert.equal(cpm.midpoint,42.5);assert.equal(classify(35,cpm),'good');assert.equal(classify(42.5,cpm),'ok');assert.equal(classify(50,cpm),'bad');assert.equal(classify(null,cpm),'waiting');assert.equal(classify(.7,rules[1]),'ok');assert.equal(classify(.69,rules[1]),'bad');assert.equal(divide(5,0),null);assert.equal(divide(null,5),null);});
 test('seven full days are required, prelaunch never unlocks',()=>{const start=Date.parse('2026-01-01T12:00:00Z');assert.equal(learning('',start).locked,true);assert.equal(learning(new Date(start).toISOString(),start+7*86400000-1).locked,true);assert.equal(learning(new Date(start).toISOString(),start+7*86400000).locked,false);});
@@ -66,4 +66,24 @@ test('show and qualified rates exclude unknowns, future and cancelled calls and 
  for(const key of ['show','qualified_rate']){const m=r.metrics.find(x=>x.key===key);assert.equal(m.value,50);assert.equal(m.sample,2);assert.equal(m.provisional,true);}
  assert.equal(r.calls.length,6); // Organic bookings can be managed but do not enter paid metrics.
  const response=await worker.fetch(new Request('http://localhost/api/calls',{method:'POST',headers:{Origin:'http://localhost'},body:JSON.stringify({id:'future',status:'showed',qualified:null,boosted:false,paid:false})}),e,{});assert.equal(response.status,400);
+});
+
+test('CAD account spend becomes USD without changing clicks; invalid FX preserves snapshot',async()=>{
+ const e=env();Object.assign(e,{META_ACCESS_TOKEN:'test-only',META_ACCOUNT_CURRENCY:'CAD',META_USD_TO_ACCOUNT_RATE:'1.3840',META_FX_DATE:'2026-09-04'});
+ const today=dayIn(Date.now(),e.REPORTING_TIMEZONE),original=globalThis.fetch;
+ globalThis.fetch=async(url)=>new URL(url).pathname.endsWith('/insights')?Response.json({data:[{date_start:today,ad_id:'222',ad_name:'Test',adset_id:'333',campaign_id:'111',campaign_name:'Rank Boost',spend:'138.40',impressions:'1000',inline_link_clicks:'10'}]}):Response.json({name:'Test',currency:'CAD',timezone_name:e.REPORTING_TIMEZONE});
+ try{
+  await syncMeta(e);let row=await e.DB.prepare('SELECT * FROM meta_daily').first();assert.ok(Math.abs(row.spend-100)<0.000001);assert.equal(row.impressions,1000);assert.equal(row.link_clicks,10);
+  const r=await report(e,new URL('https://local/api/report?days=7'));assert.equal(r.period.currency,'USD');assert.ok(r.notes.some(n=>n.includes('1.3840')&&n.includes('2026-09-04')));
+  e.META_USD_TO_ACCOUNT_RATE='0';await assert.rejects(syncMeta(e),/exchange rate/);row=await e.DB.prepare('SELECT * FROM meta_daily').first();assert.ok(Math.abs(row.spend-100)<0.000001);
+ }finally{globalThis.fetch=original;}
+});
+
+
+test('prelaunch visits stay out of paid totals and an explicit launch boundary excludes earlier reviews',async()=>{
+ const e=env();delete e.LAUNCH_AT;
+ await intake({kind:'session',session_id:sid,campaign_id:'111',ad_id:'222'},e);await intake({kind:'vsl_play',session_id:sid},e);
+ let r=await report(e,new URL('https://local/api/report'));assert.equal(r.totals.visitors,0);assert.equal(r.events.vsl_play,undefined);assert.ok(r.notes.some(n=>n.includes('has not launched')));
+ e.LAUNCH_AT=new Date(Date.now()-1000).toISOString();r=await report(e,new URL('https://local/api/report'));assert.equal(r.totals.visitors,1);
+ e.LAUNCH_AT=new Date(Date.now()+1000).toISOString();r=await report(e,new URL('https://local/api/report'));assert.equal(r.totals.visitors,0);
 });
