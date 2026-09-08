@@ -1,3 +1,4 @@
+import { WEBSITE_EVENT_TYPE_URI, WEBSITE_BOOKING_URL, websiteEligible } from "./_offers.js";
 // POST /api/booking — verify a booking against the signed lead and the
 // configured Rank Boost event before rendering confirmation details.
 
@@ -71,14 +72,16 @@ export async function onRequestPost({ request, env }) {
   const claims = await verifyLeadToken(env.FUNNEL_SIGNING_KEY, body.token);
   if (!claims) return json(401, { verified: false });
 
+  const website = body.offer === "website";
+  if (body.offer && !["boost", "website"].includes(body.offer)) return json(400, { verified: false });
   if (body.action === "access") {
     try {
       const lead = await env.LEADS_DB
-        .prepare("SELECT qualified FROM leads WHERE lead_ref = ?1 LIMIT 1")
+        .prepare("SELECT qualified, status FROM leads WHERE lead_ref = ?1 LIMIT 1")
         .bind(claims.ref)
         .first();
-      return Number(lead && lead.qualified) === 1
-        ? json(200, { eligible: true })
+      return (website ? websiteEligible(lead) : Number(lead && lead.qualified) === 1)
+        ? json(200, { eligible: true, offer: website ? "website" : "boost", ...(website ? { booking_url: WEBSITE_BOOKING_URL } : {}) })
         : json(403, { eligible: false });
     } catch (error) {
       console.log("booking_access_error", String(error).slice(0, 160));
@@ -93,7 +96,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   try {
-    const expectedEventType = String(env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, "");
+    const expectedEventType = String(website ? WEBSITE_EVENT_TYPE_URI : env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, "");
     const row = await env.LEADS_DB
       .prepare(
         `SELECT i.invitee_uri, i.event_uri, i.scheduled_start_at
@@ -101,7 +104,7 @@ export async function onRequestPost({ request, env }) {
          JOIN calendly_invitees AS i
            ON i.invitee_uri = l.calendly_invitee_uri
          WHERE l.lead_ref = ?1
-           AND l.qualified = 1
+           AND l.qualified = ${website ? 0 : 1}
            AND l.status = 'booked'
            AND i.status = 'booked'
            AND i.event_type_uri = ?2
@@ -117,7 +120,7 @@ export async function onRequestPost({ request, env }) {
     if (!matchesIdentifier(row.event_uri, expectedEvent)) {
       return json(404, { verified: false });
     }
-    return json(200, formatBooking(row));
+    return json(200, { ...formatBooking(row), offer: website ? "website" : "boost" });
   } catch (error) {
     console.log("booking_lookup_error", String(error).slice(0, 200));
     return json(503, { verified: false });

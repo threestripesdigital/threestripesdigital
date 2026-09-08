@@ -62,7 +62,7 @@ export async function onRequestPost(context) {
     row = await db
       .prepare(
         `SELECT id, lead_ref, name, phone, email, domain, top_keywords,
-                status, boost_live_at
+                status, qualified, boost_live_at
          FROM leads
          WHERE lower(email) = ?1 ORDER BY created_at DESC LIMIT 1`
       )
@@ -72,6 +72,7 @@ export async function onRequestPost(context) {
     return json({ error: "storage_unavailable" }, 503);
   }
   if (!row) return json({ error: "lead_not_found", email }, 404);
+  if (Number(row.qualified) !== 1) return json({ error: "not_boost_qualified" }, 409);
 
   const firstName = (row.name || "").trim().split(/\s+/)[0] || "";
 
@@ -173,7 +174,7 @@ export async function onRequestPost(context) {
         .prepare(
           `UPDATE leads SET status = 'boost_live',
              boost_live_at = COALESCE(boost_live_at, CURRENT_TIMESTAMP)
-           WHERE id = ?1 AND status = 'booked' AND boost_live_at IS NULL`
+           WHERE id = ?1 AND status = 'booked' AND qualified = 1 AND boost_live_at IS NULL`
         )
         .bind(row.id),
       ...jobs.map((job) =>

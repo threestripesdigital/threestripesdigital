@@ -155,7 +155,7 @@ async function kitUpsertTag(env, payload, options) {
     "X-Kit-Api-Key": env.KIT_API_KEY,
     "Content-Type": "application/json",
   };
-  await request("https://api.kit.com/v4/subscribers", {
+  const subscriberResponse = await request("https://api.kit.com/v4/subscribers", {
     method: "POST",
     headers,
     body: JSON.stringify({
@@ -164,6 +164,18 @@ async function kitUpsertTag(env, payload, options) {
       ...(payload.fields ? { fields: payload.fields } : {}),
     }),
   }, options);
+  // The booked website state removes the unbooked state before enrollment.
+  if (Array.isArray(payload.remove_tag_ids) && payload.remove_tag_ids.length) {
+    const data = await subscriberResponse.json();
+    const subscriberId = Number(data.subscriber && data.subscriber.id);
+    if (!Number.isSafeInteger(subscriberId) || subscriberId <= 0) throw new IntegrationError("kit_subscriber_id_missing");
+    for (const tagId of payload.remove_tag_ids) {
+      if (!Number.isSafeInteger(tagId) || tagId <= 0 || tagId === payload.tag_id) continue;
+      try {
+        await request(`https://api.kit.com/v4/tags/${tagId}/subscribers/${subscriberId}`, { method: "DELETE", headers }, options);
+      } catch (error) { if (error.status !== 404) throw error; }
+    }
+  }
   await request(`https://api.kit.com/v4/tags/${payload.tag_id}/subscribers`, {
     method: "POST",
     headers,

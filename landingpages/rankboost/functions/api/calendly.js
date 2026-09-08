@@ -1,3 +1,4 @@
+import { WEBSITE_EVENT_TYPE_URI, WEBSITE_TAG_IDS, websiteEligible } from "./_offers.js";
 // POST /api/calendly — Calendly webhook receiver (invitee.created / canceled).
 // Verifies the Calendly signature, posts a BOOKED/CANCELED note to Slack with
 // the qualifying answers, and flips the matching lead's status in D1.
@@ -124,11 +125,13 @@ async function metaLifecycleJob(
             ? "sched-" + uuid
             : eventName.toLowerCase() + "-" + uuid,
         event_source_url:
-          "https://threestripesdigital.com/rank-boost/law-firms/thank-you",
+          eventName.startsWith("WebsiteConsultation")
+            ? "https://threestripesdigital.com/rank-boost/law-firms/#qualify"
+            : "https://threestripesdigital.com/rank-boost/law-firms/thank-you",
         action_source: "website",
         user_data: userData,
         custom_data: {
-          content_name: "rank-boost-call",
+          content_name: eventName.startsWith("WebsiteConsultation") ? "website-consultation" : "rank-boost-call",
           lifecycle_status: eventName,
         },
       },
@@ -195,6 +198,7 @@ function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey) {
     dedupeKey: `${sourceKey}:kit`,
     payload: {
       tag_id: tagId,
+      ...(Object.values(WEBSITE_TAG_IDS).includes(tagId) ? { remove_tag_ids: Object.values(WEBSITE_TAG_IDS).filter(id => id !== tagId) } : {}),
       email,
       first_name: firstName || "",
     },
@@ -392,6 +396,7 @@ function leadLifecycleStatement(
     providerAt,
     oldInviteeUri,
     suppressTerminal,
+    isWebsite = false,
   }
 ) {
   if (!leadRef || !inviteeUri || !Number.isFinite(providerAt)) return null;
@@ -403,7 +408,7 @@ function leadLifecycleStatement(
               calendly_lifecycle_at = CURRENT_TIMESTAMP,
               calendly_provider_event_at_ms = ?3
           WHERE lead_ref = ?2
-            AND qualified = 1
+            AND qualified = ${isWebsite ? 0 : 1}
             AND status <> 'boost_live'
             AND EXISTS (
               SELECT 1 FROM calendly_invitees
@@ -432,7 +437,7 @@ function leadLifecycleStatement(
             calendly_lifecycle_at = CURRENT_TIMESTAMP,
             calendly_provider_event_at_ms = ?4
         WHERE lead_ref = ?3
-          AND qualified = 1
+          AND qualified = ${isWebsite ? 0 : 1}
           AND status <> 'boost_live'
            AND (
              calendly_invitee_uri = ?2 OR calendly_invitee_uri IS NULL
@@ -457,7 +462,8 @@ function calendlyJobStatement(
   { leadRef = null, kind, dedupeKey, payload },
   inviteeUri,
   sourceStatus,
-  providerAt
+  providerAt,
+  isWebsite = false
 ) {
   return db
     .prepare(
@@ -474,7 +480,7 @@ function calendlyJobStatement(
          ?1 IS NULL OR EXISTS (
            SELECT 1 FROM leads
            WHERE lead_ref = ?1 AND calendly_invitee_uri = ?5
-             AND qualified = 1
+             AND qualified = ${isWebsite ? 0 : 1}
              AND status = CASE
                WHEN ?6 = 'canceled' THEN 'booking_canceled'
                ELSE ?6
@@ -630,14 +636,14 @@ async function resolveStoredLeadRef(db, inviteeUri, oldInviteeUri) {
   return row && row.lead_ref ? String(row.lead_ref) : "";
 }
 
-async function resolveEligibleLeadRef(db, storedLeadRef, claimedLeadRef) {
+async function resolveEligibleLeadRef(db, storedLeadRef, claimedLeadRef, isWebsite = false) {
   const leadRef = storedLeadRef || claimedLeadRef;
   if (!leadRef) return "";
   const row = await db
-    .prepare("SELECT qualified FROM leads WHERE lead_ref = ?1 LIMIT 1")
+    .prepare("SELECT qualified, status FROM leads WHERE lead_ref = ?1 LIMIT 1")
     .bind(leadRef)
     .first();
-  if (!row || Number(row.qualified) !== 1) return "";
+  if (isWebsite ? !websiteEligible(row) : (!row || Number(row.qualified) !== 1)) return "";
   return leadRef;
 }
 
@@ -713,7 +719,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   const directTarget = directEventTypeUri(p);
   if (
     directTarget &&
-    directTarget !== String(env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, "")
+    ![String(env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, ""), WEBSITE_EVENT_TYPE_URI].includes(directTarget)
   ) {
     return ok();
   }
@@ -724,10 +730,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   if (!eventContext || !eventContext.eventTypeUri || !eventContext.startTime) {
     return reject(503);
   }
-  if (
-    eventContext.eventTypeUri !==
-    String(env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, "")
-  ) {
+  const isWebsite = eventContext.eventTypeUri === WEBSITE_EVENT_TYPE_URI;
+  if (!isWebsite && eventContext.eventTypeUri !== String(env.CALENDLY_EVENT_TYPE_URI).replace(/\/$/, "")) {
     return ok();
   }
   const inviteeUri = inviteeUriFromPayload(p);
@@ -763,7 +767,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     leadRef = await resolveEligibleLeadRef(
       env.LEADS_DB,
       storedLeadRef,
-      claimedLeadRef
+      claimedLeadRef, isWebsite
     );
   } catch (error) {
     console.log("calendly_lead_binding_error", String(error).slice(0, 160));
@@ -812,13 +816,13 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   }
   const firstName = (name || "").trim().split(/\s+/)[0] || "";
   const text = booked
-    ? `:calendar: *Rank-boost call BOOKED*\n*${name}* · ${phone || "?"}${email ? " · " + email : ""}\n` +
+    ? `:calendar: *${isWebsite ? "Website consultation" : "Rank-boost call"} BOOKED*\n*${name}* · ${phone || "?"}${email ? " · " + email : ""}\n` +
       `${domain || website || "?"} · ${when}\n` +
       `Budget: ${budget || "?"} · Revenue: ${revenue || "?"}\n` +
       `Marketing now: ${marketing || "?"}`
     : isNoShow
-      ? `:no_entry: *Rank-boost call NO-SHOW*\n*${name}*${email ? " · " + email : ""} · ${domain || website || "?"} · was ${when}`
-      : `:x: *Rank-boost call CANCELED*\n*${name}*${email ? " · " + email : ""} · ${domain || website || "?"} · was ${when}`;
+      ? `:no_entry: *${isWebsite ? "Website consultation" : "Rank-boost call"} NO-SHOW*\n*${name}*${email ? " · " + email : ""} · ${domain || website || "?"} · was ${when}`
+      : `:x: *${isWebsite ? "Website consultation" : "Rank-boost call"} CANCELED*\n*${name}*${email ? " · " + email : ""} · ${domain || website || "?"} · was ${when}`;
 
   const jobs = isRescheduledCancel || !leadRef
     ? []
@@ -834,13 +838,13 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   if (leadRef && booked) {
     jobs.push(
       kitUpsertTagJob(
-        KIT_TAG_IDS.booked,
+        isWebsite ? WEBSITE_TAG_IDS.booked : KIT_TAG_IDS.booked,
         email,
         firstName,
         leadRef,
         sourceKey
       ),
-      bookingSmsJob(
+      !isWebsite && bookingSmsJob(
         { phone, firstName, startIso: start, tz: p.timezone },
         leadRef,
         sourceKey
@@ -849,7 +853,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     if (leadRef) {
       jobs.push(
         await metaLifecycleJob(
-          "Schedule",
+          isWebsite ? "WebsiteConsultationBooked" : "Schedule",
           { inviteeUri, name, email, phone },
           leadRef,
           sourceKey
@@ -858,18 +862,18 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     }
   } else if (leadRef && isNoShow) {
     jobs.push(
-      kitTagExistingJob(
+      isWebsite ? kitUpsertTagJob(WEBSITE_TAG_IDS.noShow, email, firstName, leadRef, sourceKey) : kitTagExistingJob(
         KIT_TAG_IDS.noShow,
         email,
         leadRef,
         sourceKey
       ),
-      followupSmsJob("no_show", { phone, firstName }, leadRef, sourceKey)
+      !isWebsite && followupSmsJob("no_show", { phone, firstName }, leadRef, sourceKey)
     );
     if (leadRef) {
       jobs.push(
         await metaLifecycleJob(
-          "BookingNoShow",
+          isWebsite ? "WebsiteConsultationNoShow" : "BookingNoShow",
           { inviteeUri, name, email, phone },
           leadRef,
           sourceKey
@@ -878,12 +882,13 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     }
   } else if (leadRef && !isRescheduledCancel) {
     jobs.push(
-      followupSmsJob("canceled", { phone, firstName }, leadRef, sourceKey)
+      isWebsite && kitUpsertTagJob(WEBSITE_TAG_IDS.canceled, email, firstName, leadRef, sourceKey),
+      !isWebsite && followupSmsJob("canceled", { phone, firstName }, leadRef, sourceKey)
     );
     if (leadRef) {
       jobs.push(
         await metaLifecycleJob(
-          "BookingCanceled",
+          isWebsite ? "WebsiteConsultationCanceled" : "BookingCanceled",
           { inviteeUri, name, email, phone },
           leadRef,
           sourceKey
@@ -916,7 +921,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         dedupeKey: `${recoveredSourceKey}:slack`,
         payload: {
           text:
-            `:calendar: *Rank-boost call BOOKED*\n*${recoveredName}* · ` +
+            `:calendar: *${isWebsite ? "Website consultation" : "Rank-boost call"} BOOKED*\n*${recoveredName}* · ` +
             `${recoveredPhone || "?"} · ${recoveredEmail}\n` +
             `${recoveredDomain || recoveredWebsite || "?"} · ${recoveredWhen}\n` +
             `Budget: ${recoveredBudget || "?"} · ` +
@@ -927,13 +932,13 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         },
       },
       kitUpsertTagJob(
-        KIT_TAG_IDS.booked,
+        isWebsite ? WEBSITE_TAG_IDS.booked : KIT_TAG_IDS.booked,
         recoveredEmail,
         recoveredFirstName,
         leadRef,
         recoveredSourceKey
       ),
-      bookingSmsJob(
+      !isWebsite && bookingSmsJob(
         {
           phone: recoveredPhone,
           firstName: recoveredFirstName,
@@ -944,7 +949,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         recoveredSourceKey
       ),
       await metaLifecycleJob(
-        "Schedule",
+        isWebsite ? "WebsiteConsultationBooked" : "Schedule",
         {
           inviteeUri: recoveredBooking.inviteeUri,
           name: recoveredName,
@@ -993,6 +998,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     providerAt,
     oldInviteeUri,
     suppressTerminal: isRescheduledCancel,
+    isWebsite,
   });
   if (leadStatement) statements.push(leadStatement);
   statements.push(
@@ -1004,7 +1010,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
           job,
           inviteeUri,
           sourceStatus,
-          providerAt
+          providerAt, isWebsite
         )
       )
   );
@@ -1026,6 +1032,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
       providerAt: recoveredBooking.providerAt,
       oldInviteeUri: inviteeUri,
       suppressTerminal: false,
+      isWebsite,
     });
     if (recoveredLeadStatement) statements.push(recoveredLeadStatement);
     statements.push(
@@ -1035,7 +1042,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
           job,
           recoveredBooking.inviteeUri,
           "booked",
-          recoveredBooking.providerAt
+          recoveredBooking.providerAt, isWebsite
         )
       )
     );
@@ -1124,17 +1131,17 @@ export async function pollCalendlyNoShows(env, options = {}) {
       `UPDATE calendly_invitees
        SET status = 'expired', updated_at = CURRENT_TIMESTAMP
         WHERE status = 'booked'
-          AND event_type_uri = ?1
+          AND event_type_uri IN (?1, ?2)
           AND scheduled_start_at < datetime('now', '-${CALENDLY_POLL_WINDOW_DAYS} days')`
     )
-    .bind(eventTypeUri)
+    .bind(eventTypeUri, WEBSITE_EVENT_TYPE_URI)
     .run();
   const { results } = await env.LEADS_DB
     .prepare(
       `SELECT invitee_uri, event_uri, event_type_uri, lead_ref, scheduled_start_at
        FROM calendly_invitees
        WHERE status = 'booked'
-          AND event_type_uri = ?1
+          AND event_type_uri IN (?1, ?3)
          AND scheduled_start_at <= datetime('now', '-15 minutes')
          AND scheduled_start_at >= datetime('now', '-${CALENDLY_POLL_WINDOW_DAYS} days')
           AND (
@@ -1145,7 +1152,7 @@ export async function pollCalendlyNoShows(env, options = {}) {
        ORDER BY scheduled_start_at ASC
        LIMIT ?2`
     )
-    .bind(eventTypeUri, limit)
+    .bind(eventTypeUri, limit, WEBSITE_EVENT_TYPE_URI)
     .all();
   const candidates = results || [];
   const summary = {
@@ -1165,7 +1172,7 @@ export async function pollCalendlyNoShows(env, options = {}) {
       env.LEADS_DB,
       candidate.invitee_uri,
       leaseToken,
-      eventTypeUri
+      candidate.event_type_uri || eventTypeUri
     ))) {
       summary.skipped += 1;
       return;

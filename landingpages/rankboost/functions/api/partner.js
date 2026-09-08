@@ -113,7 +113,7 @@ function partnerText(row, totals) {
     `*Looked up by:*  ${PARTNER_LABEL}`,
     `*Website:*  ${row.domain}`,
     `*Status:*  ${flag}`,
-    `*Keywords in 11–50:*  ${row.total || 0}`,
+    `*Keywords in 1 to 50:*  ${row.total || 0}`,
   ];
   if (row.oppValue > 0) {
     lines.push(`*Opportunity:*  ${money(row.oppValue)}/mo across their top ${row.keywords.length} money keyword${row.keywords.length === 1 ? "" : "s"}`);

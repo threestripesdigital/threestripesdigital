@@ -6,7 +6,7 @@ export async function syncFunnel(env) {
  // Deliberately read only non-PII reporting columns from the existing verified Calendly integration.
  const {results}=await env.LEADS_DB.prepare(`SELECT i.invitee_uri, i.lead_ref, i.scheduled_start_at, i.status,
  i.created_at, l.qualified FROM calendly_invitees i JOIN leads l ON l.lead_ref=i.lead_ref
- WHERE i.scheduled_start_at IS NOT NULL ORDER BY i.created_at DESC LIMIT 2000`).all();
+ WHERE i.scheduled_start_at IS NOT NULL AND l.qualified = 1 ORDER BY i.created_at DESC LIMIT 2000`).all();
  if(results.length===2000) throw Error('Booking import needs pagination');
  const statements=[];
  for(const c of results) {

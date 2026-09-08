@@ -1,3 +1,4 @@
+import { WEBSITE_TAG_IDS } from "./_offers.js";
 // POST /api/check — instant DataForSEO qualify check for the rank-boost LP.
 // Body: { name, phone, website_url }
 // Returns: { qualified, domain, total, groups, keywords: [{ keyword,
@@ -85,7 +86,7 @@ function slackJobForLead(lead, leadRef) {
   }
   lines.push(`*Website:*  ${lead.domain || "—"}`);
   lines.push(`*Status:*  ${flag}`);
-  lines.push(`*Keywords in 11–50:*  ${lead.total || 0}`);
+  lines.push(`*Keywords in 1 to 50:*  ${lead.total || 0}`);
   if (totalGap > 0) {
     lines.push(`*Opportunity:*  ${money$(totalGap)}/mo across their top ${shown.length} money keyword${shown.length === 1 ? "" : "s"}`);
   }
@@ -218,7 +219,7 @@ async function metaJobForLead(context, lead, leadRef) {
       boost_fits: lead.total || 0,
     },
   };
-  const events = [{ ...baseEvent, event_name: "Lead", event_id: baseEventId }];
+  const events = [{ ...baseEvent, event_name: lead.qualified ? "Lead" : "RankCheckCompleted", event_id: baseEventId }];
   // Separate qualified signal so campaigns can optimize on real prospects
   // instead of every form fill. Dedupes with the browser's QualifiedLead.
   if (lead.qualified) {
@@ -241,7 +242,13 @@ async function metaJobForLead(context, lead, leadRef) {
 // book-the-call sequence. Two steps: upsert subscriber, then tag.
 function kitJobForLead(lead, leadRef) {
   if (!lead.email) return;
-  if (lead.status !== "qualified") return;
+  if (!["qualified", "no_fit"].includes(lead.status)) return;
+  if (lead.status === "no_fit") return {
+    leadRef, kind: "kit.upsert_tag", dedupeKey: `lead:${leadRef}:kit`,
+    payload: { email: lead.email, first_name: (lead.name || "").trim().split(/\s+/)[0],
+      fields: { domain: lead.domain || "", phone: lead.phone || "", boost_fits: "0" },
+      tag_id: WEBSITE_TAG_IDS.lead }
+  };
 
   const firstName = (lead.name || "").trim().split(/\s+/)[0] || "";
   // Per-lead keyword data from the rank check, so emails can talk about
@@ -636,6 +643,7 @@ export async function onRequestPost(context) {
       200,
       (leadToken) => ({
         qualified,
+        reason_not_qualified: qualified ? null : "no_supported_keywords",
         domain,
         total,
         groups: displayThemes.length,

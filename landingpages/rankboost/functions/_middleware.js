@@ -43,7 +43,24 @@ function notFound() {
   });
 }
 
+const PUBLIC_FUNNEL_API_PATHS = new Set(["/api/check", "/api/booking", "/api/track"]);
+const PRODUCTION_FUNNEL_ORIGIN = "https://tsd-law-firm-rank-boost.pages.dev";
+
 async function route(context, url) {
+  // Preview frontends share the configured production API, keeping signing
+  // keys and provider credentials in one environment. Never proxy admin APIs.
+  if (context.env && context.env.FUNNEL_API_ORIGIN === PRODUCTION_FUNNEL_ORIGIN &&
+      url.hostname.endsWith(".tsd-law-firm-rank-boost.pages.dev") &&
+      PUBLIC_FUNNEL_API_PATHS.has(url.pathname) && context.request.method === "POST") {
+    const headers = new Headers(context.request.headers);
+    for (const name of [...headers.keys()]) {
+      if (name.toLowerCase().startsWith("x-forwarded-client-") ||
+          ["x-router-token", "authorization", "cookie"].includes(name.toLowerCase())) headers.delete(name);
+    }
+    return fetch(new Request(PRODUCTION_FUNNEL_ORIGIN + url.pathname, {
+      method: "POST", headers, body: context.request.body, redirect: "manual", duplex: "half",
+    }));
+  }
   const onScoutHost = url.hostname === scoutHostFor(context.env);
   const path = url.pathname;
 

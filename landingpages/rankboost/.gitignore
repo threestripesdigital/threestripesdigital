@@ -7,3 +7,4 @@ _worker.bundle
 *.key
 *.pem
 credentials.json
+node_modules/

@@ -94,7 +94,7 @@
       out.innerHTML =
         '<p class="res-badge no">Not a fit</p>' +
         '<h2 class="step-h">No boost fits for ' + escHtml(data.domain) + '.</h2>' +
-        '<p class="res-sub">Nothing ranking in positions 11–50 with real search volume today. ' +
+        '<p class="res-sub">Nothing ranking in positions 1 to 50 with real search volume today. ' +
         'This one needs foundational SEO before a boost would do anything.</p>';
       return;
     }
@@ -114,7 +114,7 @@
 
     out.innerHTML =
       '<p class="res-badge">✓ ' + escHtml(data.domain) + ' qualifies</p>' +
-      '<p class="res-sub"><strong>' + totalCount + ' keywords</strong> stuck in positions 11–50. ' +
+      '<p class="res-sub"><strong>' + totalCount + ' keywords</strong> stuck in positions 1 to 50. ' +
       'Their strongest money keywords:</p>' +
       '<div class="opp-list">' +
       '<div class="opp-total">' +
@@ -165,7 +165,7 @@
             : '<span class="pt-no">no fit</span>';
           return '<div class="pt-row">' +
             '<span class="pt-dom">' + escHtml(r.domain) +
-            '<span>' + (r.qualified ? escHtml(r.total) + ' keywords in 11–50' : 'nothing in 11–50') + '</span></span>' +
+            '<span>' + (r.qualified ? escHtml(r.total) + ' keywords in 1 to 50' : 'nothing in 1 to 50') + '</span></span>' +
             value +
             '<span class="pt-when">' + escHtml(when) + '</span>' +
             '</div>';
