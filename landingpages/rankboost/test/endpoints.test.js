@@ -493,15 +493,16 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
     "founder-urgency",
     "breakout-why-free",
     "breakout-difference",
-    "breakout-free-boost",
+    "breakout-safety",
+    "breakout-timing",
     "breakout-competitors",
   ]) {
     assert.match(source, new RegExp(`data-video-slot="${slot}"`));
   }
 
   const embeds = [...source.matchAll(/<wistia-player media-id="([a-z0-9]+)" aspect="0.5625"/g)];
-  assert.equal(embeds.length, 5);
-  assert.equal(new Set(embeds.map((match) => match[1])).size, 5);
+  assert.equal(embeds.length, 4);
+  assert.equal(new Set(embeds.map((match) => match[1])).size, 4);
   for (const [, id] of embeds) {
     assert.ok(source.includes(`src="https://fast.wistia.com/embed/${id}.js"`));
   }
