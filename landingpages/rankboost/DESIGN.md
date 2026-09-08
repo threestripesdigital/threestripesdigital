@@ -28,6 +28,10 @@
 - Boost Live reasserts the booked tag while stale booking messages remain suppressed.
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
+- Qualification inputs use white backgrounds, dark text, and a visible focus ring against the navy section.
+- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 has a prominent "Step 3: Book Your Call" action.
+- Loading text describes the active request without fabricated percentages or timed claims that a particular backend stage has completed. Keep qualification gates, signed booking access, retry behavior, and tracking intact, including when session storage is unavailable.
+
 ## Responsive behaviour
 
 - Founder and breakout videos retain their portrait 9:16 framing, use accessible playback controls, and never autoplay.
@@ -51,3 +55,4 @@
 - Simplify Step 2 to its heading and a single invitation example image highlighting the Yes response. Remove numbered instruction cards. Use large high-contrast blue and pale-blue section buttons below it, stacked on mobile.
 
 - Use the exact Calendly event name, Three Stripes Digital Rank Boost, in the invitation image. Step 2 says Please check your inbox with spam guidance and Bilal’s clickable email. Below it, use matching light cards with simple blue icons, action-led titles, supporting descriptions and clear video/case-study links.
+- Preview deployments route only the public check, booking, and tracking POST APIs to the configured production funnel through a fixed upstream. Verify real API readiness and replay an existing submission before sharing a preview; mocked browser responses cannot verify environment configuration.

@@ -91,7 +91,27 @@
         <section class="section qualify hero-qualify" id="qualify">
           <div class="container">
             <div class="form-shell">
-              <div class="form-result" id="form-result" role="status" aria-live="polite"></div>
+              <div id="inline-progress" class="inline-progress" hidden>
+                <div id="inline-progress-bar" class="inline-progress-bar" role="progressbar" aria-label="Free boost progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1" aria-valuetext="Your details are submitted. Checking your rankings."><span></span></div>
+                <ol class="step-track inline-track" id="inline-track" aria-label="Your free boost progress">
+                <li class="current" aria-current="step"><span class="dot">1</span><span>Your firm</span></li>
+                <li><span class="dot">2</span><span>Your rankings</span></li>
+                <li><span class="dot">3</span><span>Book your call</span></li>
+                </ol>
+              </div>
+              <div id="inline-results" class="inline-panel" hidden>
+                <p class="inline-eyebrow">Step 2 of 3 · Your rankings</p>
+                <div id="step-result" class="step-result" aria-live="polite"></div>
+              </div>
+              <div role="region" id="inline-booking" class="inline-panel step-result" aria-labelledby="booking-heading" hidden>
+                <p class="inline-eyebrow">Step 3 of 3 · Last step</p>
+                <h2 class="step-h" id="booking-heading" tabindex="-1">Book Your Call</h2>
+                <p class="res-sub">Choose a free 30-minute call with Bilal. We’ll review your keywords, pick the right opportunity, and plan your free boost together.</p>
+                <p class="res-note">No credit card, no contract, no site access needed.</p>
+                <div class="calendly-embed" id="calendly-embed"><div class="calendly-loading">Loading your booking calendar...</div></div>
+                <p class="res-note">Calendar not loading? <a id="calendly-fallback" href="#" target="_blank" rel="noopener noreferrer">Open the booking page</a>.</p>
+                <button class="btn btn-ghost" id="inline-back-results" type="button">Back to your rankings</button>
+              </div>
 
               <button class="btn btn-primary btn-lg btn-block qualify-form-toggle" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">
                 Get my free boost
@@ -467,6 +487,9 @@
     <a class="btn btn-primary btn-block" href="#qualify">Get my free boost</a>
   </div>
 
+  <script src="inline-flow.js"></script>
+  <script src="results.js"></script>
+  <script src="book.js"></script>
   <script>
     (function () {
       var yearEl = document.getElementById("year");
@@ -540,7 +563,6 @@
       }
 
       var form = document.getElementById("qualify-form");
-      var resultEl = document.getElementById("form-result");
       var formToggle = document.getElementById("qualify-form-toggle");
       var formOpened = false;
 
@@ -561,101 +583,6 @@
           var nameInput = document.getElementById("name");
           if (nameInput) nameInput.focus();
         });
-      }
-
-      // Calendly event link, shown on the qualified screen. Prefill mapping:
-      // name/email are built-ins; a1 = Phone Number, a2 = Website URL
-      // (positional custom-question params on this event).
-      var CALENDLY_URL = "https://calendly.com/bilal-threestripesdigital/three-stripes-digital-rank-boost";
-      var lastLead = null;
-
-      function calendlyLink() {
-        if (!CALENDLY_URL) return "";
-        if (!lastLead) return CALENDLY_URL;
-        var params = [];
-        if (lastLead.name) params.push("name=" + encodeURIComponent(lastLead.name));
-        if (lastLead.email) params.push("email=" + encodeURIComponent(lastLead.email));
-        if (lastLead.phone) params.push("a1=" + encodeURIComponent(lastLead.phone));
-        if (lastLead.domain) params.push("a2=" + encodeURIComponent(lastLead.domain));
-        if (lastLead.lead_token) params.push("utm_content=" + encodeURIComponent(lastLead.lead_token));
-        return params.length ? CALENDLY_URL + "?" + params.join("&") : CALENDLY_URL;
-      }
-
-      function wait(ms) {
-        return new Promise(function (resolve) { setTimeout(resolve, ms); });
-      }
-
-      function privateCheck(payload, attempt) {
-        return fetch("api/check", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        })
-          .then(function (response) {
-            return response.json()
-              .catch(function () { return { error: "invalid_response" }; })
-              .then(function (data) {
-                return { ok: response.ok, status: response.status, data: data };
-              });
-          })
-          .then(function (res) {
-            var processing = res.status === 409 && res.data && res.data.error === "processing";
-            var storageRetry = res.status === 503 && res.data && res.data.error === "storage_unavailable";
-            if ((processing || storageRetry) && attempt < 6) {
-              var hinted = Number(res.data && res.data.retry_after_ms) || 1000;
-              return wait(Math.max(500, Math.min(hinted, 2500)))
-                .then(function () { return privateCheck(payload, attempt + 1); });
-            }
-            return res;
-          })
-          .catch(function (error) {
-            if (attempt >= 2) throw error;
-            return wait(750 * (attempt + 1))
-              .then(function () { return privateCheck(payload, attempt + 1); });
-          });
-      }
-
-      function privateBookingStarted(payload, leadToken, attempt) {
-        var eventId = "bs-" + payload.event_id;
-        if (attempt === 0 && window.tsdMetaTrackingEnabled === true && window.fbq) {
-          fbq("trackCustom", "BookingStarted", { content_name: "rank-boost-call" }, { eventID: eventId });
-        }
-        return fetch("api/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          keepalive: true,
-          body: JSON.stringify({
-            event_name: "BookingStarted",
-            event_id: eventId,
-            lead_token: leadToken,
-            fbp: payload.fbp || "",
-            fbc: payload.fbc || "",
-            external_id: payload.external_id || "",
-            page_url: location.href
-          })
-        }).then(function (response) {
-          if (response.ok || attempt >= 3) return;
-          return wait(600 * (attempt + 1))
-            .then(function () { return privateBookingStarted(payload, leadToken, attempt + 1); });
-        }).catch(function () {
-          if (attempt >= 3) return;
-          return wait(600 * (attempt + 1))
-            .then(function () { return privateBookingStarted(payload, leadToken, attempt + 1); });
-        });
-      }
-
-      function escHtml(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-        });
-      }
-
-      function showResult(html) {
-        if (!resultEl) return;
-        resultEl.innerHTML = html;
-        resultEl.classList.add("is-visible");
-        form.classList.add("is-submitted");
-        resultEl.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
       if (form) {
@@ -690,7 +617,6 @@
             return;
           }
 
-          lastLead = { name: name, phone: phone, email: email, domain: domain };
 
           // Meta attribution is collected for automatic browser-based measurement.
           var eventId = (window.crypto && crypto.randomUUID)
@@ -708,9 +634,7 @@
             if (fbclid) fbc = "fb.1." + Date.now() + "." + fbclid;
           }
 
-          // Hand off to step 2. The check itself runs there, so the visitor
-          // leaves the sales page the moment they submit and lands in a
-          // dedicated funnel step whose only job is book the call.
+          // Keep the ranking check and booking in this section.
           var payload = {
             name: name,
             phone: phone,
@@ -724,92 +648,7 @@
             fbc: fbc,
             external_id: metaAllowed ? (window.tsdExtId || "") : ""
           };
-          try {
-            sessionStorage.setItem("tsd_rb_payload", JSON.stringify(payload));
-            sessionStorage.removeItem("tsd_rb_result");
-            sessionStorage.removeItem("tsd_rb_pending_track");
-            sessionStorage.removeItem("tsd_rb_booking_started");
-            sessionStorage.removeItem("tsd_rb_lead_token");
-          } catch (err) {
-            // If private mode blocks storage, submit here before leaving so
-            // the lead and qualification result are never silently dropped.
-            showResult(
-              '<div class="res-loading"><i class="res-spin" aria-hidden="true"></i>' +
-              '<h3>Checking ' + escHtml(domain) + ' …</h3>' +
-              '<p class="res-sub">Private browsing is on, so we’re completing the check here.</p></div>'
-            );
-            privateCheck(payload, 0)
-              .then(function (res) {
-                if (!res.ok && res.data && res.data.error === "storage_unavailable") {
-                  showResult(
-                    '<h3>Couldn’t save your submission.</h3>' +
-                    '<p class="res-sub">Nothing was submitted. Please turn off private browsing and try again.</p>'
-                  );
-                  return;
-                }
-                if (!res.ok) {
-                  var privateError = res.data && res.data.error;
-                  var privateMessage = privateError === "rate_limited"
-                    ? "Your details were saved, but this browser has reached the ranking-check limit. Please try later."
-                    : privateError === "capacity_limited"
-                      ? "Your details were saved, but today’s ranking-check capacity has been reached. Please try later."
-                      : res.data && res.data.saved
-                        ? "We saved your details but couldn’t complete the ranking check. Please try again later."
-                        : "We couldn’t complete or verify the ranking check. Please try again later.";
-                  showResult(
-                    '<h3>Couldn’t complete your ranking check.</h3>' +
-                    '<p class="res-sub">' + escHtml(privateMessage) + '</p>'
-                  );
-                  return;
-                }
-                if (window.tsdMetaTrackingEnabled === true && window.fbq &&
-                    res.data && res.data.lead_token && res.data.error !== "rate_limited") {
-                  fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
-                  if (res.ok && res.data.qualified === true) {
-                    fbq("trackCustom", "QualifiedLead", { content_name: "rank-check" }, { eventID: payload.event_id + "-q" });
-                  }
-                }
-                if (res.ok && res.data && res.data.qualified === false) {
-                  showResult(
-                    '<h3>No boost fits found for ' + escHtml(domain) + '.</h3>' +
-                    '<p class="res-sub">The site needs foundational SEO before this boost makes sense. Straight answer, no sales call.</p>'
-                  );
-                  return;
-                }
-                if (!res.data || res.data.qualified !== true || !res.data.lead_token) {
-                  showResult(
-                    '<h3>Couldn’t verify qualification.</h3>' +
-                    '<p class="res-sub">We did not open booking. Please try the ranking check again later.</p>'
-                  );
-                  return;
-                }
-                lastLead.lead_token = res.data.lead_token;
-                var bookingOpened = false;
-                function openPrivateBooking() {
-                  if (bookingOpened) return;
-                  bookingOpened = true;
-                  window.location.href = "book?lead_token=" +
-                    encodeURIComponent(res.data.lead_token);
-                }
-                setTimeout(openPrivateBooking, 1500);
-                privateBookingStarted(payload, res.data.lead_token, 0)
-                  .finally(openPrivateBooking);
-              })
-              .catch(function () {
-                showResult(
-                  '<h3>Couldn’t reach the ranking checker.</h3>' +
-                  '<p class="res-sub">Your info was not submitted. Please turn off private browsing and try again.</p>'
-                );
-              });
-            return;
-          }
-
-          showResult(
-            '<div class="res-loading"><i class="res-spin" aria-hidden="true"></i>' +
-            '<h3>Checking ' + escHtml(domain) + ' …</h3>' +
-            '<p class="res-sub">Taking you to your results.</p></div>'
-          );
-          window.location.href = "results";
+          window.rankBoostFlow.start(payload);
         });
         form.addEventListener("input", function (event) {
           var field = event.target && event.target.closest
