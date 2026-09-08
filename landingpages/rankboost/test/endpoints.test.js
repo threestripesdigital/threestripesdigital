@@ -449,11 +449,11 @@ test("results UI distinguishes durable fallback from unsaved failures", async ()
 
 test("thank-you welcomes visitors and verifies personalized booking details", async () => {
   const source = await readFile(new URL("../public/thank-you.html", import.meta.url), "utf8");
-  assert.match(source, /<h1 id="ty-title">Thanks for booking\.<\/h1>/);
+  assert.match(source, /<h1 id="ty-title">Thanks for booking\. Your meeting is confirmed\.<\/h1>/);
   assert.match(source, /id="booking-actions" hidden/);
   assert.match(source, /\.ty-actions\[hidden\] \{ display: none !important; \}/);
-  assert.match(source, /title\.textContent = "Your call is booked\."/);
-  assert.match(source, /textContent === "Your call is booked\."/);
+  assert.match(source, /title\.textContent = "Thanks for booking\. Your meeting is confirmed\."/);
+  assert.match(source, /textContent === "Thanks for booking\. Your meeting is confirmed\."/);
   assert.match(source, /retryPendingTrack\(0\)/);
   assert.match(source, /method: "POST"/);
   assert.match(source, /tsd_rb_lead_token/);
@@ -466,7 +466,7 @@ test("thank-you welcomes visitors and verifies personalized booking details", as
   );
   assert.ok(
     source.lastIndexOf("cleanTokenState();") >
-      source.indexOf('title.textContent = "Your call is booked."')
+      source.indexOf('title.textContent = "Thanks for booking. Your meeting is confirmed."')
   );
   assert.match(source, /role="dialog" aria-modal="true"/);
   assert.match(source, /el\.setAttribute\("role", "slider"\)/);
