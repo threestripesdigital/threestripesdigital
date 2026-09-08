@@ -92,21 +92,24 @@ export function ctrFor(position) {
 // practice-area average fee. Monthly $ rounded to the nearest $100.
 export function opportunityFor(keyword, volume) {
   const vol = Number(volume) || 0;
-  const clicks = Math.round(vol * 0.4);
-  const leads = clicks * 0.1;
-  const cases = leads * 0.2;
+  const clicks = Math.round(vol * ctrFor(1));
+  const leads = clicks * LEAD_CONVERSION_RATE;
+  const cases = leads * CLOSE_RATE;
   const caseValue = caseValueFor(keyword);
   const monthly = Math.round((cases * caseValue) / 100) * 100;
   return { clicks, leads, cases, caseValue, monthly };
 }
+
+export const LEAD_CONVERSION_RATE = 0.1;
+export const CLOSE_RATE = 0.2;
 
 // Same funnel run at the position they hold today, for before/after.
 export function currentValueFor(keyword, volume, position) {
   const caseValue = caseValueFor(keyword);
   const ctr = ctrFor(position);
   const clicks = Math.round((Number(volume) || 0) * ctr);
-  const leads = clicks * 0.1;
-  const cases = leads * 0.2;
+  const leads = clicks * LEAD_CONVERSION_RATE;
+  const cases = leads * CLOSE_RATE;
   return {
     ctr, clicks, leads, cases, caseValue,
     monthly: Math.round((cases * caseValue) / 100) * 100,

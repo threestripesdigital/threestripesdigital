@@ -1,4 +1,5 @@
 import { WEBSITE_EVENT_TYPE_URI, WEBSITE_TAG_IDS, websiteEligible } from "./_offers.js";
+import { qualifiedBookingEmailFields } from "./_emailfields.js";
 // POST /api/calendly — Calendly webhook receiver (invitee.created / canceled).
 // Verifies the Calendly signature, posts a BOOKED/CANCELED note to Slack with
 // the qualifying answers, and flips the matching lead's status in D1.
@@ -190,7 +191,7 @@ function followupSmsJob(kind, { phone, firstName }, leadRef, sourceKey) {
   };
 }
 
-function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey) {
+function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields) {
   if (!tagId || !email) return null;
   return {
     leadRef,
@@ -201,6 +202,7 @@ function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey) {
       ...(Object.values(WEBSITE_TAG_IDS).includes(tagId) ? { remove_tag_ids: Object.values(WEBSITE_TAG_IDS).filter(id => id !== tagId) } : {}),
       email,
       first_name: firstName || "",
+      ...(fields ? { fields } : {}),
     },
   };
 }
@@ -842,7 +844,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         email,
         firstName,
         leadRef,
-        sourceKey
+        sourceKey,
+        isWebsite ? undefined : qualifiedBookingEmailFields(start, p)
       ),
       !isWebsite && bookingSmsJob(
         { phone, firstName, startIso: start, tz: p.timezone },
@@ -936,7 +939,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         recoveredEmail,
         recoveredFirstName,
         leadRef,
-        recoveredSourceKey
+        recoveredSourceKey,
+        isWebsite ? undefined : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee)
       ),
       !isWebsite && bookingSmsJob(
         {

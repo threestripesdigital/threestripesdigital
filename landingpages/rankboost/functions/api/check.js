@@ -1,4 +1,5 @@
 import { WEBSITE_TAG_IDS } from "./_offers.js";
+import { qualifiedKeywordEmailFields } from "./_emailfields.js";
 // POST /api/check — instant DataForSEO qualify check for the rank-boost LP.
 // Body: { name, phone, website_url }
 // Returns: { qualified, domain, total, groups, keywords: [{ keyword,
@@ -270,12 +271,7 @@ function kitJobForLead(lead, leadRef) {
     fields.top_keyword = kws[0].keyword;
     fields.top_position = String(kws[0].position);
     fields.top_volume = Number(kws[0].volume).toLocaleString("en-US");
-    const opp = opportunityFor(kws[0].keyword, kws[0].volume);
-    fields.opp_clicks = opp.clicks.toLocaleString("en-US");
-    fields.opp_leads =
-      opp.leads >= 10 ? String(Math.round(opp.leads)) : opp.leads.toFixed(1);
-    fields.case_value = "$" + opp.caseValue.toLocaleString("en-US");
-    fields.opp_value = "$" + opp.monthly.toLocaleString("en-US");
+    Object.assign(fields, qualifiedKeywordEmailFields(kws[0]));
   }
   if (kws[1]) fields.keyword_two = fmt(kws[1]);
   if (kws[2]) fields.keyword_three = fmt(kws[2]);

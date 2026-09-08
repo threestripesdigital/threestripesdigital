@@ -288,6 +288,10 @@ test("rank check persists one lead and durable provider jobs", async () => {
     const data = await response.json();
     assert.equal(data.qualified, true);
     assert.ok(data.lead_token);
+    const kitPayload = queuedJobs(db).find(({ kind }) => kind === "kit.upsert_tag").payload;
+    assert.equal(kitPayload.fields.ctr_position_1, "40%");
+    assert.equal(kitPayload.fields.lead_conversion_rate, "10%");
+    assert.ok(kitPayload.fields.cases_per_month);
     assert.equal(requests.length, 1);
     const saved = db.batches[0];
     assert.match(saved[0].sql, /INSERT INTO leads/);
@@ -358,6 +362,9 @@ test("Calendly lifecycle webhooks enqueue durable provider work", async (t) => {
       await Promise.all(waits);
 
       assert.equal(response.status, 200);
+      const bookingFields = queuedJobs(db).find(({ kind }) => kind === "kit.upsert_tag").payload.fields;
+      assert.equal(bookingFields.call_date, "Thursday, August 20, 2026");
+      assert.equal(bookingFields.call_time, "11:00 AM EDT");
       assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), [
         "slack.webhook",
         "kit.upsert_tag",
