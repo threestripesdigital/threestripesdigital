@@ -35,20 +35,25 @@
     .ty-calendar h2 { color: #142b4f; }
     .ty-invitation-image { display: block; width: 100%; height: auto; margin-top: 1.5rem; border-radius: 12px; }
     .ty-calendar .ty-ec-when { color: #142b4f; margin: 1rem 0 0; font-weight: 600; }
-    .ty-explore-nav { display: flex; justify-content: center; gap: 0.75rem; max-width: 680px; margin: 2rem auto 0; }
-    .ty-explore-nav a { flex: 1; display: flex; gap: 1rem; align-items: center; justify-content: space-between; min-height: 68px; padding: 1.1rem 1.4rem; border: 1px solid #8eb8ff; border-radius: 12px; text-decoration: none; color: #fff; background: #1557c0; box-shadow: 0 6px 20px #0003; font-size: 1.05rem; font-weight: 700; }
-    .ty-explore-nav a:last-child { background: #edf5ff; color: #123b76; }
-    .ty-explore-nav a:hover { filter: brightness(1.12); transform: translateY(-2px); }
-    .ty-explore-nav a span { font-size: 1.5rem; }
-    .ty-explore-nav a:focus-visible, .ty-proof-prompt a:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 4px; }
+    .ty-inbox-copy { color: #4b617c; font-size: 1rem; line-height: 1.65; margin: 0.8rem 0 0; }
+    .ty-inbox-copy a { color: #124eaa; font-weight: 600; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    .ty-explore-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 800px; margin: 2rem auto 0; text-align: left; }
+    .ty-explore-nav a { display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; padding: 1.5rem; border: 1px solid #d4e3f7; border-radius: 16px; text-decoration: none; color: #162e51; background: #f5f9ff; transition: border-color 150ms, background 150ms; }
+    .ty-explore-nav a:hover { background: #e7f1ff; border-color: #76a9ef; }
+    .ty-nav-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #dfebff; color: #1557c0; }
+    .ty-nav-icon svg { width: 22px; height: 22px; }
+    .ty-explore-nav strong { font-size: 1.15rem; line-height: 1.3; font-weight: 700; }
+    .ty-nav-detail { color: #52677f; font-size: 0.9rem; line-height: 1.5; }
+    .ty-nav-action { margin-top: auto; padding-top: 0.5rem; color: #1557c0; font-size: 0.9rem; font-weight: 700; }
+    .ty-explore-nav a:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 4px; }
     .ty-block { scroll-margin-top: 90px; }
     .ty-proof-prompt { max-width: 680px; margin: 2rem auto 0; padding: 1rem; }
     .ty-proof-prompt p { color: var(--white); font-weight: 600; margin: 0 0 0.5rem; }
     .ty-proof-prompt a { color: #9cc4ff; text-underline-offset: 4px; }
     @media (max-width: 680px) {
       .ty-calendar { padding: 1.5rem 1rem; }
-      .ty-explore-nav { flex-direction: column; gap: 0.8rem; }
-      .ty-explore-nav a { min-height: 64px; padding: 1rem 1.25rem; font-size: 1rem; }
+      .ty-explore-nav { grid-template-columns: 1fr; gap: 0.8rem; }
+      .ty-explore-nav a { padding: 1.25rem; }
     }
     #booking-actions { max-width: 520px; margin-left: auto; margin-right: auto; grid-template-columns: 1fr; }
     .ty-core { max-width: 680px; margin: 0 auto; }
@@ -371,14 +376,25 @@
 
     <section class="ty-block ty-calendar" id="ty-calendar" aria-labelledby="ty-calendar-h">
       <p class="ty-step-kicker">Step 2</p>
-      <h2 id="ty-calendar-h">Accept your calendar invitation</h2>
-      <img class="ty-invitation-image" src="photos/calendar-invitation-example.png" alt="Example calendar invitation for your call with Bilal. The Yes response is circled with an arrow showing where to accept in your inbox.">
+      <h2 id="ty-calendar-h">Please check your inbox</h2>
+      <p class="ty-inbox-copy">You should have received your calendar invitation. If you haven’t, check your spam folder. Still can’t find it? Reach out to Bilal at <a href="mailto:bilal@threestripesdigital.com">bilal@threestripesdigital.com</a>.</p>
+      <img class="ty-invitation-image" src="photos/calendar-invitation-rank-boost.png" alt="Example calendar invitation for Three Stripes Digital Rank Boost. The Yes response is circled with an arrow showing where to accept in your inbox.">
       <div id="calendar-details" hidden><p class="ty-ec-when"></p></div>
     </section>
 
     <nav class="ty-explore-nav" aria-label="Explore before your call">
-      <a href="#ty-breakouts">Your questions <span aria-hidden="true">↓</span></a>
-      <a href="#ty-testimonials">Client results <span aria-hidden="true">↓</span></a>
+      <a href="#ty-breakouts">
+        <span class="ty-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8 6 4-6 4Z" fill="currentColor" stroke="none"/></svg></span>
+        <strong>Watch answers to your questions</strong>
+        <span class="ty-nav-detail">Why it’s free, competitor exclusivity, and what to expect.</span>
+        <span class="ty-nav-action">Watch the short videos <span aria-hidden="true">↓</span></span>
+      </a>
+      <a href="#ty-testimonials">
+        <span class="ty-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v16h16M8 15l4-5 4 2 5-7M17 5h4v4"/></svg></span>
+        <strong>See law firm results</strong>
+        <span class="ty-nav-detail">Hear from firm owners and see their Google rankings.</span>
+        <span class="ty-nav-action">Explore the case studies <span aria-hidden="true">↓</span></span>
+      </a>
     </nav>
 
 

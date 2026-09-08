@@ -49,3 +49,5 @@
 - Start with “Thanks for booking. Your meeting is confirmed.” followed directly by Step 1 and its video. Keep FAQ and client-results shortcuts in normal document flow below Step 2 on every screen size. The pale-blue calendar card includes a clearly labelled sample invitation with a highlighted Yes response and an instruction to use Yes or Accept in the visitor’s own inbox. Sample responses are noninteractive illustration elements. Preserve verified-only personalization and conversion events and all six Wistia videos.
 
 - Simplify Step 2 to its heading and a single invitation example image highlighting the Yes response. Remove numbered instruction cards. Use large high-contrast blue and pale-blue section buttons below it, stacked on mobile.
+
+- Use the exact Calendly event name, Three Stripes Digital Rank Boost, in the invitation image. Step 2 says Please check your inbox with spam guidance and Bilal’s clickable email. Below it, use matching light cards with simple blue icons, action-led titles, supporting descriptions and clear video/case-study links.
