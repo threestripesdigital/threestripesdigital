@@ -17,7 +17,6 @@
 
   <script src="https://fast.wistia.com/player.js" async></script>
   <script src="https://fast.wistia.com/embed/d6f9b1wt8n.js" async type="module"></script>
-  <script src="https://fast.wistia.com/embed/2lkpcr57yd.js" async type="module"></script>
   <script src="https://fast.wistia.com/embed/4lelq9raak.js" async type="module"></script>
   <script src="https://fast.wistia.com/embed/34b3bqjm9w.js" async type="module"></script>
   <script src="https://fast.wistia.com/embed/x65rpnouuk.js" async type="module"></script>
@@ -278,10 +277,15 @@
     .ty-video-frame wistia-player { display: block; width: 100%; height: 100%; }
     .ty-video-frame wistia-player:not(:defined) { background-size: contain; background-position: center; background-repeat: no-repeat; }
     wistia-player[media-id="d6f9b1wt8n"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/d6f9b1wt8n/swatch"); }
-    wistia-player[media-id="2lkpcr57yd"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/2lkpcr57yd/swatch"); }
     wistia-player[media-id="4lelq9raak"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/4lelq9raak/swatch"); }
     wistia-player[media-id="34b3bqjm9w"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/34b3bqjm9w/swatch"); }
     wistia-player[media-id="x65rpnouuk"]:not(:defined) { background-image: url("https://fast.wistia.com/embed/medias/x65rpnouuk/swatch"); }
+    .ty-local-video { position: relative; }
+    .ty-local-video video { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .ty-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 52px; border: 0; border-radius: 8px; color: white; background: #0757d4; cursor: pointer; }
+    .ty-play[hidden] { display: none; }
+    .ty-play svg { width: 26px; height: 26px; }
+    .ty-play:focus-visible { outline: 3px solid #082b6b; outline-offset: 4px; }
     .ty-video h3 { margin: 0.85rem 0 0.25rem; font-size: 1rem; }
 
     /* proof section: wide, OG-style two-column staggered wall */
@@ -359,14 +363,25 @@
     <wistia-player media-id="x65rpnouuk" aspect="0.5625"></wistia-player>
   </div>
 </article>
-<article class="ty-video" data-video-slot="breakout-free-boost" aria-label="Is it really free?">
-  <div class="ty-video-frame">
-    <wistia-player media-id="2lkpcr57yd" aspect="0.5625"></wistia-player>
-  </div>
-</article>
 <article class="ty-video" data-video-slot="breakout-competitors" aria-label="Do you work with my competitors?">
   <div class="ty-video-frame">
     <wistia-player media-id="4lelq9raak" aspect="0.5625"></wistia-player>
+  </div>
+</article>
+<article class="ty-video" data-video-slot="breakout-safety" aria-label="Is this black-hat SEO?">
+  <div class="ty-video-frame ty-local-video">
+    <video controls playsinline preload="none" poster="assets/confirmation-faq/safety.png" aria-label="Is this black-hat SEO?">
+      <source src="assets/confirmation-faq/safety.mp4" type="video/mp4">
+    </video>
+    <button class="ty-play" type="button" aria-label="Play: Is this black-hat SEO?" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16l12-8z" fill="currentColor"/></svg></button>
+  </div>
+</article>
+<article class="ty-video" data-video-slot="breakout-timing" aria-label="Results in 24 to 48 hours?">
+  <div class="ty-video-frame ty-local-video">
+    <video controls playsinline preload="none" poster="assets/confirmation-faq/timing.png" aria-label="Results in 24 to 48 hours?">
+      <source src="assets/confirmation-faq/timing.mp4" type="video/mp4">
+    </video>
+    <button class="ty-play" type="button" aria-label="Play: Results in 24 to 48 hours?" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16l12-8z" fill="currentColor"/></svg></button>
   </div>
 </article>
       </div>
@@ -590,6 +605,15 @@
   </div>
 
   <script>
+    document.querySelectorAll('.ty-local-video').forEach((frame) => {
+      const video = frame.querySelector('video');
+      const button = frame.querySelector('.ty-play');
+      button.hidden = false;
+      button.addEventListener('click', () => {
+        video.play().catch(() => { button.hidden = false; });
+      });
+      video.addEventListener('play', () => { button.hidden = true; });
+    });
     (function () {
       // On phones the two wall columns would stack whole-column-at-a-time,
       // burying column B's strongest proof. Flatten into one column sorted
