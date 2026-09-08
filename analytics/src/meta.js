@@ -1,6 +1,10 @@
 export const dayIn = (date, tz) => new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(date));
 export const shiftDay = (day, n) => new Date(Date.parse(day+'T12:00:00Z')+n*86400000).toISOString().slice(0,10);
 export const ids = env => (env.META_CAMPAIGN_IDS||'').split(',').map(x=>x.trim()).filter(x=>/^\d+$/.test(x));
+export function websiteActions(actions=[]) {
+ const value=type=>{const n=Number(actions.find(a=>a.action_type===type)?.value||0);if(!Number.isFinite(n)||n<0)throw Error('Invalid Meta website action count');return n;};
+ return {landingPageViews:value('landing_page_view'),websiteLeads:value('offsite_conversion.fb_pixel_lead')};
+}
 export function reportingSpendFactor(env, accountCurrency) {
  if(accountCurrency===env.CURRENCY)return 1;
  const rate=Number(env.META_USD_TO_ACCOUNT_RATE);
@@ -48,7 +52,7 @@ export async function syncMeta(env) {
   await setState(env,'meta_account_name',info.name);return;
  }
  const until=dayIn(now,env.REPORTING_TIMEZONE), since=shiftDay(until,-89);
- const params={fields:'date_start,ad_id,ad_name,adset_id,campaign_id,campaign_name,spend,impressions,inline_link_clicks',level:'ad',time_increment:1,time_range:JSON.stringify({since,until}),filtering:JSON.stringify([{field:'campaign.id',operator:'IN',value:selected}]),limit:500};
+ const params={fields:'date_start,ad_id,ad_name,adset_id,campaign_id,campaign_name,spend,impressions,inline_link_clicks,actions',level:'ad',time_increment:1,time_range:JSON.stringify({since,until}),filtering:JSON.stringify([{field:'campaign.id',operator:'IN',value:selected}]),limit:500};
  const rows=[];let after='';
  for(let page=0;page<20;page++) {
   const b=await graph(env,'act_'+account+'/insights',{...params,...(after?{after}:{})});
@@ -66,6 +70,8 @@ export async function syncMeta(env) {
  // Replace the complete fetched range atomically, including rows removed by Meta corrections.
  const statements=[env.DB.prepare('DELETE FROM meta_daily WHERE day BETWEEN ? AND ?').bind(since,until)];
  for(const r of rows) statements.push(env.DB.prepare('INSERT INTO meta_daily VALUES(?,?,?,?,?,?,?,?,?)').bind(r.date_start,r.ad_id,r.ad_name||r.ad_id,r.adset_id,r.campaign_id,r.campaign_name||r.campaign_id,Number(r.spend||0)*spendFactor,Number(r.impressions||0),Number(r.inline_link_clicks||0)));
+ const actionDays=Object.values(rows.reduce((acc,r)=>{const key=r.date_start+':'+r.campaign_id;const counts=websiteActions(r.actions);const row=acc[key]||{day:r.date_start,campaign_id:r.campaign_id,landingPageViews:0,websiteLeads:0};row.landingPageViews+=counts.landingPageViews;row.websiteLeads+=counts.websiteLeads;acc[key]=row;return acc;},{}));
+ statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('meta_website_actions',JSON.stringify(actionDays)));
  const successfulAt=new Date().toISOString();
  for(const [k,v] of [['meta_success',successfulAt],['meta_error',''],['meta_account_name',info.name],['meta_campaign_ids',selected.join(',')]]) statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind(k,v));
  const first=rows.filter(r=>Number(r.spend)>0).map(r=>r.date_start).sort()[0];

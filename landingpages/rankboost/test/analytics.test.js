@@ -9,6 +9,14 @@ import {syncMeta,dayIn} from '../../../analytics/src/meta.js';
 import {syncFunnel} from '../../../analytics/src/funnel.js';
 import worker from '../../../analytics/src/worker.js';
 import {cookie,authorized} from '../../../analytics/src/auth.js';
+test('disabled browser collection does not present old events as an active connection',async()=>{
+ const e=env();e.BROWSER_TRACKING_ENABLED='false';
+ await e.DB.prepare('INSERT INTO state VALUES(?,?)').bind('event_success',new Date().toISOString()).run();
+ const r=await report(e,new URL('https://dashboard.test/api/report'));
+ assert.equal(r.setup.events,false);assert.equal(r.sources.browserTracking,false);
+ assert.ok(r.metrics.slice(3).every(m=>m.value===null&&m.status==='waiting'));
+ assert.ok(r.alerts.some(a=>a.title==='Direct source reporting'));
+});
 function database(migrate=true){
  const raw=new DatabaseSync(':memory:');raw.exec('PRAGMA foreign_keys=ON');
  if(migrate)for(const file of ['0001.sql','0002.sql','0003.sql'])raw.exec(readFileSync(new URL('../../../analytics/migrations/'+file,import.meta.url),'utf8'));

@@ -1,42 +1,24 @@
-# Delivery status, 8 September 2026
+# Reporting connections, 9 September 2026
 
-## Deployed
+The private dashboard is deployed at https://rank-boost-command-center.bilal-17f.workers.dev. Imports run at minute 7 each hour. The worker never changes Meta delivery settings.
 
-- Private dashboard: https://rank-boost-command-center.bilal-17f.workers.dev
-- Worker version: ac92a1a6-a011-48d7-928c-ff615ec04344
-- Hourly reporting schedule: minute 7 of every hour, UTC.
-- Analytics database: rank-boost-analytics, ee4bf499-5656-49eb-a728-13f1eafd2cf1. All three migrations applied remotely.
-- Read-only booking source connected successfully: rankboost-leads, 072ff1b9-a238-424d-9c03-6ae26ecf74a1.
-- Funnel instrumentation preview: https://analytics-preview.tsd-law-firm-rank-boost.pages.dev
-- Immutable preview deployment: https://23117aa2.tsd-law-firm-rank-boost.pages.dev
-- The main funnel/router has not been redeployed or launched by this task.
+## Verified
 
-## Before paid launch
+- Meta landing page view and website Lead actions are imported alongside spend and clicks, using the same ad attribution window. They are labeled separately from unique visitors and Calendly bookings.
+- Meta reporting token, account and selected campaign are connected. Campaign 120249029003230545, all 22 ad sets and all 34 ads remain PAUSED.
+- The existing lead database supplies verified Calendly booking records. No real test booking or customer message was generated during this work.
+- Direct GA4 reporting for Three Stripes Digital Website (property 524936646) is configured using a Worker secret and the Analytics read-only scope. Live 1, 7, 30 and 90 day requests succeeded. Reports are restricted to law firm funnel paths on the production host.
+- All four GA4 windows returned no rows. The landing page has no GA4 tag. Successful reporting access is not evidence of visitor collection.
+- Custom dashboard collection remains off. No landing page files were changed. Disabled custom metrics display as unavailable, not measured zero performance.
 
-1. Restore Meta reporting permission for ad account 358826439854169. Existing local reporting tokens returned Meta error 200 (permission) or 190 (expired). No invalid token was installed in the Worker. Set its META_ACCESS_TOKEN secret securely with a token that has ads_read and account access.
-2. Confirm the account currency and timezone. Sync checks them before storing data.
-3. Publish the prepared analytics endpoint, script, page hooks and ANALYTICS_DB binding with the funnel's launch release.
-4. Use the campaign naming rule and URL parameters in README.md. Campaigns starting with Rank Boost will be discovered automatically.
-5. Verify one complete approved test application and booking before spending. Existing booking workflows may send messages, so this task did not submit a real booking.
+## Still needed
 
-## Verification evidence
+- A Wistia API token with Read detailed stats access is needed for the direct video reporting integration. No token was found in the available saved credentials; the owner was asked for its saved location. Native Wistia player tracking remains present.
+- Website visit collection requires an existing source that actually receives funnel events. GA4 currently has none. No additional landing page script was installed under the owner's constraint.
+- The available PostHog account has no Three Stripes project. No unrelated project was connected. PostHog is optional.
+- Individual ad, video and booking attribution requires matching identifiers from the source systems. Aggregate reports must not be represented as linked visitor journeys.
+- Before any future paid activation, follow the launch timestamp and budget instructions in README.md and complete an explicitly authorized booking test. This task does not launch ads.
 
-- Existing Node test suite: 91 passed, zero failed. Includes 13 analytics tests covering thresholds, seven-day boundaries, weighted sums, scope filters, idempotency, token/cookie auth, CSRF, Meta pagination/corrections, automatic campaign discovery, Wistia events and booking import.
-- Browser: desktop rendered correctly, metric-detail dialog worked, mobile viewport had no horizontal document overflow, and no browser console errors were captured.
-- Live Worker: health 200, unauthenticated reporting 401, unauthenticated dashboard redirects to login, login 200, authenticated report 200 and sync dispatch 202.
-- Live preview endpoint: repeated session and VSL play requests returned 200, while D1 stored only one of each. Unsigned lead linking returned 400, and foreign-origin ingestion returned 403.
-- All probe session/event rows were removed afterward. No sample ad spend, customers or revenue were inserted.
+## Deployment
 
-## Source and release
-
-Implementation branch: `codex/rank-boost-analytics`, based on `origin/main` at `227e314e6e52ee952dab64d71e51d6c2bbce2c25`. The dashboard is deployed independently of the main funnel release. The funnel launch and Meta reporting access remain pending. Do not treat a source push as a funnel launch.
-
-The linked worktree must remain available until source integration and the funnel release are resolved. Local development servers are stopped and regenerable caches have been removed.
-
-## Wistia and call-metric update
-
-- Manual qualification confirmed by user. No Google attendance authorization configured. Stripe deferred.
-- Wistia watched-percentage test on actual preview embed: after jumping to 80% playback position, percentWatched was only 0.012158. Only session and play events were emitted, not 25/50/75 milestones. Analytics requests were intercepted in the browser, so this test did not add production dashboard events.
-- Manual Showed and Qualified persisted through the real local form and API, including independent timestamps. Desktop and mobile verified with no document overflow. Test row was local only.
-- Remote login and reporting returned 200, with the qualified-rate metric and missing-outcome counters present.
-- During embed verification, Wistia fonts from fast.wistia.net were blocked by CSP. Added that exact font host to both funnel CSP definitions.
+Worker version 54cd845e-d918-4e4c-a9e1-ff792b3bf8d6. No database migration or funnel deployment was required.
