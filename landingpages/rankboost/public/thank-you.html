@@ -33,29 +33,13 @@
     .ty-calendar { max-width: 680px; margin-left: auto; margin-right: auto; padding: 2rem; background: #f1f7ff; border: 1px solid #c7dcf9; border-radius: 20px; color: #142b4f; }
     .ty-calendar .ty-step-kicker { color: #1557c0; }
     .ty-calendar h2 { color: #142b4f; }
-    .ty-calendar-intro { margin: 0.5rem 0 1.5rem; color: #4b617c; }
-    .ty-invite-guide { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.8rem; text-align: left; }
-    .ty-invite-guide li { display: flex; gap: 0.85rem; padding: 1rem; background: #fff; border: 1px solid #dbe7f7; border-radius: 12px; }
-    .ty-invite-number { flex: 0 0 28px; height: 28px; display: grid; place-items: center; background: #e9f1ff; color: #1557c0; font-weight: 700; border-radius: 50%; }
-    .ty-invite-guide strong { display: block; font-size: 0.98rem; }
-    .ty-invite-guide p { margin: 0.3rem 0 0; font-size: 0.9rem; line-height: 1.5; color: #4b617c; }
-    .ty-invite-example { margin: 1.5rem 0 0; text-align: left; }
-    .ty-invite-example figcaption { color: #4b617c; font-size: 0.78rem; margin-bottom: 0.65rem; }
-    .ty-sample-mail { background: white; border: 1px solid #cbd8e8; border-radius: 14px; overflow: hidden; box-shadow: 0 5px 20px #142b4f0a; }
-    .ty-sample-mail-head { padding: 1rem 1.2rem; border-bottom: 1px solid #e4eaf2; }
-    .ty-sample-mail-head strong { display: block; font-size: 1rem; color: #142b4f; }
-    .ty-sample-mail-head small { display: block; margin-top: 0.4rem; color: #61718a; }
-    .ty-sample-event { padding: 1.2rem; }
-    .ty-sample-event p { margin: 0 0 0.8rem; color: #4b617c; font-size: 0.88rem; }
-    .ty-sample-rsvp { display: flex; gap: 0.5rem; align-items: center; }
-    .ty-sample-rsvp span { padding: 0.55rem 1rem; border: 1px solid #d4deeb; border-radius: 6px; color: #61718a; font-size: 0.9rem; }
-    .ty-sample-rsvp .ty-sample-yes { background: #1557c0; color: white; border-color: #1557c0; font-weight: 700; outline: 3px solid #b4d2ff; outline-offset: 3px; }
-    .ty-sample-callout { margin-top: 1rem; font-size: 0.88rem; font-weight: 700; color: #1557c0; }
-    .ty-calendar-help { margin: 1.2rem 0 0; font-size: 0.83rem; color: #4b617c; }
+    .ty-invitation-image { display: block; width: 100%; height: auto; margin-top: 1.5rem; border-radius: 12px; }
     .ty-calendar .ty-ec-when { color: #142b4f; margin: 1rem 0 0; font-weight: 600; }
     .ty-explore-nav { display: flex; justify-content: center; gap: 0.75rem; max-width: 680px; margin: 2rem auto 0; }
-    .ty-explore-nav a { display: flex; gap: 1rem; align-items: center; justify-content: center; padding: 0.75rem 1.2rem; border: 1px solid #44638c; border-radius: 10px; text-decoration: none; color: #e6f0ff; background: #142640; font-size: 0.9rem; font-weight: 600; }
-    .ty-explore-nav a:hover { background: #203c63; }
+    .ty-explore-nav a { flex: 1; display: flex; gap: 1rem; align-items: center; justify-content: space-between; min-height: 68px; padding: 1.1rem 1.4rem; border: 1px solid #8eb8ff; border-radius: 12px; text-decoration: none; color: #fff; background: #1557c0; box-shadow: 0 6px 20px #0003; font-size: 1.05rem; font-weight: 700; }
+    .ty-explore-nav a:last-child { background: #edf5ff; color: #123b76; }
+    .ty-explore-nav a:hover { filter: brightness(1.12); transform: translateY(-2px); }
+    .ty-explore-nav a span { font-size: 1.5rem; }
     .ty-explore-nav a:focus-visible, .ty-proof-prompt a:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 4px; }
     .ty-block { scroll-margin-top: 90px; }
     .ty-proof-prompt { max-width: 680px; margin: 2rem auto 0; padding: 1rem; }
@@ -63,8 +47,8 @@
     .ty-proof-prompt a { color: #9cc4ff; text-underline-offset: 4px; }
     @media (max-width: 680px) {
       .ty-calendar { padding: 1.5rem 1rem; }
-      .ty-explore-nav { gap: 0.5rem; }
-      .ty-explore-nav a { flex: 1; min-height: 44px; padding: 0.65rem 0.4rem; gap: 0.4rem; font-size: 0.86rem; }
+      .ty-explore-nav { flex-direction: column; gap: 0.8rem; }
+      .ty-explore-nav a { min-height: 64px; padding: 1rem 1.25rem; font-size: 1rem; }
     }
     #booking-actions { max-width: 520px; margin-left: auto; margin-right: auto; grid-template-columns: 1fr; }
     .ty-core { max-width: 680px; margin: 0 auto; }
@@ -388,25 +372,8 @@
     <section class="ty-block ty-calendar" id="ty-calendar" aria-labelledby="ty-calendar-h">
       <p class="ty-step-kicker">Step 2</p>
       <h2 id="ty-calendar-h">Accept your calendar invitation</h2>
-      <p class="ty-calendar-intro">Keep your call with Bilal on your calendar.</p>
-      <ol class="ty-invite-guide">
-        <li><span class="ty-invite-number">1</span><div><strong>Find the invitation in your inbox</strong><p>Search for Calendly or Three Stripes Digital.</p></div></li>
-        <li><span class="ty-invite-number">2</span><div><strong>Choose Yes or Accept</strong><p>Respond inside the calendar invitation so your attendance is confirmed.</p></div></li>
-      </ol>
-      <figure class="ty-invite-example">
-        <figcaption>Example invitation. Your email app may look different.</figcaption>
-        <div class="ty-sample-mail">
-          <div class="ty-sample-mail-head"><strong>Invitation: Your call with Bilal</strong><small>Three Stripes Digital · To you</small></div>
-          <div class="ty-sample-event">
-            <p>Your scheduled date and time appear here.</p>
-            <p><strong>Going?</strong></p>
-            <div class="ty-sample-rsvp" aria-label="Example response options: Yes, No, Maybe. Choose Yes in your email."><span class="ty-sample-yes">✓ Yes</span><span>No</span><span>Maybe</span></div>
-            <div class="ty-sample-callout">↑ Tap Yes in your inbox. It may say Accept.</div>
-          </div>
-        </div>
-      </figure>
+      <img class="ty-invitation-image" src="photos/calendar-invitation-example.png" alt="Example calendar invitation for your call with Bilal. The Yes response is circled with an arrow showing where to accept in your inbox.">
       <div id="calendar-details" hidden><p class="ty-ec-when"></p></div>
-      <p class="ty-calendar-help">Can’t find it? Check your spam or junk folder.</p>
     </section>
 
     <nav class="ty-explore-nav" aria-label="Explore before your call">

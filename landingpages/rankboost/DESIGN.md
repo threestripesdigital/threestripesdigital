@@ -47,3 +47,5 @@
 - Lead the confirmation content with Step 1, Watch this before your call, and the founder video. Step 2, Accept your calendar invitation, follows immediately before FAQs. Calendar instructions are always readable; personalized invite details retain the existing verification gate. Keep the remaining FAQs and proof below, with the save-number reminder unnumbered.
 
 - Start with “Thanks for booking. Your meeting is confirmed.” followed directly by Step 1 and its video. Keep FAQ and client-results shortcuts in normal document flow below Step 2 on every screen size. The pale-blue calendar card includes a clearly labelled sample invitation with a highlighted Yes response and an instruction to use Yes or Accept in the visitor’s own inbox. Sample responses are noninteractive illustration elements. Preserve verified-only personalization and conversion events and all six Wistia videos.
+
+- Simplify Step 2 to its heading and a single invitation example image highlighting the Yes response. Remove numbered instruction cards. Use large high-contrast blue and pale-blue section buttons below it, stacked on mobile.
