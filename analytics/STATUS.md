@@ -4,6 +4,7 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 
 ## Verified
 
+- Meta landing page view and website Lead actions are imported alongside spend and clicks, using the same ad attribution window. They are labeled separately from unique visitors and Calendly bookings.
 - Meta reporting token, account and selected campaign are connected. Campaign 120249029003230545, all 22 ad sets and all 34 ads remain PAUSED.
 - The existing lead database supplies verified Calendly booking records. No real test booking or customer message was generated during this work.
 - Direct GA4 reporting for Three Stripes Digital Website (property 524936646) is configured using a Worker secret and the Analytics read-only scope. Live 1, 7, 30 and 90 day requests succeeded. Reports are restricted to law firm funnel paths on the production host.
@@ -20,4 +21,4 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 
 ## Deployment
 
-Worker version e38bfc0c-de88-4e34-9cda-27697f4a4a1a. No database migration or funnel deployment was required.
+Worker version 54cd845e-d918-4e4c-a9e1-ff792b3bf8d6. No database migration or funnel deployment was required.

@@ -93,6 +93,8 @@ Stripe integration is explicitly deferred. Existing manual financial fields rema
 
 ## Direct source reporting, September 2026
 
+Meta Insights also imports landing_page_view and offsite_conversion.fb_pixel_lead actions, aggregated by campaign and day. Overlapping generic Lead totals are not added. These are Meta-attributed website actions, not unique visitors or verified bookings; they remain separate from GA4 and Calendly counts.
+
 GA4 property 524936646 belongs to Three Stripes Digital Website and uses America/New_York. The worker reads it hourly using the GA4_SERVICE_ACCOUNT secret and the read-only Analytics scope. Only the main site's law firm funnel paths are included. The 1, 7, 30 and 90 day windows are queried independently so unique users are not added across days. All-traffic provider totals stay separate from paid campaign metrics. Failed imports preserve the last snapshot and expose an error and freshness status.
 
 Initial live requests for all four windows succeeded with no rows. The landing page currently has no GA4 tag, so API access alone does not establish collection. No new landing page code was installed. Wistia reporting still requires an API token with Read detailed stats access; its native player continues to collect its own analytics. Available PostHog projects do not belong to Three Stripes, so no unrelated project was connected. PostHog is optional.

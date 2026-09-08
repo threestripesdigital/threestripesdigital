@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {ga4Request,ga4Values,sourceReport} from './sources.js';
+import {websiteActions} from './meta.js';
+test('Meta website actions do not add overlapping lead aggregates',()=>{
+ assert.deepEqual(websiteActions([{action_type:'landing_page_view',value:'12'},{action_type:'offsite_conversion.fb_pixel_lead',value:'3'},{action_type:'lead',value:'3'},{action_type:'omni_lead',value:'3'}]),{landingPageViews:12,websiteLeads:3});
+ assert.deepEqual(websiteActions(),{landingPageViews:0,websiteLeads:0});
+ assert.throws(()=>websiteActions([{action_type:'landing_page_view',value:'NaN'}]));
+});
 test('GA4 is restricted to the funnel and reports a missing result as unavailable',()=>{
  const request=ga4Request('2026-09-01','2026-09-08');
  const filters=request.dimensionFilter.andGroup.expressions;
