@@ -95,3 +95,9 @@ test('prelaunch visits stay out of paid totals and an explicit launch boundary e
  e.LAUNCH_AT=new Date(Date.now()-1000).toISOString();r=await report(e,new URL('https://local/api/report'));assert.equal(r.totals.visitors,1);
  e.LAUNCH_AT=new Date(Date.now()+1000).toISOString();r=await report(e,new URL('https://local/api/report'));assert.equal(r.totals.visitors,0);
 });
+
+test('website consultations do not enter main-offer dashboard booking totals',async()=>{
+ const e=env();e.LEADS_DB=database(false);
+ e.LEADS_DB.raw.exec("CREATE TABLE leads(lead_ref TEXT,qualified INTEGER);CREATE TABLE calendly_invitees(invitee_uri TEXT,lead_ref TEXT,scheduled_start_at TEXT,status TEXT,created_at TEXT);INSERT INTO leads VALUES('website',0),('boost',1);INSERT INTO calendly_invitees VALUES('website-call','website','2026-09-15T12:00:00Z','booked','2026-09-08 10:00:00'),('boost-call','boost','2026-09-15T12:00:00Z','booked','2026-09-08 10:00:00');");
+ await syncFunnel(e);const rows=await e.DB.prepare('SELECT id FROM calls').all();assert.deepEqual(rows.results.map(r=>r.id),['boost-call']);
+});

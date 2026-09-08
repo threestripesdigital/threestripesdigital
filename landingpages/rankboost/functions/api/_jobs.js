@@ -1,3 +1,4 @@
+import { WEBSITE_TAG_IDS } from "./_offers.js";
 import { dispatchIntegrationJob, IntegrationError } from "./_providers.js";
 
 const MAX_ATTEMPTS = 5;
@@ -175,7 +176,14 @@ async function claimJob(db, job, leaseToken) {
 }
 
 async function sourceIsCurrent(db, job) {
-  if (!job.source_resource || !job.source_status) return true;
+  if (!job.source_resource || !job.source_status) {
+    const payload = JSON.parse(job.payload_json || "{}");
+    if (job.kind === "kit.upsert_tag" && payload.tag_id === WEBSITE_TAG_IDS.lead) {
+      const lead = await db.prepare("SELECT status FROM leads WHERE lead_ref = ?1").bind(job.lead_ref).first();
+      return Boolean(lead && lead.status === "no_fit");
+    }
+    return true;
+  }
   try {
     const row = await db
       .prepare(

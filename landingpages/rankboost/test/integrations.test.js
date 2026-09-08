@@ -1595,6 +1595,7 @@ test("Boost Live atomically records lifecycle state and provider jobs", async ()
       { keyword: "injury lawyer test" },
     ]),
     status: "booked",
+    qualified: 1,
     boost_live_at: null,
   });
   const waits = [];
@@ -1638,4 +1639,61 @@ test("Boost Live atomically records lifecycle state and provider jobs", async ()
   const bookedKey = "boost-live:lead-test-9:kit-booked";
   assert.equal(storedJobs[0].args[4], null);
   assert.ok(storedJobs.slice(1).every((statement) => statement.args[4] === bookedKey));
+});
+
+test("website booking lifecycle is separate, verified, replay-safe and rejects wrong qualification", async () => {
+  const { WEBSITE_EVENT_TYPE_URI, WEBSITE_TAG_IDS } = await import("../functions/api/_offers.js");
+  const { onRequestPost: bookingPost } = await import("../functions/api/booking.js");
+  const sqlite = migratedSqlite();
+  const db = d1Sqlite(sqlite);
+  sqlite.exec("INSERT INTO leads (name, phone, email, domain, qualified, status, lead_ref) VALUES ('QA', '', 'qa@example.test', 'example.test', 0, 'no_fit', 'website-test')");
+  const signingKey = "website-test-key";
+  const token = await createLeadToken(signingKey, "website-test", 60);
+  const event = "https://api.calendly.com/scheduled_events/website-event-test";
+  const invitee = event + "/invitees/website-invitee-test";
+  const env = { LEADS_DB: db, FUNNEL_SIGNING_KEY: signingKey, CALENDLY_EVENT_TYPE_URI, CALENDLY_PAT: "test", CALENDLY_WEBHOOK_SIGNING_KEY: "webhook-test" };
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => Response.json({ resource: { uri: event, event_type: WEBSITE_EVENT_TYPE_URI, start_time: "2026-09-15T15:00:00Z" } });
+  const booking = async (body) => bookingPost({env, request: new Request("https://threestripesdigital.com/api/booking", {method:"POST", headers:{Origin:"https://threestripesdigital.com","Content-Type":"application/json"},body:JSON.stringify({token,...body})})});
+  const lifecycle = async (kind, at) => {
+    const request = await calendlyRequest({event:kind, payload:{uri:invitee,event,updated_at:at,name:"QA",email:"qa@example.test",tracking:{utm_content:token}}}, env.CALENDLY_WEBHOOK_SIGNING_KEY, true);
+    // Keep this test offline: no job processor or outbound messages.
+    return calendlyPost({request,env,waitUntil(){}});
+  };
+  try {
+    assert.equal((await booking({action:"access",offer:"website"})).status,200);
+    assert.equal((await booking({action:"access",offer:"boost"})).status,403);
+    assert.equal((await booking({offer:"website",invitee,event})).status,404);
+    assert.equal((await lifecycle("invitee.created","2026-09-08T12:00:00Z")).status,200);
+    assert.equal((await lifecycle("invitee.created","2026-09-08T12:00:00Z")).status,200);
+    const row=sqlite.prepare("SELECT qualified,status FROM leads WHERE lead_ref='website-test'").get();
+    assert.equal(row.qualified,0); assert.equal(row.status,"booked");
+    const jobs=sqlite.prepare("SELECT kind,payload_json FROM integration_jobs").all();
+    assert.equal(jobs.length,3);
+    const kit=JSON.parse(jobs.find(j=>j.kind==='kit.upsert_tag').payload_json);
+    assert.equal(kit.tag_id,WEBSITE_TAG_IDS.booked);
+    const meta=JSON.parse(jobs.find(j=>j.kind==='meta.events').payload_json);
+    assert.equal(meta.events[0].event_name,"WebsiteConsultationBooked");
+    assert.equal(meta.events[0].event_id,"websiteconsultationbooked-website-invitee-test");
+    assert.ok(!jobs.some(j=>j.kind==='roezan.sms'));
+    assert.equal((await booking({offer:"website",invitee,event})).status,200);
+    assert.equal((await booking({offer:"boost",invitee,event})).status,404);
+    assert.equal((await lifecycle("invitee.canceled","2026-09-08T13:00:00Z")).status,200);
+    assert.equal((await lifecycle("invitee.created","2026-09-08T12:00:00Z")).status,200);
+    assert.equal((await booking({offer:"website",invitee,event})).status,404);
+    sqlite.exec("UPDATE leads SET status='check_failed'");
+    assert.equal((await booking({action:"access",offer:"website"})).status,403);
+    sqlite.exec("UPDATE leads SET status='qualified',qualified=1");
+    assert.equal((await booking({action:"access",offer:"website"})).status,403);
+    assert.equal((await booking({action:"access",offer:"boost"})).status,200);
+  } finally { globalThis.fetch=original; sqlite.close(); }
+});
+
+test("website Kit transition removes prior lifecycle tags before setting the new state", async () => {
+  const original=globalThis.fetch;const calls=[];
+  globalThis.fetch=async (url,options)=>{calls.push([url,options.method]);return Response.json({subscriber:{id:123}});};
+  try {
+    await dispatchIntegrationJob({KIT_API_KEY:'test'},'kit.upsert_tag',{email:'qa@example.test',tag_id:23211441,remove_tag_ids:[23211440]});
+    assert.deepEqual(calls,[['https://api.kit.com/v4/subscribers','POST'],['https://api.kit.com/v4/tags/23211440/subscribers/123','DELETE'],['https://api.kit.com/v4/tags/23211441/subscribers','POST']]);
+  } finally {globalThis.fetch=original;}
 });

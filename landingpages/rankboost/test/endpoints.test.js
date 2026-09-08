@@ -140,6 +140,7 @@ test("booking verifier binds the signed lead to its current Rank Boost event", a
     invitee,
     event,
     start: "2026-08-20T15:00:00Z",
+    offer: "boost",
   });
 });
 

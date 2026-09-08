@@ -50,3 +50,22 @@ test("domain normalization accepts public hosts and rejects ambiguous targets", 
   assert.equal(normalizeDomain("localhost"), "");
   assert.equal(normalizeDomain("javascript:alert(1)"), "");
 });
+
+test("all page-one positions remain eligible for the main offer", () => {
+  for (let position = 1; position <= 10; position++) {
+    assert.equal(projectKeywords("example.com", buildThemes([item("divorce lawyer chicago", position, 100)])).keywords.length, 1);
+  }
+});
+
+test("provider request includes page one and retains volume and organic filters", async () => {
+  const { fetchRankedKeywords } = await import("../functions/api/_rankmodel.js");
+  const original = globalThis.fetch;
+  let request;
+  globalThis.fetch = async (_url, options) => { request = JSON.parse(options.body)[0]; return Response.json({ tasks: [{ status_code: 20000, result: [{ items: [] }] }] }); };
+  try {
+    await fetchRankedKeywords({ DATAFORSEO_LOGIN: "test", DATAFORSEO_PASSWORD: "test" }, "example.com");
+    assert.ok(request.filters.some(f => Array.isArray(f) && f[0].endsWith("rank_absolute") && f[1] === ">=" && f[2] === 1));
+    assert.ok(request.filters.some(f => Array.isArray(f) && f[2] === "organic"));
+    assert.ok(request.filters.some(f => Array.isArray(f) && f[0].endsWith("search_volume") && f[2] === 10));
+  } finally { globalThis.fetch = original; }
+});

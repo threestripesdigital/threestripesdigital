@@ -231,7 +231,7 @@ export async function fetchRankedKeywords(env, domain) {
       location_code: 2840, // United States
       language_code: "en",
       filters: [
-        ["ranked_serp_element.serp_item.rank_absolute", ">=", 11],
+        ["ranked_serp_element.serp_item.rank_absolute", ">=", 1],
         "and",
         ["ranked_serp_element.serp_item.rank_absolute", "<=", 50],
         "and",

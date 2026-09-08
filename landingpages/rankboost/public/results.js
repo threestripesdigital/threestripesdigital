@@ -157,15 +157,15 @@
     show(
       '<p class="res-badge">✓ Boost fits found</p>' +
       '<h1 class="step-h">' + escHtml(data.domain) + ' qualifies.</h1>' +
-      '<p class="res-sub">We found <strong>' + totalTxt + '</strong> stuck in positions 11–50. ' +
-      'These are real searches where you currently rank below page one. Here is an illustrative opportunity model:</p>' +
+      '<p class="res-sub">We found <strong>' + totalTxt + '</strong> ranking in positions 1 to 50. ' +
+      'Page-one rankings qualify too. Here is an illustrative opportunity model:</p>' +
       ctaBlock(true) +
       '<div class="opp-list">' +
       '<div class="opp-total">' +
       '<div class="opp-total-lbl">Illustrative monthly opportunity at #1</div>' +
       '<div class="opp-total-num">' + fmtMoney(total) + '<small>/month</small></div>' +
       '<div class="opp-total-sub">across ' + kws.length + ' money keyword' + (kws.length === 1 ? '' : 's') +
-      ' stuck on pages 2–5 · estimates use stated assumptions, not guaranteed outcomes</div>' +
+      ' on pages 1 to 5 · estimates use stated assumptions, not guaranteed outcomes</div>' +
       '</div>' +
       cards + '</div>' +
       ctaBlock(false)
@@ -202,12 +202,30 @@
 
   function renderNoFit(data) {
     show(
-      '<p class="res-badge no">Not a fit, for now</p>' +
-      '<h1 class="step-h">No boost fits found for ' + escHtml(data.domain) + '.</h1>' +
-      '<p class="res-sub">The free boost needs keywords already ranking in positions 11–50 with real ' +
-      'search volume, and we didn’t find any today. That usually means the site needs foundational SEO ' +
-      'before a boost makes sense. Straight answer, no sales call.</p>' +
-      '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p>'
+      '<div class="downsell"><p class="res-badge">A different first step</p>' +
+      '<h1 class="step-h">Your site is not a fit for the free boost yet. Let’s build the foundation.</h1>' +
+      '<p class="res-sub">There is another way forward: a custom law firm website built for search, then a fresh look at Rank Boost.</p>' +
+      '<div class="downsell-reason"><span class="downsell-label">Your scan result</span>' +
+      '<p>We did not find supported, non-branded law firm searches for <strong>' + escHtml(data.domain) + '</strong> in positions 1 to 50 with at least 10 monthly searches in our US ranking data.</p>' +
+      '<p>This scan checks rankings, not your site’s speed or code. Bilal will review the foundations with you and explain whether a rebuild is the right next step.</p></div>' +
+      '<div class="downsell-offer"><span class="downsell-label">Built for your firm. Built for search.</span>' +
+      '<h2>A custom website that gives your SEO a stronger starting point.</h2>' +
+      '<ul class="downsell-features"><li><strong>Custom design and code</strong><span>Hand-built HTML and CSS, tailored to your firm. No off-the-shelf theme.</span></li>' +
+      '<li><strong>SEO from the ground up</strong><span>Site structure, speed, schema, internal links and metadata built in.</span></li>' +
+      '<li><strong>Unlimited revisions</strong><span>We keep refining the design until it is right.</span></li>' +
+      '<li><strong>3 to 4 week turnaround</strong><span>A clear scope and a fixed price, covered on your consultation.</span></li></ul>' +
+      '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
+      '<p class="res-note">30 minutes with Bilal. No pressure or obligation.</p></div>' +
+      '<article class="downsell-proof"><span class="downsell-label">The path in practice</span><h2>Vernsten Law: website first, then Rank Boost.</h2>' +
+      '<p>We rebuilt Vernsten Law’s website before running Rank Boost. Hear directly from the firm below.</p>' +
+      '<video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg" aria-label="Vernsten Law client testimonial"><source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4"></video>' +
+      '<p class="res-note">One client’s experience. A rebuild does not automatically qualify a site for Rank Boost. We scan again when it is live.</p></article>' +
+      '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal reviews your current site, walks through the SEO foundations and shows what a custom build could look like for your firm. Scope and pricing are covered together on the call.</p></div>' +
+      '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. The ranking scan alone cannot tell us that. The consultation establishes whether a rebuild is the right fit.</p></details>' +
+      '<details><summary>Can I get the free boost after the rebuild?</summary><p>We run a fresh ranking check after launch. If suitable keywords are present, you can move into the free Rank Boost flow.</p></details>' +
+      '<details><summary>What if I am already on page one?</summary><p>Page one is eligible for the main offer. Your position on page one is never a reason to send you to the website offer.</p></details></div>' +
+      '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
+      '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p></div>'
     );
   }
 
@@ -237,6 +255,8 @@
   function renderResult(res) {
     if (res.data && res.data.lead_token && payload) {
       payload.lead_token = res.data.lead_token;
+      payload.website_eligible = Boolean(res.ok && res.data.qualified === false);
+      payload.offer = payload.website_eligible ? "website" : "boost";
       payload.booking_eligible = Boolean(
         res.ok && res.data.qualified === true
       );
@@ -244,8 +264,9 @@
     }
     if (inline && payload) {
       window.rankBoostFlow.lead = payload;
+      window.rankBoostFlow.setOffer(payload.offer);
       var progressBar = document.getElementById("inline-progress-bar");
-      window.rankBoostFlow.rankingsReady = Boolean(res.ok && res.data && res.data.qualified === true);
+      window.rankBoostFlow.rankingsReady = Boolean(res.ok && res.data && typeof res.data.qualified === "boolean");
       if (window.rankBoostFlow.rankingsReady) {
         progressBar.style.setProperty("--progress", "66.6667%");
         progressBar.setAttribute("aria-valuenow", "2");
@@ -314,6 +335,8 @@
   // their results into the calendar. The API validates the signed lead token
   // and deduplicates replays before sending its matching CAPI event.
   document.addEventListener("click", function (event) {
+    var websiteLink = event.target.closest && event.target.closest(".downsell-cta");
+    if (websiteLink && inline) { event.preventDefault(); window.rankBoostFlow.book(); return; }
     var link = event.target.closest && event.target.closest(".step-cta, .opp-sticky-btn");
     if (inline && event.target.closest && event.target.closest("#step-result .step-back")) {
       event.preventDefault();
@@ -372,17 +395,17 @@
       '<h1 class="step-h">Checking your current rankings...</h1>' +
       '<p class="res-sub">Give us a few seconds. We’re checking ' + escHtml(payload.domain) +
       ' for keywords that could fit your free boost.</p>' +
-      '<p class="res-note">Looking for relevant searches and rankings in positions 11 to 50.</p></div>'
+      '<p class="res-note">Looking for relevant searches and rankings in positions 1 to 50.</p></div>'
     );
     resultEl.setAttribute("aria-busy", "true");
     var slow = setTimeout(function () {
       var note = resultEl.querySelector(".res-note");
       if (note) note.textContent = "Still checking. Some websites take a little longer. You can stay right here.";
-    }, 12000);
+    }, 5000);
     return requestCheck(0).then(function (res) {
       if (window.tsdMetaTrackingEnabled === true && window.fbq &&
           res.data && res.data.lead_token && res.data.error !== "rate_limited") {
-        fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
+        fbq(res.ok && res.data.qualified === true ? "track" : "trackCustom", res.ok && res.data.qualified === true ? "Lead" : "RankCheckCompleted", { content_name: "rank-check" }, { eventID: payload.event_id });
         if (res.ok && res.data.qualified === true) {
           fbq("trackCustom", "QualifiedLead", { content_name: "rank-check" }, { eventID: payload.event_id + "-q" });
         }

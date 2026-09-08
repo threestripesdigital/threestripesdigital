@@ -56,3 +56,11 @@
 
 - Use the exact Calendly event name, Three Stripes Digital Rank Boost, in the invitation image. Step 2 says Please check your inbox with spam guidance and Bilal’s clickable email. Below it, use matching light cards with simple blue icons, action-led titles, supporting descriptions and clear video/case-study links.
 - Preview deployments route only the public check, booking, and tracking POST APIs to the configured production funnel through a fixed upstream. Verify real API readiness and replay an existing submission before sharing a preview; mocked browser responses cannot verify environment configuration.
+
+## Website consultation path
+
+- A successful no-fit scan replaces steps 2 and 3 with the website offer and dedicated consultation booking. Page-one rankings remain eligible for the main offer, including position 1. Provider failures and limits never become a no-fit result.
+- Explain the observed keyword result without diagnosing site speed, indexing, or code from ranking data alone. Recheck eligibility after a rebuild.
+- Use Vernsten Law as the owner-confirmed website rebuild followed by Rank Boost example, with the existing on-domain testimonial. No invented ranking screenshots or numerical results.
+- Preserve the main calendar for qualified leads. Website bookings use their own provider event, Kit tags, verified inline confirmation and custom Meta event. Never fire Schedule for website bookings.
+- Keep pricing on the consultation and use the navy and gold card patterns in the inline flow.
