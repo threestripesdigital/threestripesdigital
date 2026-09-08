@@ -66,7 +66,7 @@ Only `public/` is uploaded as dashboard assets. Authentication executes before a
 - There is no automated scaling rule. A 20% increase is not recommended merely because 14 days passed. Profitability and stable seven-day results require review.
 - Bookings without a tracked campaign session are excluded from paid metrics, but appear in the call management list when no campaign is selected. Meta-attributed and first-party conversion counts are deliberately not added together.
 - Existing signed lead tokens link anonymous sessions to verified bookings. Customer names, emails, phone numbers and keywords are not copied to analytics.
-- Current booking import is capped at 2,000 records and fails visibly at that limit. Meta imports are capped at 2,500 daily ad rows. This is sufficient for the requested one-campaign, four-to-six-creative start; add pagination/storage partitioning before expanding significantly.
+- Current booking import is capped at 2,000 records and fails visibly at that limit. Meta imports are capped at 5,000 daily ad rows, supporting 34 ads across the 90-day correction window. Add pagination/storage partitioning before expanding significantly.
 
 ## Source references
 
@@ -90,3 +90,9 @@ Show rate is Showed divided by Showed plus No-show among past, noncancelled call
 Google attendance is not connected. For future automation, enable the Meet and Calendar APIs in a Google Cloud project and configure an OAuth client. The meeting owner must sign in and grant `meetings.space.readonly` and `calendar.events.readonly`; securely retain the refresh token as a Worker secret. Match calendar meeting codes/times to Meet conference records and participant sessions. Host/bot attendance is not prospect attendance. Anonymous, phone and unmatched guests require manual review. Missing records must stay Unknown, never inferred No-show. No recording/Drive permission is needed just for attendance. Manual entry requires no Google authorization.
 
 Stripe integration is explicitly deferred. Existing manual financial fields remain available, but no payment feed is connected and financial metrics are not verified automatic outcomes.
+
+## Paused September 2026 campaign
+
+The campaign is pinned by ID to `120249029003230545`. All 22 ad sets and 34 ads must remain paused until the owner explicitly authorizes activation. The target daily budget is USD 154, implemented in the CAD ad account as CAD 9.69 per ad set. Reporting retains the strategy's USD thresholds and converts CAD spend using a fixed reference rate of 1 USD = CAD 1.3840 (Bank of Canada, 4 September 2026). The dashboard discloses this estimate. Review the rate before activation and when interpreting subsequent results; it is not live FX or card settlement data.
+
+Prelaunch review and preview sessions are retained as raw diagnostic records but excluded from paid visitor, video, lead, booking and revenue totals. Before activating this campaign, set `LAUNCH_AT` to the actual activation timestamp in UTC and deploy the reporting configuration. If it is omitted, the first detected spend sets the fallback timestamp; that fallback may miss first-hour sessions. Never activate the campaign during preparation.

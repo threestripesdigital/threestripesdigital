@@ -33,10 +33,13 @@
   "vars": {
     "REPORTING_TIMEZONE": "America/New_York",
     "CURRENCY": "USD",
-    "DAILY_BUDGET": "100",
+    "DAILY_BUDGET": "154",
+    "META_ACCOUNT_CURRENCY": "CAD",
+    "META_USD_TO_ACCOUNT_RATE": "1.3840",
+    "META_FX_DATE": "2026-09-04",
     "FUNNEL_ORIGINS": "https://threestripesdigital.com,https://www.threestripesdigital.com,https://tsd-law-firm-rank-boost.pages.dev",
     "META_ACCOUNT_ID": "358826439854169",
-    "META_CAMPAIGN_IDS": "",
+    "META_CAMPAIGN_IDS": "120249029003230545",
     "META_API_VERSION": "v25.0",
     "LAUNCH_AT": "",
     "META_CAMPAIGN_PREFIX": "Rank Boost"
