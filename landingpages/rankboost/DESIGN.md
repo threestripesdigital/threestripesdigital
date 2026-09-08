@@ -45,3 +45,5 @@
 - Exercise direct-entry, failure, and successful funnel states rather than reviewing only the happy path.
 
 - Lead the confirmation content with Step 1, Watch this before your call, and the founder video. Step 2, Accept your calendar invitation, follows immediately before FAQs. Calendar instructions are always readable; personalized invite details retain the existing verification gate. Keep the remaining FAQs and proof below, with the save-number reminder unnumbered.
+
+- The calendar step uses a pale-blue card with two clear inbox instructions, not a simulated email or a pretend acceptance control. Put persistent Your questions and Client results links at the mobile bottom edge, with safe-area spacing and page-bottom clearance. On desktop those links stay inline above Step 1. Provide an explicit case-study link after the calendar step. Preserve all six Wistia videos and existing verification.
