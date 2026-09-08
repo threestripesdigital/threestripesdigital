@@ -12,3 +12,8 @@ database_id = "072ff1b9-a238-424d-9c03-6ae26ecf74a1"
 binding = "ANALYTICS_DB"
 database_name = "rank-boost-analytics"
 database_id = "ee4bf499-5656-49eb-a728-13f1eafd2cf1"
+
+# Preview assets use the existing configured public API. Keep this in source:
+# Pages deploy replaces dashboard-only plaintext variables from this config.
+[env.preview.vars]
+FUNNEL_API_ORIGIN = "https://tsd-law-firm-rank-boost.pages.dev"

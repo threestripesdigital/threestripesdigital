@@ -20,7 +20,7 @@
     var completed = number === 3 || flow.rankingsReady ? 2 : 1;
     progressBar.style.setProperty("--progress", (completed / 3 * 100) + "%");
     progressBar.setAttribute("aria-valuenow", String(completed));
-    progressBar.setAttribute("aria-valuetext", number === 3 ? "Your rankings are ready. Book your call to finish." : "Your details are submitted. Checking your rankings.");
+    progressBar.setAttribute("aria-valuetext", completed === 2 ? "Your rankings are ready. Book your call to finish." : "Your details are submitted. Checking your rankings.");
     toggle.hidden = true;
     toggle.setAttribute("aria-expanded", "true");
     form.hidden = number !== 1;
