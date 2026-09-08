@@ -11,7 +11,7 @@
 
 - Keyboard and pointer users must receive equivalent controls and state changes.
 - Error copy must distinguish a durably saved lead from an unsaved submission.
-- Booking confirmation content must remain hidden until Calendly data confirms a booking; direct or failed confirmation visits use a neutral recovery state.
+- Use Thanks for booking as the default welcome, including direct visits and lookup failures. Do not show a booking warning or ask the visitor to book again. Personalized meeting details, booking-dependent actions, and Schedule tracking remain gated by verified booking evidence.
 - Booking verification retries webhook lag, uses the signed lead token and exact event identity, and never trusts redirect-query timestamps.
 - Field errors must set `aria-invalid`, reference visible error text, and focus the first invalid control while matching server validation limits.
 - Proof comparisons must expose keyboard-operable slider semantics, and enlarged images must use a labeled modal with focus restoration.
