@@ -6,3 +6,9 @@ pages_build_output_dir = "public"
 binding = "LEADS_DB"
 database_name = "rankboost-leads"
 database_id = "072ff1b9-a238-424d-9c03-6ae26ecf74a1"
+
+# Isolated first-party campaign reporting. Never migrate the lead DB from analytics.
+[[d1_databases]]
+binding = "ANALYTICS_DB"
+database_name = "rank-boost-analytics"
+database_id = "ee4bf499-5656-49eb-a728-13f1eafd2cf1"
