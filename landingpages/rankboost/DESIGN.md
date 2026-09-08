@@ -34,7 +34,7 @@
 - Cap portrait cards at 380 pixels, with two FAQ columns above 680 pixels and one column on smaller screens. Show clean white and pale-blue thumbnails with bold blue questions above the center play button.
 - Publish complete selected takes only. The full agency-difference claim and the free-offer sales-tool explanation remain intact at Bilal’s request.
 
-- Use Wistia embeds for existing founder and FAQ videos. The safety and timing FAQs use same-origin MP4s because Wistia has reached its 10-media limit. Use preload none, native controls, and an accessible center play button. Keep FAQ titles in thumbnails only, with accessible player labels and no duplicated captions. Keep the agency, free offer, competitors, safety, and timing order.
+- Use Wistia embeds for all six founder and FAQ videos, including safety and timing. Use the matching light-blue question thumbnails and Wistia center play controls. Keep FAQ titles in thumbnails only, with accessible player labels and no duplicated captions. Keep the agency, free offer, competitors, safety, and timing order.
 
 ## Verification
 

@@ -501,8 +501,8 @@ test("thank-you page orders urgency video, breakouts, testimonials, next steps",
   }
 
   const embeds = [...source.matchAll(/<wistia-player media-id="([a-z0-9]+)" aspect="0.5625"/g)];
-  assert.equal(embeds.length, 4);
-  assert.equal(new Set(embeds.map((match) => match[1])).size, 4);
+  assert.equal(embeds.length, 6);
+  assert.equal(new Set(embeds.map((match) => match[1])).size, 6);
   for (const [, id] of embeds) {
     assert.ok(source.includes(`src="https://fast.wistia.com/embed/${id}.js"`));
   }
