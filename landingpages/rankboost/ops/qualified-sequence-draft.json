@@ -1,0 +1,290 @@
+{
+  "target_sequence_id": 2862371,
+  "scope": "Qualified booked leads with eligible keywords on pages 1 to 5. No unqualified, unbooked, no-show or post-boost flow changes.",
+  "status": "31 drafts saved and read back in Kit; original four emails remain published. Visual automation and production field deployment are pending.",
+  "reply_to": "bilal@threestripesdigital.com",
+  "schedule": "Q01 to Q06 at 0,2,4,6,8,10 hours. Q07 to Q12 at 24,26,28,30,32,34 hours. Q13 at48 then every8hours. Reminders separate.",
+  "required_fields": [
+    "calendly_link",
+    "call_date",
+    "call_time",
+    "case_value",
+    "cases_per_month",
+    "close_rate",
+    "ctr_position_1",
+    "current_clicks_per_month",
+    "current_ctr",
+    "firm_name",
+    "first_name",
+    "lead_conversion_rate",
+    "location",
+    "opp_clicks",
+    "opp_leads",
+    "opp_value",
+    "top_keyword",
+    "top_position",
+    "top_volume"
+  ],
+  "emails": [
+    {
+      "key": "Q01",
+      "subject": "Your call is confirmed. Here is what happens next.",
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}Your call is confirmed for {{ subscriber.call_date }} at {{ subscriber.call_time }}.{% else %}Your call is confirmed. Your Calendly invitation has the date, time, and joining details.{% endif %}</p><p>The scan found a qualifying keyword for {{ subscriber.firm_name | default: \"your firm\" }}: \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\". We will review its current position on the call.</p>{% assign rank = subscriber.top_position | plus: 0 %}{% if rank > 0 and rank <= 10 %}<p>You already have page 1 visibility at position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The opportunity is to improve your share of those searches.</p>{% elsif rank > 10 %}<p>Your scan recorded position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The comparison on our call will show the estimated traffic gap between that position and position 1.</p>{% else %}<p>We will review the ranking recorded in your scan and the opportunity above it.</p>{% endif %}<p>First, I show you the ranking on desktop and mobile and walk through the opportunity math. Then we cover how the boost works and the options for continuing, including pricing, before anything starts.</p><p>There are two main options: fully managed work across organic search, AI search visibility, and your local business profile, or boost only while you manage the rest of your SEO.</p><p>Before I trigger the free boost, we book a follow-up for 2 to 3 days later. Once the boost starts, I give you your dashboard login on the call so you can check the daily ranking updates. We review the results together at the follow-up.</p><p>The first boost is free. No preparation needed. Your keyword and scan are the starting point.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Bilal</p>"
+    },
+    {
+      "key": "Q02",
+      "subject": "What \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" could be worth: the math",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.top_volume != blank and subscriber.ctr_position_1 != blank and subscriber.current_ctr != blank and subscriber.current_clicks_per_month != blank and subscriber.lead_conversion_rate != blank and subscriber.close_rate != blank and subscriber.opp_clicks != blank and subscriber.opp_leads != blank and subscriber.cases_per_month != blank and subscriber.case_value != blank and subscriber.opp_value != blank %}<p>Here is the monthly opportunity model for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\". These are estimates from the scan and its assumptions, not measured website traffic or promised revenue.</p><p>Search volume: {{ subscriber.top_volume }} searches.</p><p>Position 1 click estimate: {{ subscriber.top_volume }} searches x {{ subscriber.ctr_position_1 }} = {{ subscriber.opp_clicks }} clicks.</p><p>Current click estimate: {{ subscriber.top_volume }} searches x {{ subscriber.current_ctr }} = {{ subscriber.current_clicks_per_month }} clicks.</p><p>Visitor to inquiry: {{ subscriber.opp_clicks }} clicks x {{ subscriber.lead_conversion_rate }} = {{ subscriber.opp_leads }} inquiries.</p><p>Inquiry to signed case: {{ subscriber.opp_leads }} inquiries x {{ subscriber.close_rate }} = {{ subscriber.cases_per_month }} cases.</p><p>Case value: {{ subscriber.cases_per_month }} cases x {{ subscriber.case_value }} = approximately {{ subscriber.opp_value }} per month.</p><p>The conversion and close rates are planning assumptions. We will compare them with your intake experience. Change those inputs and the estimate changes too.</p>{% else %}<p>The opportunity model starts with search volume, estimates clicks at your current position and at position 1, then applies an inquiry rate, a close rate, and an average case value.</p><p>I will walk through the complete calculation with you on our call. We will check the assumptions against your intake experience before treating it as a business opportunity.</p>{% endif %}{% assign rank = subscriber.top_position | plus: 0 %}{% if rank > 0 and rank <= 10 %}<p>You already have page 1 visibility at position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The opportunity is to improve your share of those searches.</p>{% elsif rank > 10 %}<p>Your scan recorded position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The comparison on our call will show the estimated traffic gap between that position and position 1.</p>{% else %}<p>We will review the ranking recorded in your scan and the opportunity above it.</p>{% endif %}<p>The position 1 estimate is the total modeled opportunity at that position. It is not all additional revenue on top of what you already receive. We will look at the difference on our call.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q03",
+      "subject": "If an SEO agency has let you down before",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You do not need another vague report telling you to wait. You need a clear keyword, a starting position, and a way to see what changes.</p><p>On our call, I will explain the method, show you the baseline, and cover the options for continuing. After the free boost starts, you get dashboard access to follow the ranking yourself.</p><p>Here is an example of documented client work: Cruz Gold, an immigration firm in New Jersey. These are Google Maps grids from a broader campaign, not proof of a 48-hour organic boost.</p><p><img src=\"https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-before-sm.jpg\" alt=\"Cruz Gold: Google Maps ranking grid before the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p><img src=\"https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-after-sm.jpg\" alt=\"Cruz Gold: Google Maps ranking grid after the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p>We will use your own organic ranking to evaluate your boost.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q04",
+      "subject": "Why I give the first boost away for free",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I would rather start with a measured demonstration on your keyword than ask you to buy from a presentation alone.</p><p>That is why the first boost is free. On our call, I explain how it works and show you the options and pricing for continuing. Before the boost starts, we book the results review for 2 to 3 days later.</p><p>Once I trigger it, you get a dashboard login on the call. You can follow the ranking updates between the two conversations.</p><p>The review is already booked. We look at what changed, what did not, and the plan that fits.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q05",
+      "subject": "How can a boost be assessed in 24 to 48 hours?",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A focused boost and a full SEO campaign have different scopes. The boost is a test on a qualifying keyword. Managed SEO also covers the wider organic, AI, and local work.</p><p>On our call, I will explain the actual method and the ranking signals involved before I run anything. You should understand what is being done, how we measure it, and what the limitations are.</p><p>The initial observation window is 24 to 48 hours. That is when we look for movement, not a promise that every keyword reaches page 1 in that time.</p><p>We record the baseline and review the dashboard together. A safety claim needs an explanation of the method, so we will address that directly on the call.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q06",
+      "subject": "Do I work with your competitors?",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I do not run the same boost keyword for two firms in the same market. If we work together on \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" in {{ subscriber.location | default: \"your market\" }}, that is the keyword and market we discuss reserving.</p><p>I will confirm availability and scope on the call. I will not tell you a competitor has taken a keyword unless that has actually happened.</p><p>We will also cover the difference between fully managed work and boost only, so you know what each option includes before the free boost starts.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Bilal</p>"
+    },
+    {
+      "key": "Q07",
+      "subject": "A real law firm example to review before our call",
+      "delay_value": 14,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Cruz Gold is an immigration law firm in New Jersey. Its published case study documents growth in search visibility and inquiries during a broader campaign.</p><p><img src=\"https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-before-sm.jpg\" alt=\"Cruz Gold: Google Maps ranking grid before the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p><img src=\"https://threestripesdigital.com/case-studies/assets/cruz-gold/heatmap-after-sm.jpg\" alt=\"Cruz Gold: Google Maps ranking grid after the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p>These before-and-after images show local Google Maps visibility. They are useful evidence of managed work, but they are not organic ranking screenshots and do not establish a 48-hour boost result.</p><p><a href=\"https://threestripesdigital.com/case-studies/cruz-gold/\">See the case study and attorney video</a>.</p><p>On our call, I will show you how we measure the separate organic boost on your own keyword.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q08",
+      "subject": "Another firm, another before-and-after comparison",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is a second example from Vernsten Law. The images compare local ranking visibility before and after broader client work.</p><p><img src=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-before-sm.jpg\" alt=\"Vernsten Law: Google Maps ranking grid before the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p><img src=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/heatmap-after-sm.jpg\" alt=\"Vernsten Law: Google Maps ranking grid after the broader campaign\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p>A map grid shows visibility from multiple locations. Your organic keyword dashboard measures a different search result. We will keep that distinction clear.</p><p>For \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\", we will record your own starting point and check the same keyword and devices during the review window.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q09",
+      "subject": "Exactly what happens on our call",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is the full process so you know what to expect.</p><p>1. We review your keyword ranking on desktop and mobile.</p><p>2. We walk through the opportunity math using your scan and the assumptions behind it.</p><p>3. I explain the boost and the options for continuing, including pricing.</p><p>4. Before the boost starts, we book a follow-up for 2 to 3 days later.</p><p>5. If we move forward, I trigger the free boost and give you your dashboard login on the call. You can check daily updates before we review the results together.</p><p>At the follow-up, we look at what happened and discuss the plan that fits. You do not need to bring a keyword list. We start with the scan.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q10",
+      "subject": "The big three: organic, AI, and local search",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Being found online involves more than one search surface.</p><p>Organic search: the regular Google results for your practice and market. This is where we measure the keyword boost.</p><p>AI search: how your firm is represented in answers from tools such as ChatGPT, Perplexity, and Google AI Overviews.</p><p>Local search: your Google Business Profile, Maps, and the local pack.</p><p>Fully managed work covers all three. Each needs its own work and measurement. An organic ranking change does not automatically create an AI recommendation or a Maps result.</p><p>We will cover the scope and pricing on the call.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q11",
+      "subject": "Managed or boost only: what fits your firm?",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Fully managed means my team handles organic boost work across 10 keywords, AI search visibility work, and local business profile work.</p><p>Boost only means you choose the keywords and URLs, with a minimum of 5 keywords, and manage the rest of your SEO yourself.</p><p>Managed is the more complete option. Boost only can fit when you already have someone handling the other work. I will cover the exact scope and pricing on our call.</p><p>There is one other piece: your website needs to convert the traffic. If the site is holding that back, we can discuss a custom build as a separate option.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q12",
+      "subject": "Your booked call: a quick check-in",
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}Your call is confirmed for {{ subscriber.call_date }} at {{ subscriber.call_time }}.{% else %}Your call is confirmed. Your Calendly invitation has the date, time, and joining details.{% endif %}</p><p>We will start with \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" and the scan, then cover the method, the options for continuing, and the follow-up review.</p><p>No keyword list or website logins needed for this conversation. If a partner needs to be involved in the decision, they are welcome to join.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Bilal</p>"
+    },
+    {
+      "key": "Q13",
+      "subject": "Traffic needs somewhere useful to land",
+      "delay_value": 14,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The boost is intended to help the right people find your page. The page then needs to make it easy to understand your practice and contact you.</p><p>Clear service information, a visible phone number, and a straightforward inquiry form matter. On our call, we can discuss whether your current site supports the traffic opportunity or whether a custom site would help.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q14",
+      "subject": "A third example of local visibility work",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>These before-and-after grids are from Ticket Crushers. They show local ranking coverage during broader client work, not a promised outcome for your organic boost.</p><p><img src=\"https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-before.jpg\" alt=\"Ticket Crushers: local ranking grid before broader work\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p><img src=\"https://threestripesdigital.com/case-studies/assets/ticket-crushers/sf-after.jpg\" alt=\"Ticket Crushers: local ranking grid after broader work\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p>The point of a baseline is to make the change visible. We will do that with your own keyword.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q15",
+      "subject": "Hear the attorney explain the broader campaign",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p><a href=\"https://threestripesdigital.com/case-studies/cruz-gold/\">Watch the Cruz Gold case study</a>.</p><p>It shows what a broader engagement can involve. On your call, we separate that longer-term work from the scope of the first free boost.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q16",
+      "subject": "Will this fit your practice area?",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The scan is the starting point. We look at whether the keyword reflects the cases your firm actually wants, where the page ranks, and what the search results look like.</p><p>\"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" is the keyword we will review. If it does not match the work you want more of, tell me on the call so we can discuss a better fit.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q17",
+      "subject": "Is page 5 too far away?",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A keyword on page 5 can still be a candidate. We look at the keyword, page, search demand, and current result together.</p><p>Being eligible for a test is different from predicting the outcome. We will use the scan and your dashboard to see what actually happens.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q18",
+      "subject": "What about a competitive market?",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Competition in {{ subscriber.location | default: \"your market\" }} is part of the review. We will look at which pages appear above you and whether the search fits your practice.</p><p>We will discuss a focused test on your keyword and what a broader plan would involve. The market affects the outcome, which is why we start with your own baseline.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q19",
+      "subject": "If your current SEO provider has questions",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>They are welcome to ask how the test works and what is being measured. A useful conversation starts with the actual method, scope, and baseline.</p><p>On the call, I will explain those details. Boost only is also an option if your existing team will continue handling the wider SEO work.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q20",
+      "subject": "The math changes when the assumptions change",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.top_volume != blank and subscriber.ctr_position_1 != blank and subscriber.current_ctr != blank and subscriber.current_clicks_per_month != blank and subscriber.lead_conversion_rate != blank and subscriber.close_rate != blank and subscriber.opp_clicks != blank and subscriber.opp_leads != blank and subscriber.cases_per_month != blank and subscriber.case_value != blank and subscriber.opp_value != blank %}<p>Here is the monthly opportunity model for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\". These are estimates from the scan and its assumptions, not measured website traffic or promised revenue.</p><p>Search volume: {{ subscriber.top_volume }} searches.</p><p>Position 1 click estimate: {{ subscriber.top_volume }} searches x {{ subscriber.ctr_position_1 }} = {{ subscriber.opp_clicks }} clicks.</p><p>Current click estimate: {{ subscriber.top_volume }} searches x {{ subscriber.current_ctr }} = {{ subscriber.current_clicks_per_month }} clicks.</p><p>Visitor to inquiry: {{ subscriber.opp_clicks }} clicks x {{ subscriber.lead_conversion_rate }} = {{ subscriber.opp_leads }} inquiries.</p><p>Inquiry to signed case: {{ subscriber.opp_leads }} inquiries x {{ subscriber.close_rate }} = {{ subscriber.cases_per_month }} cases.</p><p>Case value: {{ subscriber.cases_per_month }} cases x {{ subscriber.case_value }} = approximately {{ subscriber.opp_value }} per month.</p><p>The conversion and close rates are planning assumptions. We will compare them with your intake experience. Change those inputs and the estimate changes too.</p>{% else %}<p>The opportunity model starts with search volume, estimates clicks at your current position and at position 1, then applies an inquiry rate, a close rate, and an average case value.</p><p>I will walk through the complete calculation with you on our call. We will check the assumptions against your intake experience before treating it as a business opportunity.</p>{% endif %}<p>If your average case value is higher, the opportunity estimate increases. If your intake closes fewer inquiries, it decreases. We will use your experience to check the model.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q21",
+      "subject": "What the firms above you can teach us",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% assign rank = subscriber.top_position | plus: 0 %}{% if rank > 0 and rank <= 10 %}<p>You already have page 1 visibility at position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The opportunity is to improve your share of those searches.</p>{% elsif rank > 10 %}<p>Your scan recorded position {{ subscriber.top_position | default: \"the position recorded in your scan\" }}. The comparison on our call will show the estimated traffic gap between that position and position 1.</p>{% else %}<p>We will review the ranking recorded in your scan and the opportunity above it.</p>{% endif %}<p>On the call, we will look at the actual search results for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\". We can discuss who appears above you without assuming what they spend or how many cases they sign.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q22",
+      "subject": "One search channel is only part of the picture",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Organic rankings, AI answers, and local Maps results are separate opportunities to be found. The fully managed option addresses all three.</p><p>We start the free boost with an organic keyword. On the call, we will also cover how the wider work fits together.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q23",
+      "subject": "A simple way to compare the two options",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>With managed, my team handles the boost plus AI visibility and local profile work. With boost only, you choose the keywords and URLs and keep responsibility for the wider SEO.</p><p>We will cover the scope, pricing, and which option fits your existing team on our call.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q24",
+      "subject": "Why the follow-up is booked before the boost",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We book the follow-up on the first call, before the boost starts. That puts a time in the calendar to review the results, whether the keyword moves or stays where it is.</p><p>You get your dashboard login after I trigger the boost. At the review 2 to 3 days later, we look at what happened and discuss the plan that fits.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q25",
+      "subject": "What client feedback can tell you",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>This anonymized client message describes calls and website activity during client work. It is feedback from that campaign, not evidence that every boost produces the same result.</p><p><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/anon/email-posted-x.webp\" alt=\"Anonymized client email describing calls and website activity\" width=\"560\" style=\"max-width:100%;height:auto;\"></p><p>For your firm, we begin with the keyword baseline and keep ranking movement separate from inquiries and signed cases.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q26",
+      "subject": "More attorney experiences before our call",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>On the call, I can walk you through the client examples relevant to your practice and explain what work each example covers.</p><p>A useful case study makes its timeframe, search channel, and scope clear. We will apply that same standard to your own boost review.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q27",
+      "subject": "What a conversion-focused website should do",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Someone landing on your page should quickly understand the cases you handle, where you work, why they should contact you, and how to take the next step.</p><p>A website discussion only makes sense if it solves a problem with that experience. If needed, we can cover a custom HTML/CSS build, the revision process, and the expected 3 to 4 week turnaround on our call. Pricing is covered there.</p><p>Bilal</p>"
+    },
+    {
+      "key": "Q28",
+      "subject": "The next steps, in one place",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan is the starting point. On the call we review the keyword, the method, the math, and the options for continuing.</p><p>We book the follow-up before the boost starts, then I give you dashboard access after triggering it. We review the results together 2 to 3 days later.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Bilal</p>"
+    },
+    {
+      "key": "Q29",
+      "subject": "The cost of leaving the opportunity unmeasured",
+      "delay_value": 8,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You already know where \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" sits in the scan. The question is how much room there is above that position and whether more visibility would support your intake goals.</p><p>The opportunity calculation is a scenario, not a bill you are losing each month. On our call, we will compare the current-position estimate with the position 1 estimate and check the assumptions.</p><p>That gives us a concrete starting point for the free boost and the options for continuing.</p><p>Bilal</p>"
+    },
+    {
+      "key": "R01",
+      "subject": "Tomorrow at {{ subscriber.call_time }}: see you then",
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your call is tomorrow at {{ subscriber.call_time }}. We will start with \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" and your scan. No prep needed.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Bilal</p>",
+      "scheduling_requirement": "Separate event-relative reminder, evening before call in invitee timezone. Do not place in the relative-delay content stream."
+    },
+    {
+      "key": "R02",
+      "subject": "See you in a couple of hours",
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>See you at {{ subscriber.call_time }}. I have \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" and your scan ready for our conversation. Talk soon.</p><p>Bilal</p>",
+      "scheduling_requirement": "Separate event-relative reminder, two hours before call. Skip if booking occurs within that window."
+    }
+  ],
+  "known_gaps": [
+    "Visual automation setup blocked by Chrome JavaScript from Apple Events being disabled.",
+    "Event-relative reminders and day 3 onward repetition are not active.",
+    "Actual organic before/after boost evidence with a verified timeframe is missing; available grids are broader local Maps campaign evidence.",
+    "Dedicated breakout and confirmation video links remain unverified.",
+    "Firm name and location are not collected; email fallback text is used.",
+    "CRM outcome command stops emails explicitly; moving a deal stage alone does not. Rebooking restart is not yet automated."
+  ],
+  "draft_ids": {
+    "Q01": 10285529,
+    "Q02": 10285530,
+    "Q03": 10285531,
+    "Q04": 10285532,
+    "Q05": 10285533,
+    "Q06": 10285534,
+    "Q07": 10285535,
+    "Q08": 10285536,
+    "Q09": 10285537,
+    "Q10": 10285538,
+    "Q11": 10285539,
+    "Q12": 10285540,
+    "Q13": 10285541,
+    "Q14": 10285542,
+    "Q15": 10285543,
+    "Q16": 10285544,
+    "Q17": 10285545,
+    "Q18": 10285546,
+    "Q19": 10285547,
+    "Q20": 10285548,
+    "Q21": 10285549,
+    "Q22": 10285550,
+    "Q23": 10285551,
+    "Q24": 10285552,
+    "Q25": 10285553,
+    "Q26": 10285554,
+    "Q27": 10285555,
+    "Q28": 10285556,
+    "Q29": 10285557,
+    "R01": 10285558,
+    "R02": 10285560
+  }
+}
