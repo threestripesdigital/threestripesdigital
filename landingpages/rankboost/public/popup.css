@@ -1,0 +1,98 @@
+
+#boost-dialog { --rb-navy:#0a1628; --rb-surface:#0f1f35; --rb-panel:#152640; --rb-gold:#d4b96a; --rb-green:#34d399; --rb-text:#f8fafc; --rb-muted:#a6b4c7; --rb-line:#2b3b51; color:var(--rb-text); font-family:Inter,Arial,sans-serif; }
+#boost-dialog * { box-sizing:border-box; }
+#boost-dialog .rb-scene { background:#050c17; padding:20px; border-radius:18px; }
+#boost-dialog .rb-modal { background:var(--rb-surface); max-width:650px; margin:auto; border:1px solid var(--rb-line); border-radius:16px; overflow:hidden; box-shadow:0 24px 70px #0005; }
+#boost-dialog .rb-head { display:flex; align-items:center; gap:16px; padding:20px 26px 16px; }
+#boost-dialog .rb-wordmark { font-family:'Playfair Display',Georgia,serif; font-size:18px; font-weight:600; margin-right:auto; color:var(--rb-text); letter-spacing:-.01em; }
+#boost-dialog .rb-wordmark span { color:var(--rb-gold); }
+#boost-dialog .rb-step { color:var(--rb-muted); font-size:11px; white-space:nowrap; letter-spacing:.05em; }
+#boost-dialog .rb-close { background:transparent; border:0; color:var(--rb-muted); font-size:24px; width:32px; height:32px; cursor:pointer; }
+#boost-dialog .rb-progress { height:3px; background:var(--rb-line); margin:0 26px; }
+#boost-dialog .rb-progress span { display:block; height:100%; width:66.6667%; background:var(--rb-gold); }
+#boost-dialog .rb-content { padding:26px; }
+#boost-dialog .rb-summary { text-align:center; margin-bottom:28px; }
+#boost-dialog h2 { color:var(--rb-text); font-size:23px; font-weight:600; letter-spacing:-.5px; line-height:1.4; margin:0 auto 22px; max-width:440px; }
+#boost-dialog h2 span { color:var(--rb-gold); }
+#boost-dialog .rb-total-label { color:var(--rb-muted); font-size:14px; line-height:1.5; }
+#boost-dialog .rb-total { color:var(--rb-green); font-size:48px; letter-spacing:-1.8px; font-weight:650; line-height:1.2; margin:8px 0 5px; font-variant-numeric:tabular-nums; }
+#boost-dialog .rb-total small { font-size:17px; letter-spacing:0; font-weight:400; white-space:nowrap; }
+#boost-dialog .rb-total-context { font-size:12px; color:var(--rb-muted); }
+#boost-dialog h3 { margin:0; color:var(--rb-text); font-size:16px; font-weight:600; }
+#boost-dialog .rb-section-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px; }
+#boost-dialog .rb-section-head span { color:var(--rb-muted); font-size:11px; }
+#boost-dialog table { width:100%; table-layout:fixed; border-collapse:collapse; }
+#boost-dialog th { color:var(--rb-muted); font-size:11px; font-weight:500; text-align:left; padding:10px 8px; border-bottom:1px solid var(--rb-line); }
+#boost-dialog th:first-child { width:58%; padding-left:10px; }
+#boost-dialog th:nth-child(2) { width:14%; text-align:center; }
+#boost-dialog th:last-child { width:28%; text-align:center; }
+#boost-dialog td { padding:10px 8px; font-size:12px; line-height:1.45; border-bottom:1px solid var(--rb-line); }
+#boost-dialog td:first-child { padding-left:10px; }
+#boost-dialog td:nth-child(2) { text-align:center; color:var(--rb-muted); font-variant-numeric:tabular-nums; }
+#boost-dialog td:last-child { text-align:center; color:var(--rb-green); font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; }
+#boost-dialog .rb-selected { background:var(--rb-panel); }
+#boost-dialog .rb-selected td:first-child { box-shadow:inset 2px 0 var(--rb-gold); }
+#boost-dialog .rb-keyword-button { background:none; border:0; color:var(--rb-text); font:inherit; text-align:left; padding:0; line-height:1.45; cursor:pointer; }
+#boost-dialog .rb-keyword-button:hover { color:var(--rb-gold); }
+#boost-dialog .rb-math { margin-top:28px; background:var(--rb-panel); border-radius:10px; padding:20px; }
+#boost-dialog .rb-selected-keyword { margin:7px 0 16px; font-size:13px; color:var(--rb-gold); line-height:1.5; }
+#boost-dialog .rb-math-line { display:flex; justify-content:space-between; gap:16px; align-items:baseline; padding:9px 0; font-size:13px; line-height:1.5; }
+#boost-dialog .rb-math-line span:first-child { color:var(--rb-muted); }
+#boost-dialog .rb-math-line strong { color:var(--rb-text); font-weight:500; font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+#boost-dialog .rb-math-line .rb-factor { color:var(--rb-gold); }
+#boost-dialog .rb-math-line.rb-subtract { border-top:1px solid var(--rb-line); margin-top:8px; padding-top:14px; }
+#boost-dialog .rb-math-total { border-top:1px solid var(--rb-line); margin-top:8px; padding-top:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+#boost-dialog .rb-math-total span { color:var(--rb-muted); font-size:12px; }
+#boost-dialog .rb-math-total strong { color:var(--rb-green); font-size:23px; font-weight:600; letter-spacing:-.5px; white-space:nowrap; }
+#boost-dialog .rb-math-total small { font-size:12px; font-weight:400; letter-spacing:0; }
+#boost-dialog .rb-foot { padding:20px 26px; border-top:1px solid var(--rb-line); background:var(--rb-surface); }
+#boost-dialog .rb-book { display:block; width:fit-content; max-width:100%; margin-inline:auto; padding:13.6px 21.6px; border:1px solid transparent; border-radius:8px; font:600 15.2px/1.5 'Inter',system-ui,-apple-system,sans-serif; letter-spacing:-.01em; background:linear-gradient(180deg,#D4B96A,#C4A35A); box-shadow:0 8px 24px rgba(196,163,90,.25); color:var(--rb-navy); cursor:pointer; }
+#boost-dialog .rb-book:hover { background:linear-gradient(180deg,#E0C878,#D4B96A); box-shadow:0 10px 28px rgba(196,163,90,.35); }
+#boost-dialog .rb-step, #boost-dialog th { font-family:'JetBrains Mono',ui-monospace,monospace; }
+#boost-dialog .rb-cta-block { margin-top:22px; }
+#boost-dialog .rb-foot-note { text-align:center; color:var(--rb-muted); font-size:12px; margin:10px 0 0; }
+#boost-dialog .rb-next { text-align:center; padding:36px 26px; }
+#boost-dialog .rb-next p { font-size:14px; color:var(--rb-muted); }
+#boost-dialog .rb-reopen { color:var(--rb-navy); background:var(--rb-gold); border:0; padding:14px 20px; border-radius:8px; cursor:pointer; display:block; margin:auto; }
+#boost-dialog [hidden] { display:none!important; }
+@media(max-width:480px) {
+ #boost-dialog .rb-scene { padding:8px; }
+ #boost-dialog .rb-head { padding:14px 16px; gap:8px; }
+ #boost-dialog .rb-wordmark { font-size:15px; max-width:140px; }
+ #boost-dialog .rb-step { font-size:10px; }
+ #boost-dialog .rb-content { padding:22px 16px; }
+ #boost-dialog .rb-progress { margin:0 16px; }
+ #boost-dialog h2 { font-size:21px; }
+ #boost-dialog .rb-total { font-size:40px; }
+ #boost-dialog .rb-total small { font-size:15px; }
+ #boost-dialog .rb-section-head span { display:none; }
+ #boost-dialog th:first-child { width:53%; }
+ #boost-dialog th:nth-child(2) { width:14%; }
+ #boost-dialog th:last-child { width:33%; }
+ #boost-dialog .rb-keyword-button { min-height:36px; }
+ #boost-dialog .rb-math { padding:16px; }
+ #boost-dialog .rb-math-line { font-size:12px; gap:8px; }
+ #boost-dialog .rb-math-total { flex-direction:column; align-items:center; text-align:center; }
+ #boost-dialog .rb-foot { padding:18px 16px; }
+}
+/* Native modal keeps focus inside the funnel and makes the page inert. */
+#boost-dialog { padding:0; width:calc(100% - 32px); max-width:650px; max-height:calc(100dvh - 32px); border:1px solid var(--line); border-radius:16px; background:var(--navy-2); overscroll-behavior:contain; box-shadow:var(--shadow); }
+#boost-dialog::backdrop { background:rgba(3,9,18,.82); backdrop-filter:blur(4px); }
+#boost-dialog .rb-head { position:sticky; top:0; background:var(--navy-2); z-index:2; }
+#boost-dialog .rb-close { width:44px; height:44px; }
+#boost-dialog .inline-progress { margin:0 26px; }
+#boost-dialog .inline-progress-bar { height:3px; }
+#boost-dialog .inline-track, #boost-dialog .inline-eyebrow { display:none; }
+#boost-dialog .inline-panel { padding:0; border:0; }
+#boost-dialog #inline-booking { padding:24px; }
+#boost-dialog #inline-booking h2 { margin-bottom:12px; }
+#boost-dialog #inline-booking .res-sub { font-size:14px; }
+#boost-dialog .res-loading, #boost-dialog #step-result > .step-h, #boost-dialog #step-result > .res-sub, #boost-dialog #step-result > .res-note, #boost-dialog #step-result > .res-badge { margin:24px; }
+#boost-dialog .step-cta { display:block; width:fit-content; font-size:15.2px; padding:13.6px 21.6px; }
+#boost-dialog .rb-keyword-button { min-height:44px; }
+#boost-dialog .rb-summary h2 { text-transform:none; }
+#boost-dialog .rb-foot-note { line-height:1.5; }
+#boost-resume[hidden] { display:none; }
+@media(max-width:480px) { #boost-dialog { width:calc(100% - 16px); max-height:calc(100dvh - 16px); } #boost-dialog #inline-booking { padding:16px; } }
+#boost-dialog td:first-child, #boost-dialog .rb-math { text-align:left; }
+#boost-dialog .rb-foot .rb-cta-block { margin-top:0; }

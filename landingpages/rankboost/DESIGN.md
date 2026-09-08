@@ -29,7 +29,7 @@
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
 - Qualification inputs use white backgrounds, dark text, and a visible focus ring against the navy section.
-- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 has a prominent "Step 3: Book Your Call" action.
+- Keep qualification in the original VSL section; after submission, show live checking, results, and the booking calendar inside one native modal dialog with focus containment, background scroll lock, close and resume controls. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 uses three compact centered "Book My Free Boost Call" buttons: below the green monthly upside total, after the keyword table, and after the line-by-line math. Match Inter, Playfair Display branding, and the existing gold gradient buttons. The calendar is step 3 inside the same dialog; redirect to the existing thank-you page only after a completed booking event.
 - Loading text describes the active request without fabricated percentages or timed claims that a particular backend stage has completed. Keep qualification gates, signed booking access, retry behavior, and tracking intact, including when session storage is unavailable.
 
 ## Responsive behaviour

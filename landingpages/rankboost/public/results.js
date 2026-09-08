@@ -136,6 +136,7 @@
   }
 
   function renderFit(data) {
+    if (inline) { window.renderBoostPopup(data, show); return; }
     var kws = data.keywords || [];
     function gapOf(k) {
       return Math.max(0, (Number(k.opp_value) || 0) - (Number(k.now_value) || 0));

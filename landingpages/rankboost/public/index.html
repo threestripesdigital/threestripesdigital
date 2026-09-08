@@ -31,6 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Browser-based Meta measurement. -->
@@ -92,6 +93,9 @@
         <section class="section qualify hero-qualify" id="qualify">
           <div class="container">
             <div class="form-shell">
+              <button class="btn btn-primary" id="boost-resume" type="button" hidden>View my boost results</button>
+              <dialog id="boost-dialog" aria-label="Your free boost">
+                <div class="rb-head"><div class="rb-wordmark">Three Stripes <span>Digital</span></div><span id="boost-step" class="rb-step">STEP 2 OF 3</span><button class="rb-close" id="boost-close" type="button" aria-label="Close popup">×</button></div>
               <div id="inline-progress" class="inline-progress" hidden>
                 <div id="inline-progress-bar" class="inline-progress-bar" role="progressbar" aria-label="Free boost progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1" aria-valuetext="Your details are submitted. Checking your rankings."><span></span></div>
                 <ol class="step-track inline-track" id="inline-track" aria-label="Your free boost progress">
@@ -113,6 +117,7 @@
                 <p class="res-note">Calendar not loading? <a id="calendly-fallback" href="#" target="_blank" rel="noopener noreferrer">Open the booking page</a>.</p>
                 <button class="btn btn-ghost" id="inline-back-results" type="button">Back to your rankings</button>
               </div>
+              </dialog>
 
               <button class="btn btn-primary btn-lg btn-block qualify-form-toggle" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">
                 Get my free boost
@@ -489,6 +494,7 @@
   </div>
 
   <script src="inline-flow.js"></script>
+  <script src="popup-results.js"></script>
   <script src="results.js"></script>
   <script src="book.js"></script>
   <script>

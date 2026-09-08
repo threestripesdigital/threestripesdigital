@@ -8,15 +8,40 @@
   var results = document.getElementById("inline-results");
   var booking = document.getElementById("inline-booking");
   var toggle = document.getElementById("qualify-form-toggle");
+  var dialog = document.getElementById("boost-dialog");
+  var resume = document.getElementById("boost-resume");
+  var pageY = 0;
+  function openPopup() {
+    if (dialog.open) return;
+    pageY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = -pageY + "px";
+    document.body.style.width = "100%";
+    dialog.showModal();
+  }
+  dialog.addEventListener("close", function () {
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, pageY);
+    if (!resume.hidden) resume.focus({ preventScroll: true });
+  });
+  document.getElementById("boost-close").onclick = function () { dialog.close(); };
+  resume.onclick = openPopup;
   var busy = false;
   var mountedToken = null;
   var keys = ["tsd_rb_payload", "tsd_rb_result", "tsd_rb_pending_track", "tsd_rb_booking_started", "tsd_rb_lead_token"];
 
   function scroll() {
-    (progress.hidden ? form : progress).scrollIntoView({ block: "start", behavior: "instant" });
+    if (dialog.open) dialog.scrollTop = 0;
+    else form.scrollIntoView({ block: "start", behavior: "instant" });
   }
   function step(number) {
     progress.hidden = number === 1;
+    resume.hidden = number === 1;
+    if (number === 1) dialog.close();
+    else openPopup();
+    document.getElementById("boost-step").textContent = "STEP " + number + " OF 3";
     var completed = number === 3 || flow.rankingsReady ? 2 : 1;
     progressBar.style.setProperty("--progress", (completed / 3 * 100) + "%");
     progressBar.setAttribute("aria-valuenow", String(completed));
