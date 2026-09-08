@@ -1,7 +1,5 @@
-// Funnel step 2: renders the rank-check result and the booking calendar.
-// The form on step 1 stashes the lead payload in sessionStorage and sends the
-// visitor here, so the check itself runs on this page. Results are cached in
-// sessionStorage too, so a refresh never re-runs the check or duplicates a lead.
+// Shared rank-check results for the inline funnel and existing results route.
+// Cache completed answers and reuse the submission event ID on refresh.
 (function () {
   var PAYLOAD_KEY = "tsd_rb_payload";
   var RESULT_KEY = "tsd_rb_result";
@@ -9,6 +7,7 @@
   var CALENDLY_URL = "https://calendly.com/bilal-threestripesdigital/three-stripes-digital-rank-boost";
   var STEP1 = "./#qualify";
 
+  var inline = Boolean(window.rankBoostFlow);
   var resultEl = document.getElementById("step-result");
   var lastLead = null;
 
@@ -36,13 +35,14 @@
   }
 
   function show(html) {
-    resultEl.innerHTML = html;
+    resultEl.innerHTML = inline ? html.replace(/<h1\b/g, "<h2").replace(/<\/h1>/g, "</h2>") : html;
     var heading = resultEl.querySelector("h1, h2, h3");
     if (heading) {
       heading.setAttribute("tabindex", "-1");
       heading.focus({ preventScroll: true });
     }
-    window.scrollTo(0, 0);
+    if (inline) window.rankBoostFlow.scroll();
+    else window.scrollTo(0, 0);
   }
 
   // Rank tiers: top 5 white, 6-10 amber, outside the top 10 red.
@@ -109,10 +109,10 @@
   // action is unmistakable from the top of the page and again at the bottom.
   function ctaBlock(hero) {
     return '<div class="step-cta-wrap' + (hero ? " hero" : "") + '">' +
-      '<a class="step-cta" href="book">Claim my free boost, book the call ' +
+      '<a class="step-cta" href="book">Step 3: Book Your Call ' +
       '<span aria-hidden="true">→</span></a>' +
       '<p class="step-cta-note">Step 3 of 3 · 30-minute call · ' +
-      '<strong class="res-red">No call, no boost.</strong></p>' +
+      'Choose a time to review your keywords and start your free boost.</p>' +
       '</div>';
   }
 
@@ -159,6 +159,7 @@
       '<h1 class="step-h">' + escHtml(data.domain) + ' qualifies.</h1>' +
       '<p class="res-sub">We found <strong>' + totalTxt + '</strong> stuck in positions 11–50. ' +
       'These are real searches where you currently rank below page one. Here is an illustrative opportunity model:</p>' +
+      ctaBlock(true) +
       '<div class="opp-list">' +
       '<div class="opp-total">' +
       '<div class="opp-total-lbl">Illustrative monthly opportunity at #1</div>' +
@@ -166,7 +167,6 @@
       '<div class="opp-total-sub">across ' + kws.length + ' money keyword' + (kws.length === 1 ? '' : 's') +
       ' stuck on pages 2–5 · estimates use stated assumptions, not guaranteed outcomes</div>' +
       '</div>' +
-      ctaBlock(true) +
       cards + '</div>' +
       ctaBlock(false)
     );
@@ -178,7 +178,7 @@
   // bottom bar once the in-page hero CTA has scrolled away.
   // Named opp-sticky, not sticky-cta: the sales page already owns that id.
   function mountStickyCta(total) {
-    if (document.getElementById("opp-sticky")) return;
+    if (inline || document.getElementById("opp-sticky")) return;
     var bar = document.createElement("div");
     bar.id = "opp-sticky";
     bar.className = "opp-sticky";
@@ -242,6 +242,7 @@
       );
       try { sessionStorage.setItem(PAYLOAD_KEY, JSON.stringify(payload)); } catch (e) {}
     }
+    if (inline && payload) window.rankBoostFlow.lead = payload;
     if (res.ok && res.data && res.data.qualified === true) renderFit(res.data);
     else if (res.ok && res.data && res.data.qualified === false) renderNoFit(res.data);
     else if (
@@ -303,8 +304,20 @@
   // and deduplicates replays before sending its matching CAPI event.
   document.addEventListener("click", function (event) {
     var link = event.target.closest && event.target.closest(".step-cta, .opp-sticky-btn");
+    if (inline && event.target.closest && event.target.closest("#step-result .step-back")) {
+      event.preventDefault();
+      window.rankBoostFlow.reset();
+      return;
+    }
     if (!link || !payload || !payload.lead_token) return;
+    if (inline) {
+      event.preventDefault();
+      if (!payload.booking_eligible) return;
+      window.rankBoostFlow.book();
+    }
     var onceKey = "tsd_rb_booking_started";
+    if (inline && payload.booking_started) return;
+    if (inline) payload.booking_started = true;
     var pending = null;
     try {
       pending = JSON.parse(sessionStorage.getItem(TRACK_KEY) || "null");
@@ -338,50 +351,49 @@
     sendPendingTrack(pending);
   });
 
-  // --- boot ---------------------------------------------------------------
   var payload = null;
+  function startCheck(nextPayload, cached) {
+    payload = nextPayload;
+    lastLead = { name: payload.name, phone: payload.phone, email: payload.email, domain: payload.domain };
+    if (cached) { renderResult(cached); return; }
+    show(
+      '<div class="res-loading"><i class="res-spin" aria-hidden="true"></i>' +
+      '<h1 class="step-h">Checking your current rankings...</h1>' +
+      '<p class="res-sub">Give us a few seconds. We’re checking ' + escHtml(payload.domain) +
+      ' for keywords that could fit your free boost.</p>' +
+      '<p class="res-note">Looking for relevant searches and rankings in positions 11 to 50.</p></div>'
+    );
+    resultEl.setAttribute("aria-busy", "true");
+    var slow = setTimeout(function () {
+      var note = resultEl.querySelector(".res-note");
+      if (note) note.textContent = "Still checking. Some websites take a little longer. You can stay right here.";
+    }, 12000);
+    return requestCheck(0).then(function (res) {
+      if (window.tsdMetaTrackingEnabled === true && window.fbq &&
+          res.data && res.data.lead_token && res.data.error !== "rate_limited") {
+        fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
+        if (res.ok && res.data.qualified === true) {
+          fbq("trackCustom", "QualifiedLead", { content_name: "rank-check" }, { eventID: payload.event_id + "-q" });
+        }
+      }
+      if (res.ok && res.data && typeof res.data.qualified === "boolean") {
+        try { sessionStorage.setItem(RESULT_KEY, JSON.stringify(res)); } catch (e) {}
+      }
+      renderResult(res);
+    }).catch(renderSubmissionError).finally(function () {
+      clearTimeout(slow);
+      resultEl.removeAttribute("aria-busy");
+    });
+  }
+  if (inline) {
+    window.rankBoostFlow.check = startCheck;
+    return;
+  }
   var cached = null;
   try {
     payload = JSON.parse(sessionStorage.getItem(PAYLOAD_KEY) || "null");
     cached = JSON.parse(sessionStorage.getItem(RESULT_KEY) || "null");
-  } catch (e) { /* treat as absent */ }
-
-  if (!payload) {
-    // Landed here directly: nothing to check, send them to the form.
-    window.location.replace(STEP1);
-    return;
-  }
-
-  lastLead = {
-    name: payload.name, phone: payload.phone,
-    email: payload.email, domain: payload.domain
-  };
-
-  if (cached) { renderResult(cached); return; }
-
-  show(
-    '<div class="res-loading"><i class="res-spin" aria-hidden="true"></i>' +
-    '<h1 class="step-h">Checking ' + escHtml(payload.domain) + ' …</h1>' +
-    '<p class="res-sub">Pulling your live Google rankings and hunting for money keywords stuck in ' +
-    'positions 11–50. Takes a few seconds.</p></div>'
-  );
-
-  requestCheck(0)
-    .then(function (res) {
-      if (window.tsdMetaTrackingEnabled === true && window.fbq &&
-          res.data && res.data.lead_token && res.data.error !== "rate_limited") {
-        fbq("track", "Lead", { content_name: "rank-check" }, { eventID: payload.event_id });
-        if (res.ok && res.data && res.data.qualified === true) {
-          fbq("trackCustom", "QualifiedLead", { content_name: "rank-check" }, { eventID: payload.event_id + "-q" });
-        }
-      }
-      // Cache real answers only, so a refresh re-renders instead of
-      // re-running the check. Failures stay uncached so a refresh retries.
-      var isAnswer = res.ok && res.data && typeof res.data.qualified === "boolean";
-      if (isAnswer) {
-        try { sessionStorage.setItem(RESULT_KEY, JSON.stringify(res)); } catch (e) {}
-      }
-      renderResult(res);
-    })
-    .catch(renderSubmissionError);
+  } catch (e) {}
+  if (!payload) { window.location.replace(STEP1); return; }
+  startCheck(payload, cached);
 })();

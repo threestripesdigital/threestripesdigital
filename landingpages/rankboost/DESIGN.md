@@ -28,6 +28,10 @@
 - Boost Live reasserts the booked tag while stale booking messages remain suppressed.
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
+- Qualification inputs use white backgrounds, dark text, and a visible focus ring against the navy section.
+- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Show a three-step progress indicator and explicit step headings. Step 2 has a prominent "Step 3: Book Your Call" action.
+- Loading text describes the active request without fabricated percentages or timed claims that a particular backend stage has completed. Keep qualification gates, signed booking access, retry behavior, and tracking intact, including when session storage is unavailable.
+
 ## Responsive behaviour
 
 - Founder and breakout videos retain their portrait 9:16 framing, use accessible playback controls, and never autoplay.

@@ -1435,7 +1435,7 @@ section.qualify.hero-qualify {
   transition: transform 0.14s ease, box-shadow 0.14s ease;
 }
 
-.step-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(196, 163, 90, 0.26); }
+.step-cta:hover { color: #0A1628; transform: translateY(-1px); box-shadow: 0 10px 26px rgba(196, 163, 90, 0.26); }
 .step-cta:active { transform: translateY(0); }
 
 .step-cta-note { margin: 0.6rem 0 0; font-size: 0.75rem; color: var(--muted); }
@@ -1527,7 +1527,7 @@ section.qualify.hero-qualify {
 
 @media (prefers-reduced-motion: reduce) {
   .step-cta { transition: none; }
-  .step-cta:hover { transform: none; }
+  .step-cta:hover { color: #0A1628; transform: none; }
 }
 
 /* What actually happens on the call, numbered because it is a real sequence. */
@@ -2138,4 +2138,51 @@ section.qualify.hero-qualify {
   [id] {
     scroll-margin-top: 12px;
   }
+}
+
+/* Keep the three conversion steps together beneath the VSL. */
+.hero-qualify .qualify-form input {
+  background: #fff;
+  color: #13233b;
+  border-color: #b9c5d5;
+  color-scheme: light;
+}
+.hero-qualify .qualify-form input::placeholder { color: #596779; opacity: 1; }
+.hero-qualify .qualify-form input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(196, 163, 90, 0.4);
+}
+.inline-track[hidden], .inline-panel[hidden] { display: none; }
+.inline-track {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 24px 0;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+.inline-track li { flex-direction: column; text-align: center; gap: 8px; line-height: 1.4; }
+.inline-track li + li::before { display: none; }
+.inline-track .dot { width: 32px; height: 32px; font-size: 14px; }
+.inline-track .current { font-weight: 700; }
+.inline-panel { padding: 24px 0; border-top: 1px solid var(--line-strong); }
+.inline-eyebrow { color: var(--gold-light); font-size: 14px; font-weight: 600; text-align: center; margin: 0 0 16px; }
+.inline-panel .step-h { overflow-wrap: anywhere; }
+.inline-panel .step-cta-wrap.hero { background: rgba(196, 163, 90, 0.09); border: 1px solid var(--gold); border-radius: 12px; }
+.inline-panel .res-sub { font-size: 16px; }
+.inline-panel .res-note, .inline-panel .step-cta-note { font-size: 14px; }
+.inline-panel .calendly-embed { height: 740px; margin-top: 24px; border-radius: 12px; overflow: hidden; background: #fff; }
+.inline-panel .calendly-embed .calendly-inline-widget { height: 100% !important; min-width: 0 !important; }
+.inline-panel .calendly-loading { height: 100%; display: grid; place-items: center; color: #344054; }
+.inline-panel .calendly-embed > p { color: #344054; padding: 24px; }
+.inline-panel #calendly-fallback { color: var(--gold-light); text-decoration: underline; }
+.inline-panel #calendly-fallback[aria-disabled="true"] { pointer-events: none; opacity: 0.5; }
+.inline-panel #inline-back-results { min-height: 44px; }
+@media (max-width: 560px) {
+  .inline-panel .calendly-embed { height: 820px; }
+  .inline-track { font-size: 13px; }
 }
