@@ -17,6 +17,8 @@ export async function pollSmsReplies(env) {
   const db=env.LEADS_DB;
   const {results=[]}=await db.prepare(`SELECT a.*,l.status AS lead_status FROM appointment_followup a JOIN leads l ON l.lead_ref=a.lead_ref
     WHERE a.phone<>'' AND l.calendly_invitee_uri=a.invitee_uri AND datetime(a.starts_at)>datetime('now','-1 day')
+    AND a.invitee_uri=(SELECT invitee_uri FROM appointment_followup latest WHERE lower(latest.email)=lower(a.email)
+      ORDER BY datetime(latest.booked_at) DESC,latest.rowid DESC LIMIT 1)
     AND (a.reply_checked_at IS NULL OR a.reply_checked_at<datetime('now','-5 minutes'))
     ORDER BY COALESCE(a.reply_checked_at,'') LIMIT 2`).all();
   let received=0,failed=0;

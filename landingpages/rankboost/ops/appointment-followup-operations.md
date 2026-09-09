@@ -16,7 +16,7 @@ Recorded CRM stop, boost-live and website attended/closed/not-closed tags stop t
 
 ## Verification and rollout
 
-- 118 automated tests pass, including cadence, idempotency, old-appointment suppression, rescheduling, recovery token validation, SMS replies and opt-outs.
+- 119 automated tests pass, including cadence, idempotency, old-appointment suppression across repeated scans, rescheduling, recovery token validation, SMS replies and opt-outs.
 - Wrangler Pages Functions build passes.
 - Kit owner QA inbox received the native reminder twice, confirming repeat delivery despite initially stale API/inbox readbacks. Messages: `1a08593e8e7aa528`, `1a08595ad66a9d39`. A separate bounded owner-only broadcast experiment also delivered (`1a0859d45f21ffe3`); production uses native sequences.
 - All 39 main email contents were updated and read back. Existing email IDs and timing were retained. Two existing Kit contacts had attribution fields backfilled without enrollment or sending.
