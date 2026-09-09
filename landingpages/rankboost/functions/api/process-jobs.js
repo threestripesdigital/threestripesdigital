@@ -1,3 +1,4 @@
+import { queueWebsiteEmailTimers } from "./_websiteemails.js";
 import {
   flushOperationalAlerts,
   operationalSummary,
@@ -127,6 +128,7 @@ export async function onRequestPost({ request, env }) {
     if (action !== "process") return json({ error: "invalid_action" }, 400);
 
     const deadlineAt = Date.now() + 25000;
+    const websiteEmails = await queueWebsiteEmailTimers(env);
     const jobs = await processIntegrationJobs(env, {
       limit: body.limit || 4,
       budgetMs: Math.min(Number(body.budget_ms) || 10000, 10000),
@@ -149,7 +151,7 @@ export async function onRequestPost({ request, env }) {
           timeoutMs: Math.min(4000, remaining - 250),
         })
       : { pending: 0, notified: 0, skipped: "deadline" };
-    return json({ ok: true, jobs, noShows, retention, notifications });
+    return json({ ok: true, jobs, noShows, retention, notifications, websiteEmails });
   } catch (error) {
     console.log("job_processor_error", String(error).slice(0, 200));
     try {

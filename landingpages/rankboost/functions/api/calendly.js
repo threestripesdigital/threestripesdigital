@@ -1,3 +1,4 @@
+import { WEBSITE_EMAILS } from "./_websiteemailconfig.js";
 import { WEBSITE_EVENT_TYPE_URI, WEBSITE_TAG_IDS, websiteEligible } from "./_offers.js";
 import { qualifiedBookingEmailFields } from "./_emailfields.js";
 // POST /api/calendly — Calendly webhook receiver (invitee.created / canceled).
@@ -191,6 +192,11 @@ function followupSmsJob(kind, { phone, firstName }, leadRef, sourceKey) {
   };
 }
 
+function websiteBookingFields(start, invitee) {
+  const fields = qualifiedBookingEmailFields(start, invitee);
+  return { website_call_date: fields.call_date, website_call_time: fields.call_time, website_reschedule_link: fields.calendly_link };
+}
+
 function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields, callStartIso) {
   if (!tagId || !email) return null;
   return {
@@ -199,11 +205,11 @@ function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields, ca
     dedupeKey: `${sourceKey}:kit`,
     payload: {
       tag_id: tagId,
-      ...(Object.values(WEBSITE_TAG_IDS).includes(tagId) ? { remove_tag_ids: Object.values(WEBSITE_TAG_IDS).filter(id => id !== tagId) } : {}),
+      ...(Object.values(WEBSITE_TAG_IDS).includes(tagId) ? { remove_tag_ids: [...Object.values(WEBSITE_TAG_IDS).filter(id => id !== tagId), ...(tagId === WEBSITE_TAG_IDS.booked ? [WEBSITE_EMAILS.tags.stop] : [])] } : {}),
       email,
       first_name: firstName || "",
       ...(fields ? { fields } : {}),
-      ...(callStartIso ? { qualified_call_start: callStartIso } : {}),
+      ...(callStartIso ? (tagId === WEBSITE_TAG_IDS.booked ? { website_call_start: callStartIso } : { qualified_call_start: callStartIso }) : {}),
     },
   };
 }
@@ -846,8 +852,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         firstName,
         leadRef,
         sourceKey,
-        isWebsite ? undefined : qualifiedBookingEmailFields(start, p),
-        isWebsite ? undefined : start
+        isWebsite ? websiteBookingFields(start, p) : qualifiedBookingEmailFields(start, p),
+        start
       ),
       !isWebsite && bookingSmsJob(
         { phone, firstName, startIso: start, tz: p.timezone },
@@ -942,8 +948,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         recoveredFirstName,
         leadRef,
         recoveredSourceKey,
-        isWebsite ? undefined : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee),
-        isWebsite ? undefined : recoveredBooking.start
+        isWebsite ? websiteBookingFields(recoveredBooking.start, recoveredInvitee) : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee),
+        recoveredBooking.start
       ),
       !isWebsite && bookingSmsJob(
         {

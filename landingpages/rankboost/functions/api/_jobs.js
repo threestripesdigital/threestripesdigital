@@ -1,3 +1,4 @@
+import { websiteEmailJobCurrent } from "./_websiteemails.js";
 import { WEBSITE_TAG_IDS } from "./_offers.js";
 import { dispatchIntegrationJob, IntegrationError } from "./_providers.js";
 
@@ -176,6 +177,17 @@ async function claimJob(db, job, leaseToken) {
 }
 
 async function sourceIsCurrent(db, job) {
+  const emailPayload = JSON.parse(job.payload_json || "{}");
+  if (emailPayload.website_invitee || emailPayload.website_long_term) {
+    if (emailPayload.website_sequence_id) {
+      const uuid = emailPayload.website_invitee.split("/").pop();
+      const booking = await db.prepare("SELECT status,last_error FROM integration_jobs WHERE dedupe_key=?1").bind(`calendly:booked:${uuid}:kit`).first();
+      if (!booking || booking.status === "failed" || booking.last_error === "skipped_stale_source") return false;
+      if (booking.status !== "completed") throw new IntegrationError("website_booking_fields_pending", { retryable:true });
+    }
+    const lead = await db.prepare("SELECT qualified,status,calendly_invitee_uri FROM leads WHERE lead_ref=?1").bind(job.lead_ref).first();
+    return websiteEmailJobCurrent(emailPayload,lead);
+  }
   if (!job.source_resource || !job.source_status) {
     const payload = JSON.parse(job.payload_json || "{}");
     if (job.kind === "kit.upsert_tag" && payload.tag_id === WEBSITE_TAG_IDS.lead) {

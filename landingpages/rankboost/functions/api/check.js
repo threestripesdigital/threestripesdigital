@@ -1,4 +1,4 @@
-import { WEBSITE_TAG_IDS } from "./_offers.js";
+import { WEBSITE_TAG_IDS, WEBSITE_BOOKING_URL } from "./_offers.js";
 import { qualifiedKeywordEmailFields } from "./_emailfields.js";
 // POST /api/check — instant DataForSEO qualify check for the rank-boost LP.
 // Body: { name, phone, website_url }
@@ -241,13 +241,13 @@ async function metaJobForLead(context, lead, leadRef) {
 // Kit (v4 API, X-Kit-Api-Key auth): only qualified emailed leads get
 // `lp-form` (22494626). No-fit / failed checks must not enter the
 // book-the-call sequence. Two steps: upsert subscriber, then tag.
-function kitJobForLead(lead, leadRef) {
+function kitJobForLead(lead, leadRef, leadToken) {
   if (!lead.email) return;
   if (!["qualified", "no_fit"].includes(lead.status)) return;
   if (lead.status === "no_fit") return {
     leadRef, kind: "kit.upsert_tag", dedupeKey: `lead:${leadRef}:kit`,
     payload: { email: lead.email, first_name: (lead.name || "").trim().split(/\s+/)[0],
-      fields: { domain: lead.domain || "", phone: lead.phone || "", boost_fits: "0" },
+      fields: { domain: lead.domain || "", phone: lead.phone || "", boost_fits: "0", website_calendly_link: WEBSITE_BOOKING_URL + "?utm_content=" + encodeURIComponent(leadToken) },
       tag_id: WEBSITE_TAG_IDS.lead }
   };
 
@@ -380,7 +380,7 @@ async function saveLead(context, lead, submission, responseStatus, buildResponse
   const jobs = [
     slackJobForLead(lead, leadRef),
     await metaJobForLead(context, lead, leadRef),
-    kitJobForLead(lead, leadRef),
+    kitJobForLead(lead, leadRef, leadToken),
   ].filter(Boolean);
   const statements = [
     db
