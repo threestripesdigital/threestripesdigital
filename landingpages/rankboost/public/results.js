@@ -157,7 +157,7 @@
     show(
       '<p class="res-badge">✓ Boost fits found</p>' +
       '<h1 class="step-h">' + escHtml(data.domain) + ' qualifies.</h1>' +
-      '<p class="res-sub">We found <strong>' + totalTxt + '</strong> ranking in positions 1 to 50. ' +
+      '<p class="res-sub">We found <strong>' + totalTxt + '</strong> ranking in Google’s first five pages. ' +
       'Page-one rankings qualify too. Here is an illustrative opportunity model:</p>' +
       ctaBlock(true) +
       '<div class="opp-list">' +
@@ -201,29 +201,37 @@
   }
 
   function renderNoFit(data) {
+    if (data.reason_not_qualified === "already_first") {
+      show('<div class="downsell"><p class="res-badge">Your scan result</p>' +
+        '<h1 class="step-h">You’re already at number one.</h1>' +
+        '<p class="res-sub">The qualifying searches we found already rank first. Those keywords have nowhere higher to go, and we found no other eligible keywords to boost in this scan.</p>' +
+        '<p>This result does not mean you need a new website.</p>' +
+        '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p></div>');
+      return;
+    }
     show(
       '<div class="downsell"><p class="res-badge">A different first step</p>' +
-      '<h1 class="step-h">First, build the flame. Then add fuel.</h1>' +
-      '<p class="res-sub">Rank Boost helps existing Google rankings climb. Your first step is to start showing up for the searches that bring in new clients.</p>' +
+      '<h1 class="step-h">We can’t boost what isn’t there yet.</h1>' +
+      '<p class="res-sub">Rank Boost pushes existing Google rankings up. Your firm isn’t showing up for the searches that bring in new clients. So we build the foundation first, then boost it.</p>' +
       '<div class="downsell-reason"><span class="downsell-label">Your scan result</span>' +
-      '<p>We didn’t find <strong>' + escHtml(data.domain) + '</strong> in the first 5 pages of Google for the lawyer searches we checked. That leaves us with no rankings from this scan to boost right now.</p>' +
-      '<p>Think of Rank Boost as adding fuel to a flame. It can help an existing ranking grow, but it can’t boost a ranking that isn’t there. First, we need to build that flame.</p></div>' +
-      '<div class="downsell-offer"><span class="downsell-label">Step one: give Google something to rank.</span>' +
-      '<h2>Build a website designed to get your firm showing up on Google.</h2>' +
-      '<p>We build pages around your legal services and the cities you serve, so Google can understand what you do and who to show you to. The goal is to establish your first relevant rankings. Once those rankings are there, we check whether Rank Boost can help them climb.</p><ul class="downsell-features"><li><strong>Built for the cases you want</strong><span>Pages focused on the services and locations your future clients search for.</span></li>' +
-      '<li><strong>Easy for Google to understand</strong><span>Clear pages and a fast, easy-to-use website that explains what your firm does.</span></li>' +
-      '<li><strong>Unlimited revisions</strong><span>We keep refining the design until it is right.</span></li>' +
-      '<li><strong>3 to 4 week website build</strong><span>A clear scope and fixed price. Google rankings take time and are not guaranteed within the build window.</span></li></ul>' +
+      '<p>We ran your site through the scan and didn’t find <strong>' + escHtml(data.domain) + '</strong> anywhere in the first 5 pages of Google for the lawyer searches we checked.</p>' +
+      '<p>Rank Boost is like pouring fuel on a fire. It makes an existing ranking burn brighter. But there’s no fire to fuel here yet. We need to build that first.</p></div>' +
+      '<div class="downsell-offer"><span class="downsell-label">Step one: get your firm showing up on Google.</span>' +
+      '<h2>Build a website Google can actually rank.</h2>' +
+      '<p>Your current site isn’t built in a way that makes Google understand what you do and who you serve. We build pages around your specific legal services and the cities you cover, so Google knows exactly when to show your firm to someone searching for a lawyer. After your website is live, we can re-evaluate whether your firm qualifies for Rank Boost.</p><ul class="downsell-features"><li><strong>Built for the cases you want</strong><span>Pages focused on the services and locations your future clients actually search for.</span></li>' +
+      '<li><strong>Easy for Google to understand</strong><span>Clean structure, fast loading, clear content. Google reads it and knows who to show you to.</span></li>' +
+      '<li><strong>Unlimited revisions</strong><span>We don’t stop until it’s right.</span></li>' +
+      '<li><strong>3 to 4 week build</strong><span>Fixed scope, fixed price, custom HTML and CSS from the ground up. Not a template.</span></li></ul>' +
       '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
-      '<p class="res-note">30 minutes with Bilal. No pressure or obligation.</p></div>' +
-      '<article class="downsell-proof"><span class="downsell-label">The path in practice</span><h2>Vernsten Law: website first, then Rank Boost.</h2>' +
-      '<p>We rebuilt Vernsten Law’s website before running Rank Boost. Hear directly from the firm below.</p>' +
+      '<p class="res-note">30 minutes. Bilal reviews your site live and shows you exactly what’s holding it back.</p></div>' +
+      '<article class="downsell-proof"><span class="downsell-label">The path in practice</span><h2>Website first. Then Rank Boost.</h2>' +
+      '<p>We rebuilt Vernsten Law’s website before running Rank Boost. Here’s what that looked like.</p>' +
       '<video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg" aria-label="Vernsten Law client testimonial"><source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4"></video>' +
-      '<p class="res-note">Website first. Existing rankings next. Then we check for a Rank Boost opportunity. A new website alone does not qualify you.</p></article>' +
-      '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal reviews your current site and explains what it needs to start showing up for the searches that matter to your firm. If a new website is the right first step, you’ll talk through the build, scope and fixed price together.</p></div>' +
-      '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. Missing rankings do not automatically mean you need a rebuild. Bilal reviews your current site with you before recommending the next step.</p></details>' +
-      '<details><summary>Can I get the free boost after the rebuild?</summary><p>First, the site needs to show up for relevant Google searches. Once it does, we run another check. If those rankings qualify, we can add the boost.</p></details>' +
-      '<details><summary>What if I am already on page one?</summary><p>Page one is eligible for the main offer. Your position on page one is never a reason to send you to the website offer.</p></details></div>' +
+      '<p class="res-note">After your website is live, we can re-evaluate whether your firm qualifies for Rank Boost. A new website alone doesn’t qualify you for the boost. It puts you in position to qualify.</p></article>' +
+      '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal pulls up your current website on the call, walks through what’s keeping it from showing up on Google, and shows you what a new build would look like for your firm specifically. If a new website is the right move, you’ll talk through scope and price right there. If it’s not, he’ll tell you that too. No pressure, no pitch deck, just an honest look at what your site needs.</p></div>' +
+      '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. Missing rankings don’t automatically mean you need a rebuild. Bilal reviews your current site with you on the call and tells you straight up what the right next step is.</p></details>' +
+      '<details><summary>Can I get the free boost after the rebuild?</summary><p>After your website is live, we can re-evaluate whether your firm qualifies for Rank Boost. The website puts you in position. The boost pushes you up.</p></details>' +
+      '<details><summary>What if I am already on page one?</summary><p>Page-one keywords can qualify too. Rank Boost helps move your keywords higher within Google’s first five pages. A keyword already at number one has nowhere higher to go, but your other keywords can still qualify.</p></details></div>' +
       '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
       '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p></div>'
     );
@@ -255,7 +263,7 @@
   function renderResult(res) {
     if (res.data && res.data.lead_token && payload) {
       payload.lead_token = res.data.lead_token;
-      payload.website_eligible = Boolean(res.ok && res.data.qualified === false);
+      payload.website_eligible = Boolean(res.ok && res.data.qualified === false && res.data.reason_not_qualified !== "already_first");
       payload.offer = payload.website_eligible ? "website" : "boost";
       payload.booking_eligible = Boolean(
         res.ok && res.data.qualified === true
@@ -266,7 +274,7 @@
       window.rankBoostFlow.lead = payload;
       window.rankBoostFlow.setOffer(payload.offer);
       var progressBar = document.getElementById("inline-progress-bar");
-      window.rankBoostFlow.rankingsReady = Boolean(res.ok && res.data && typeof res.data.qualified === "boolean");
+      window.rankBoostFlow.rankingsReady = Boolean(res.ok && res.data && typeof res.data.qualified === "boolean" && res.data.reason_not_qualified !== "already_first");
       if (window.rankBoostFlow.rankingsReady) {
         progressBar.style.setProperty("--progress", "66.6667%");
         progressBar.setAttribute("aria-valuenow", "2");
@@ -395,7 +403,7 @@
       '<h1 class="step-h">Checking your current rankings...</h1>' +
       '<p class="res-sub">Give us a few seconds. We’re checking ' + escHtml(payload.domain) +
       ' for keywords that could fit your free boost.</p>' +
-      '<p class="res-note">Looking for relevant searches and rankings in positions 1 to 50.</p></div>'
+      '<p class="res-note">Looking for relevant searches in Google’s first five pages.</p></div>'
     );
     resultEl.setAttribute("aria-busy", "true");
     var slow = setTimeout(function () {
