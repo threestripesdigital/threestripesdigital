@@ -74,3 +74,5 @@ Explain the progression in plain language: establish relevant Google rankings fi
 Use Jeremy’s approved September 9 rewrite: “We can’t boost what isn’t there yet” and “Build a website Google can actually rank.” Preserve the inline popup, Vernsten proof, two website consultation CTAs, and honest live consultation explanation.
 
 Do not show a qualification caption beneath the Vernsten testimonial or a page-one FAQ in the website downsell popup, per the owner’s screenshot-directed removal.
+
+The hero VSL uses the approved Watch how to reach page 1 in 48 hours graphic as both its loading background and Wistia poster, served from the production funnel assets. Keep the native player control.
