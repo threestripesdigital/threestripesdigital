@@ -1895,3 +1895,14 @@ test('SMS sends honor both local suppression and the provider opt-out state',asy
     await dispatchIntegrationJob(env,'roezan.sms',payload);assert.equal(calls.length,1);assert.ok(!calls[0].includes('/send'));
   } finally {globalThis.fetch=original;db.close();}
 });
+
+test('a newer booking from a repeated scan prevents the old lead sending or applying its cutoff',async()=>{
+  const db=migratedSqlite();appointmentFixture(db);
+  const api=d1Sqlite(db),payload={appointment_invitee:'invitee-current',appointment_timer:true};
+  assert.equal(await appointmentCurrent(api,payload),true);
+  db.prepare("INSERT INTO appointment_followup(invitee_uri,lead_ref,offer,email,starts_at,journey_started_at,booked_at) VALUES ('new-scan-booking','another-lead','boost','QA@example.test',datetime('now','+3 days'),CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)").run();
+  assert.equal(await appointmentCurrent(api,payload),false);
+  assert.equal(await appointmentCurrent(api,{...payload,appointment_stop:true}),false);
+  assert.equal((await queueAppointmentTimers({LEADS_DB:api,APPOINTMENT_FOLLOWUP_ENABLED:'true'})).queued,0);
+  db.close();
+});

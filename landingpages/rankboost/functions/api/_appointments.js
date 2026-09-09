@@ -55,6 +55,9 @@ export async function appointmentCurrent(db,payload,now=Date.now()) {
     JOIN calendly_invitees i ON i.invitee_uri=a.invitee_uri WHERE a.invitee_uri=?1`)
     .bind(payload.appointment_invitee).first();
   if(!row||row.lead_status!=='booked'||row.invitee_status!=='booked'||row.calendly_invitee_uri!==row.invitee_uri)return false;
+  const latest=await db.prepare(`SELECT invitee_uri FROM appointment_followup WHERE lower(email)=lower(?1)
+    ORDER BY datetime(booked_at) DESC,rowid DESC LIMIT 1`).bind(row.email).first();
+  if(latest?.invitee_uri!==row.invitee_uri)return false;
   if(payload.appointment_stop)return true;
   if(row.stopped_at||utcTime(row.starts_at)<=now+30*60000)return false;
   if(payload.appointment_deadline&&Date.parse(payload.appointment_deadline)<=now)return false;
@@ -67,6 +70,8 @@ export async function queueAppointmentTimers(env,now=Date.now()) {
   const {results=[]}=await db.prepare(`SELECT a.* FROM appointment_followup a
     JOIN leads l ON l.lead_ref=a.lead_ref JOIN calendly_invitees i ON i.invitee_uri=a.invitee_uri
     WHERE a.stopped_at IS NULL AND l.status='booked' AND i.status='booked' AND l.calendly_invitee_uri=a.invitee_uri
+    AND a.invitee_uri=(SELECT invitee_uri FROM appointment_followup latest WHERE lower(latest.email)=lower(a.email)
+      ORDER BY datetime(latest.booked_at) DESC,latest.rowid DESC LIMIT 1)
     ORDER BY a.starts_at LIMIT 100`).all();
   const statements=[];
   const enqueue=(row,kind,key,payload)=>statements.push(db.prepare(`INSERT OR IGNORE INTO integration_jobs
