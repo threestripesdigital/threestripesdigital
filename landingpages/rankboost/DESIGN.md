@@ -29,7 +29,7 @@
 - Boost Live accepts only booked leads; every live message waits for the durable booked-tag prerequisite.
 
 - Qualification inputs use white backgrounds, dark text, and a visible focus ring against the navy section.
-- Keep qualification, live checking, results, and the booking calendar in the original VSL section. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 has a prominent "Step 3: Book Your Call" action.
+- Keep qualification in the original VSL section. Open live checking, results, and booking in a shared native popup for both qualified and website consultation leads. Keep all stage indicators hidden until valid form submission. Then show a filled progress bar and three-step labels: one third after details, two thirds after successful rankings, and completion only after booking. Step 2 has a prominent "Step 3: Book Your Call" action.
 - Loading text describes the active request without fabricated percentages or timed claims that a particular backend stage has completed. Keep qualification gates, signed booking access, retry behavior, and tracking intact, including when session storage is unavailable.
 
 ## Responsive behaviour
@@ -63,4 +63,6 @@
 - Explain the observed keyword result without diagnosing site speed, indexing, or code from ranking data alone. Recheck eligibility after a rebuild.
 - Use Vernsten Law as the owner-confirmed website rebuild followed by Rank Boost example, with the existing on-domain testimonial. No invented ranking screenshots or numerical results.
 - Preserve the main calendar for qualified leads. Website bookings use their own provider event, Kit tags, verified inline confirmation and custom Meta event. Never fire Schedule for website bookings.
-- Keep pricing on the consultation and use the navy and gold card patterns in the inline flow.
+- Keep pricing on the consultation and use the navy and gold card patterns in the shared popup.
+
+- Both offers use the same modal for steps 2 and 3. Close, Escape, and backdrop dismiss preserve progress. A clearly named resume button reopens the current step. Lock background scroll, retain native modal focus containment, and keep the close control visible while scrolling.
