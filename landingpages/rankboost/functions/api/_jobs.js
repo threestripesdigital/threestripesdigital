@@ -1,4 +1,5 @@
 import { websiteEmailJobCurrent } from "./_websiteemails.js";
+import { appointmentCurrent } from "./_appointments.js";
 import { WEBSITE_TAG_IDS } from "./_offers.js";
 import { dispatchIntegrationJob, IntegrationError } from "./_providers.js";
 
@@ -8,13 +9,15 @@ const MAX_LIMIT = 8;
 const DEFAULT_BUDGET_MS = 12000;
 const MAX_BUDGET_MS = 20000;
 const PROCESSOR_LEASE_SECONDS = 30;
-const UNSAFE_REPLAY_KINDS = new Set(["slack.webhook", "roezan.sms"]);
+const UNSAFE_REPLAY_KINDS = new Set(["slack.webhook", "roezan.sms", "kit.appointment_email"]);
 const JOB_KINDS = new Set([
   "slack.webhook",
   "meta.events",
   "kit.upsert_tag",
   "kit.tag_existing",
   "roezan.sms",
+  "kit.appointment_email",
+  "kit.appointment_stop",
 ]);
 
 function boundedInteger(value, fallback, minimum, maximum) {
@@ -178,6 +181,7 @@ async function claimJob(db, job, leaseToken) {
 
 async function sourceIsCurrent(db, job) {
   const emailPayload = JSON.parse(job.payload_json || "{}");
+  if (emailPayload.appointment_timer) return appointmentCurrent(db,emailPayload);
   if (emailPayload.website_invitee || emailPayload.website_long_term) {
     if (emailPayload.website_sequence_id) {
       const uuid = emailPayload.website_invitee.split("/").pop();
@@ -266,6 +270,12 @@ async function resolveJobAlerts(db, jobId) {
 }
 
 async function failJob(env, job, leaseToken, error, attemptId) {
+  if(error?.message==='sms_quiet_hours') {
+    const deferred=await env.LEADS_DB.prepare(`UPDATE integration_jobs SET status='pending',available_at=datetime('now','+30 minutes'),
+      attempts=MAX(0,attempts-1),lease_token=NULL,lease_until=NULL,last_error='sms_quiet_hours',updated_at=CURRENT_TIMESTAMP
+      WHERE id=?1 AND status='processing' AND lease_token=?2`).bind(job.id,leaseToken).run();
+    return {state:deferred.meta?.changes?'retry':'lost',deliveryUnknown:false};
+  }
   const attempts = Number(job.attempts || 0) + 1;
   const code = errorCode(error);
   const deliveryUnknown = error && error.deliveryUnknown === true;
@@ -506,6 +516,7 @@ export async function processIntegrationJobs(env, options = {}) {
       }
       summary.claimed += 1;
       await recordAttempt(env.LEADS_DB, job.id, leaseToken, "started");
+      let providerCompleted=false;
       try {
         if (job.depends_on_dedupe_key) {
           const dependency = await env.LEADS_DB
@@ -550,6 +561,7 @@ export async function processIntegrationJobs(env, options = {}) {
           timeoutMs: 7000,
           deadlineAt: Math.min(deadlineAt - 250, Date.now() + 7000),
         });
+        providerCompleted=true;
         if (await finishJob(env.LEADS_DB, job.id, leaseToken)) {
           summary.completed += 1;
           await recordAttempt(env.LEADS_DB, job.id, leaseToken, "succeeded");
@@ -580,6 +592,7 @@ export async function processIntegrationJobs(env, options = {}) {
           }
         }
       } catch (error) {
+        if(providerCompleted&&UNSAFE_REPLAY_KINDS.has(job.kind))error=new IntegrationError('completion_storage_failed',{deliveryUnknown:true});
         const result = await failJob(env, job, leaseToken, error, leaseToken);
         if (result.state === "retry") summary.retried += 1;
         if (result.state === "dead") summary.dead += 1;

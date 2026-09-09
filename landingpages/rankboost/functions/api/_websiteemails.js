@@ -17,6 +17,7 @@ export async function queueWebsiteEmailTimers(env) {
   if (!db) return { queued: 0 };
   const statements = [];
   for (const [key, hours] of [['tomorrow', 24], ['soon', 2], ['stop', 0.5]]) {
+    if (env.APPOINTMENT_FOLLOWUP_ENABLED === 'true') continue;
     const due = `-${hours} hours`;
     const { results = [] } = await db.prepare(`SELECT l.lead_ref,l.email,i.invitee_uri,i.scheduled_start_at
       FROM leads l JOIN calendly_invitees i ON i.invitee_uri=l.calendly_invitee_uri
