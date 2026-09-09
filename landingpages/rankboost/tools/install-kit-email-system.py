@@ -623,6 +623,8 @@ def main() -> int:
     args = parse_args()
     try:
         config = load_config(args.config)
+        if args.command in ("stage", "activate") and config.get("qualified_update_manifest"):
+            raise InstallError("The qualified booked flow has a newer manifest. This legacy full-system installer must not overwrite it; review " + config["qualified_update_manifest"])
         if args.command == "plan":
             email_count = sum(len(sequence["emails"]) for sequence in config["sequences"])
             print(f"validated {email_count} emails and 4 automation routes")

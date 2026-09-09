@@ -1,0 +1,151 @@
+{
+  "sequences": {
+    "rotation": {
+      "id": 2887690,
+      "emails": {
+        "Q13": 10286331,
+        "Q14": 10286332,
+        "Q15": 10286333,
+        "Q16": 10286334,
+        "Q17": 10286335,
+        "Q18": 10286336,
+        "Q19": 10286337,
+        "Q20": 10286338,
+        "Q21": 10286339,
+        "Q22": 10286340,
+        "Q23": 10286341,
+        "Q24": 10286342,
+        "Q25": 10286343,
+        "Q26": 10286344,
+        "Q27": 10286345,
+        "Q28": 10286346,
+        "Q29": 10286347
+      }
+    },
+    "reminder24": {
+      "id": 2887691,
+      "emails": {
+        "R01": 10286348
+      }
+    },
+    "reminder2": {
+      "id": 2887692,
+      "emails": {
+        "R02": 10286349
+      }
+    }
+  },
+  "tags": {
+    "rankboost-qualified-rotation": 23216314
+  },
+  "fields": {
+    "call_24h_due": {
+      "id": 1360734,
+      "name": "ck_field_1360734_call_24h_due",
+      "key": "call_24h_due",
+      "label": "Call 24H Due"
+    },
+    "call_2h_due": {
+      "id": 1360735,
+      "name": "ck_field_1360735_call_2h_due",
+      "key": "call_2h_due",
+      "label": "Call 2H Due"
+    },
+    "call_24h_eligible": {
+      "id": 1360736,
+      "name": "ck_field_1360736_call_24h_eligible",
+      "key": "call_24h_eligible",
+      "label": "Call 24H Eligible"
+    },
+    "call_2h_eligible": {
+      "id": 1360737,
+      "name": "ck_field_1360737_call_2h_eligible",
+      "key": "call_2h_eligible",
+      "label": "Call 2H Eligible"
+    }
+  },
+  "automations": {
+    "rotation": 2068253,
+    "reminder24": 2068256,
+    "reminder2": 2068257,
+    "main": 1987920
+  },
+  "nodes": {
+    "rotation": {
+      "entry": 11703936,
+      "sequence": 11703937,
+      "remove-trigger": 11703938,
+      "loop-delay": 11703939,
+      "restart": 11703940,
+      "stop22494650": 11703941,
+      "stop23211559": 11703942,
+      "stop22622480": 11703943,
+      "stop22511246": 11703944
+    },
+    "reminder24": {
+      "entry": 11703946,
+      "eligible": 11703947,
+      "date": 11703949,
+      "sequence": 11703950,
+      "stop22494650": 11703951,
+      "stop23211559": 11703952,
+      "stop22622480": 11703953,
+      "stop22511246": 11703954
+    },
+    "reminder2": {
+      "entry": 11703956,
+      "eligible": 11703957,
+      "date": 11703958,
+      "sequence": 11703959,
+      "stop22494650": 11703960,
+      "stop23211559": 11703961,
+      "stop22622480": 11703962,
+      "stop22511246": 11703963
+    },
+    "main": {
+      "rotation-delay": 11703964,
+      "start-rotation": 11703965
+    }
+  },
+  "core_sequence_id": 2862371,
+  "core_email_ids": [
+    10285529,
+    10285530,
+    10285531,
+    10285532,
+    10285533,
+    10285534,
+    10285535,
+    10285536,
+    10285537,
+    10285538,
+    10285539,
+    10285540
+  ],
+  "stop_tag_ids": [
+    22494650,
+    22511246,
+    22622480,
+    23211559
+  ],
+  "cadence": {
+    "opening_hours": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      24,
+      26,
+      28,
+      30,
+      32,
+      34
+    ],
+    "rotation_starts_hours": 48,
+    "rotation_interval_hours": 8,
+    "reminder_timezone": "America/New_York",
+    "reminder_minimum_lead_minutes": 15
+  }
+}

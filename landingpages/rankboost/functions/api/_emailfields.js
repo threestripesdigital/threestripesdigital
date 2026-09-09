@@ -32,3 +32,19 @@ export function qualifiedBookingEmailFields(start, invitee) {
   } catch { /* Blank keeps the email's reply-to-reschedule fallback. */ }
   return fields;
 }
+
+// Kit interprets custom-date delays in the account timezone, not the invitee's.
+// Calculate eligibility at dispatch so delayed webhook retries cannot send old reminders.
+export function qualifiedReminderEmailFields(start, now = Date.now()) {
+  const fields = { call_24h_due: "", call_2h_due: "", call_24h_eligible: "no", call_2h_eligible: "no" };
+  const callTime = Date.parse(start || "");
+  if (!Number.isFinite(callTime)) return fields;
+  for (const hours of [24, 2]) {
+    const due = callTime - hours * 60 * 60 * 1000;
+    const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(due)).map(p => [p.type, p.value]));
+    fields[`call_${hours}h_due`] = `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}`;
+    // Leave one Kit processing interval so a reminder is not enrolled already overdue.
+    fields[`call_${hours}h_eligible`] = due > now + 15 * 60 * 1000 ? "yes" : "no";
+  }
+  return fields;
+}

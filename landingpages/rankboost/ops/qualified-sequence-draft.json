@@ -1,7 +1,7 @@
 {
   "target_sequence_id": 2862371,
   "scope": "Qualified booked leads with eligible keywords on pages 1 to 5. No unqualified, unbooked, no-show or post-boost flow changes.",
-  "status": "31 drafts saved and read back in Kit; original four emails remain published. Visual automation and production field deployment are pending.",
+  "status": "Content saved and routing built. Production activation is separately verified in the launch audit.",
   "reply_to": "bilal@threestripesdigital.com",
   "schedule": "Q01 to Q06 at 0,2,4,6,8,10 hours. Q07 to Q12 at 24,26,28,30,32,34 hours. Q13 at48 then every8hours. Reminders separate.",
   "required_fields": [
@@ -286,5 +286,6 @@
     "Q29": 10285557,
     "R01": 10285558,
     "R02": 10285560
-  }
+  },
+  "routing_manifest": "qualified-routing.json"
 }
