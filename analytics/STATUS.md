@@ -7,7 +7,7 @@ The private dashboard is deployed at https://rank-boost-command-center.bilal-17f
 - Direct Wistia main-VSL reporting is connected using a token limited to Read detailed stats. All four date-window requests returned real video metrics. Native tracking remains unchanged.
 
 - Meta landing page view and website Lead actions are imported alongside spend and clicks, using the same ad attribution window. They are labeled separately from unique visitors and Calendly bookings.
-- Meta reporting token, account and selected campaign are connected. Campaign 120249029003230545, all 22 ad sets and all 34 ads remain PAUSED.
+- Meta reporting token, account and selected campaign are connected. USD account 1342092947734370, campaign 120251425577330371, all 22 ad sets and all 34 ads remain PAUSED.
 - The existing lead database supplies verified Calendly booking records. No real test booking or customer message was generated during this work.
 - Direct GA4 reporting for Three Stripes Digital Website (property 524936646) is configured using a Worker secret and the Analytics read-only scope. Live 1, 7, 30 and 90 day requests succeeded. Reports are restricted to law firm funnel paths on the production host.
 - All four GA4 windows returned no rows. The landing page has no GA4 tag. Successful reporting access is not evidence of visitor collection.
