@@ -203,26 +203,26 @@
   function renderNoFit(data) {
     show(
       '<div class="downsell"><p class="res-badge">A different first step</p>' +
-      '<h1 class="step-h">Your site is not a fit for the free boost yet. Let’s build the foundation.</h1>' +
-      '<p class="res-sub">There is another way forward: a custom law firm website built for search, then a fresh look at Rank Boost.</p>' +
+      '<h1 class="step-h">First, build the flame. Then add fuel.</h1>' +
+      '<p class="res-sub">Rank Boost helps existing Google rankings climb. Your first step is to start showing up for the searches that bring in new clients.</p>' +
       '<div class="downsell-reason"><span class="downsell-label">Your scan result</span>' +
-      '<p>We did not find supported, non-branded law firm searches for <strong>' + escHtml(data.domain) + '</strong> in positions 1 to 50 with at least 10 monthly searches in our US ranking data.</p>' +
-      '<p>This scan checks rankings, not your site’s speed or code. Bilal will review the foundations with you and explain whether a rebuild is the right next step.</p></div>' +
-      '<div class="downsell-offer"><span class="downsell-label">Built for your firm. Built for search.</span>' +
-      '<h2>A custom website that gives your SEO a stronger starting point.</h2>' +
-      '<ul class="downsell-features"><li><strong>Custom design and code</strong><span>Hand-built HTML and CSS, tailored to your firm. No off-the-shelf theme.</span></li>' +
-      '<li><strong>SEO from the ground up</strong><span>Site structure, speed, schema, internal links and metadata built in.</span></li>' +
+      '<p>We didn’t find <strong>' + escHtml(data.domain) + '</strong> in the first 5 pages of Google for the lawyer searches we checked. That leaves us with no rankings from this scan to boost right now.</p>' +
+      '<p>Think of Rank Boost as adding fuel to a flame. It can help an existing ranking grow, but it can’t boost a ranking that isn’t there. First, we need to build that flame.</p></div>' +
+      '<div class="downsell-offer"><span class="downsell-label">Step one: give Google something to rank.</span>' +
+      '<h2>Build a website designed to get your firm showing up on Google.</h2>' +
+      '<p>We build pages around your legal services and the cities you serve, so Google can understand what you do and who to show you to. The goal is to establish your first relevant rankings. Once those rankings are there, we check whether Rank Boost can help them climb.</p><ul class="downsell-features"><li><strong>Built for the cases you want</strong><span>Pages focused on the services and locations your future clients search for.</span></li>' +
+      '<li><strong>Easy for Google to understand</strong><span>Clear pages and a fast, easy-to-use website that explains what your firm does.</span></li>' +
       '<li><strong>Unlimited revisions</strong><span>We keep refining the design until it is right.</span></li>' +
-      '<li><strong>3 to 4 week turnaround</strong><span>A clear scope and a fixed price, covered on your consultation.</span></li></ul>' +
+      '<li><strong>3 to 4 week website build</strong><span>A clear scope and fixed price. Google rankings take time and are not guaranteed within the build window.</span></li></ul>' +
       '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
       '<p class="res-note">30 minutes with Bilal. No pressure or obligation.</p></div>' +
       '<article class="downsell-proof"><span class="downsell-label">The path in practice</span><h2>Vernsten Law: website first, then Rank Boost.</h2>' +
       '<p>We rebuilt Vernsten Law’s website before running Rank Boost. Hear directly from the firm below.</p>' +
       '<video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg" aria-label="Vernsten Law client testimonial"><source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4"></video>' +
-      '<p class="res-note">One client’s experience. A rebuild does not automatically qualify a site for Rank Boost. We scan again when it is live.</p></article>' +
-      '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal reviews your current site, walks through the SEO foundations and shows what a custom build could look like for your firm. Scope and pricing are covered together on the call.</p></div>' +
-      '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. The ranking scan alone cannot tell us that. The consultation establishes whether a rebuild is the right fit.</p></details>' +
-      '<details><summary>Can I get the free boost after the rebuild?</summary><p>We run a fresh ranking check after launch. If suitable keywords are present, you can move into the free Rank Boost flow.</p></details>' +
+      '<p class="res-note">Website first. Existing rankings next. Then we check for a Rank Boost opportunity. A new website alone does not qualify you.</p></article>' +
+      '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal reviews your current site and explains what it needs to start showing up for the searches that matter to your firm. If a new website is the right first step, you’ll talk through the build, scope and fixed price together.</p></div>' +
+      '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. Missing rankings do not automatically mean you need a rebuild. Bilal reviews your current site with you before recommending the next step.</p></details>' +
+      '<details><summary>Can I get the free boost after the rebuild?</summary><p>First, the site needs to show up for relevant Google searches. Once it does, we run another check. If those rankings qualify, we can add the boost.</p></details>' +
       '<details><summary>What if I am already on page one?</summary><p>Page one is eligible for the main offer. Your position on page one is never a reason to send you to the website offer.</p></details></div>' +
       '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
       '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p></div>'

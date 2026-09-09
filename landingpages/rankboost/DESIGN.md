@@ -66,3 +66,7 @@
 - Keep pricing on the consultation and use the navy and gold card patterns in the shared popup.
 
 - Both offers use the same modal for steps 2 and 3. Close, Escape, and backdrop dismiss preserve progress. A clearly named resume button reopens the current step. Lock background scroll, retain native modal focus containment, and keep the close control visible while scrolling.
+
+## Website downsell language
+
+Explain the progression in plain language: establish relevant Google rankings first, then use Rank Boost as fuel for that existing flame. Introduce the website offer after explaining why there is no eligible ranking to boost. State that the scan found no rankings for the lawyer searches checked in the first five pages, without claiming the domain ranks for nothing at all. Describe service and location pages and the goal of showing up on Google instead of technical SEO terminology or a vague stronger starting point. Separate the 3 to 4 week website build from ranking timelines, and retain the fresh qualification check.
