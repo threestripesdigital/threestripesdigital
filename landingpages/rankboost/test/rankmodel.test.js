@@ -51,8 +51,8 @@ test("domain normalization accepts public hosts and rejects ambiguous targets", 
   assert.equal(normalizeDomain("javascript:alert(1)"), "");
 });
 
-test("all page-one positions remain eligible for the main offer", () => {
-  for (let position = 1; position <= 10; position++) {
+test("page-one positions below number one remain eligible for the main offer", () => {
+  for (let position = 2; position <= 10; position++) {
     assert.equal(projectKeywords("example.com", buildThemes([item("divorce lawyer chicago", position, 100)])).keywords.length, 1);
   }
 });
@@ -68,4 +68,15 @@ test("provider request includes page one and retains volume and organic filters"
     assert.ok(request.filters.some(f => Array.isArray(f) && f[2] === "organic"));
     assert.ok(request.filters.some(f => Array.isArray(f) && f[0].endsWith("search_volume") && f[2] === 10));
   } finally { globalThis.fetch = original; }
+});
+
+ test("boost candidates exclude first and out-of-range ranks while keeping eligible variants", () => {
+  assert.equal(projectKeywords("example.com", buildThemes([item("divorce lawyer chicago", 1, 100)])).keywords.length, 0);
+  for (const position of [0, 51]) assert.equal(projectKeywords("example.com", buildThemes([item("divorce lawyer chicago", position, 100)])).keywords.length, 0);
+  const result = projectKeywords("example.com", buildThemes([
+    item("divorce lawyer chicago", 1, 1000), item("divorce attorney chicago", 2, 300),
+    item("criminal lawyer chicago", 50, 100)
+  ]));
+  assert.deepEqual(result.keywords.map(k => k.position), [2, 50]);
+  assert.equal(result.keywords[0].url, "https://example.com/2");
 });

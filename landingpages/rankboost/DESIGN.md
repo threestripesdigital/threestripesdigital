@@ -59,7 +59,7 @@
 
 ## Website consultation path
 
-- A successful no-fit scan replaces steps 2 and 3 with the website offer and dedicated consultation booking. Page-one rankings remain eligible for the main offer, including position 1. Provider failures and limits never become a no-fit result.
+- A successful no-fit scan replaces steps 2 and 3 with the website offer and dedicated consultation booking. Boostable rankings are positions 2 to 50. Firms with a position-one term can qualify through other eligible terms. A scan with only first-place terms shows a neutral result, not a website downsell. Provider failures and limits never become a no-fit result.
 - Explain the observed keyword result without diagnosing site speed, indexing, or code from ranking data alone. Recheck eligibility after a rebuild.
 - Use Vernsten Law as the owner-confirmed website rebuild followed by Rank Boost example, with the existing on-domain testimonial. No invented ranking screenshots or numerical results.
 - Preserve the main calendar for qualified leads. Website bookings use their own provider event, Kit tags, verified inline confirmation and custom Meta event. Never fire Schedule for website bookings.
@@ -69,4 +69,6 @@
 
 ## Website downsell language
 
-Explain the progression in plain language: establish relevant Google rankings first, then use Rank Boost as fuel for that existing flame. Introduce the website offer after explaining why there is no eligible ranking to boost. State that the scan found no rankings for the lawyer searches checked in the first five pages, without claiming the domain ranks for nothing at all. Describe service and location pages and the goal of showing up on Google instead of technical SEO terminology or a vague stronger starting point. Separate the 3 to 4 week website build from ranking timelines, and retain the fresh qualification check.
+Explain the progression in plain language: establish relevant Google rankings first, then use Rank Boost as fuel for that existing flame. Introduce the website offer after explaining why there is no eligible ranking to boost. State that the scan found no rankings for the lawyer searches checked in the first five pages, without claiming the domain ranks for nothing at all. Describe service and location pages and the goal of showing up on Google instead of technical SEO terminology or a vague stronger starting point. Label the delivery window as a 3 to 4 week build, without defensive rankings disclaimer copy. After the website is live, re-evaluate whether the firm qualifies for Rank Boost.
+
+Use Jeremy’s approved September 9 rewrite: “We can’t boost what isn’t there yet” and “Build a website Google can actually rank.” Preserve the inline popup, Vernsten proof, two website consultation CTAs, and honest live consultation explanation.

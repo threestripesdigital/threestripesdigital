@@ -1618,7 +1618,7 @@ test("Boost Live atomically records lifecycle state and provider jobs", async ()
     domain: "example.test",
     top_keywords: JSON.stringify([
       { keyword: "how long does an injury case take" },
-      { keyword: "injury lawyer test" },
+      { keyword: "injury lawyer test", position: 12, volume: 100 },
     ]),
     status: "booked",
     qualified: 1,
@@ -1905,4 +1905,26 @@ test('a newer booking from a repeated scan prevents the old lead sending or appl
   assert.equal(await appointmentCurrent(api,{...payload,appointment_stop:true}),false);
   assert.equal((await queueAppointmentTimers({LEADS_DB:api,APPOINTMENT_FOLLOWUP_ENABLED:'true'})).queued,0);
   db.close();
+});
+
+test('first-place-only scan avoids website enrollment and returns an honest result', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => Response.json({tasks:[{status_code:20000,result:[{items:[{
+    keyword_data:{keyword:'divorce lawyer chicago',keyword_info:{search_volume:100}},
+    ranked_serp_element:{serp_item:{rank_absolute:1,type:'organic'}}
+  }]}]}]});
+  try {
+    const db=rankCheckDb(); const waits=[];
+    const response=await checkPost({request:new Request('https://threestripesdigital.com/rank-boost/law-firms/api/check',{
+      method:'POST',headers:{'Content-Type':'application/json',Origin:'https://threestripesdigital.com','CF-Connecting-IP':'192.0.2.20'},
+      body:JSON.stringify({name:'QA',phone:'+15555550110',email:'qa@example.test',website_url:'https://example.test',event_id:'first-place-only-test',page_url:'https://threestripesdigital.com/rank-boost/law-firms/'})
+    }),env:{DATAFORSEO_LOGIN:'test',DATAFORSEO_PASSWORD:'test',FUNNEL_SIGNING_KEY:'test-signing-key',LEADS_DB:db},waitUntil(p){waits.push(p)}});
+    await Promise.all(waits);
+    assert.equal(response.status,200);
+    const result=await response.json();
+    assert.equal(result.qualified,false);
+    assert.equal(result.reason_not_qualified,'already_first');
+    assert.equal(queuedJobs(db).some(j=>j.kind==='kit.upsert_tag'),false);
+    assert.equal(db.batches[0].find(s=>s.sql.includes('INSERT INTO leads')).args[7],'already_first');
+  } finally {globalThis.fetch=originalFetch;}
 });

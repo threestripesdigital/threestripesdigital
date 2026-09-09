@@ -394,7 +394,7 @@ test("landing page keeps the simplified VSL structure", async () => {
   assert.ok(index.includes("Cruz Gold &amp; Associates"));
   assert.ok(index.includes("Señor Ticket"));
   assert.ok(index.includes("Stuart Allen Law Firm"));
-  assert.ok(index.includes("Page-one firms qualify too, including position one."));
+  assert.ok(index.includes("Page-one keywords can qualify too."));
   const sectionIds = [...index.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>/g)].map(
     (match) => match[1]
   );

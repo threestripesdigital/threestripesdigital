@@ -257,10 +257,8 @@ function kitJobForLead(lead, leadRef, leadToken) {
   // THEIR keywords instead of keywords in the abstract. Only high
   // commercial intent keywords reach the emails: no informational
   // queries, no brand searches for their own firm name.
-  const isMoneyKeyword = moneyKeywordTest(lead.domain);
   const all = lead.keywords || [];
-  const money = all.filter((k) => isMoneyKeyword(k.keyword));
-  const kws = money.length ? money : all;
+  const kws = projectKeywords(lead.domain, all, 8).keywords;
   const fmt = (k) =>
     k ? `${k.keyword} (#${k.position}, ${Number(k.volume).toLocaleString("en-US")}/mo)` : "";
   const fields = {
@@ -625,6 +623,10 @@ export async function onRequestPost(context) {
   const { keywords, displayThemes } = projectKeywords(domain, allThemes, 8);
 
   const qualified = keywords.length > 0;
+  const alreadyFirst = !qualified && allThemes.some((theme) =>
+    (theme.variants?.length ? theme.variants : [theme]).some((k) =>
+      Number(k.position) === 1 && moneyKeywordTest(domain)(k.keyword)));
+  const resultStatus = qualified ? "qualified" : alreadyFirst ? "already_first" : "no_fit";
 
   try {
     const saved = await saveLead(
@@ -635,13 +637,13 @@ export async function onRequestPost(context) {
         total,
         keywords: allThemes,
         cost,
-        status: qualified ? "qualified" : "no_fit",
+        status: resultStatus,
       },
       { submissionId: metaCtx.event_id, leaseToken: submission.leaseToken },
       200,
       (leadToken) => ({
         qualified,
-        reason_not_qualified: qualified ? null : "no_supported_keywords",
+        reason_not_qualified: qualified ? null : alreadyFirst ? "already_first" : "no_supported_keywords",
         domain,
         total,
         groups: displayThemes.length,

@@ -195,7 +195,13 @@ export function buildThemes(items) {
 // back to branded or informational themes: an empty list is a truthful no-fit.
 export function projectKeywords(domain, allThemes, limit = 8) {
   const isMoney = moneyKeywordTest(domain);
-  const moneyThemes = allThemes.filter((t) => isMoney(t.keyword));
+  const moneyThemes = allThemes.map((theme) => {
+    // Keep a boostable variant even when the theme's leading term ranks first.
+    const variants = (theme.variants?.length ? theme.variants : [theme])
+      .filter((t) => isMoney(t.keyword) && Number(t.position) >= 2 && Number(t.position) <= 50)
+      .sort((a, b) => a.position - b.position || b.volume - a.volume);
+    return variants.length ? { ...theme, ...variants[0], variants } : null;
+  }).filter(Boolean).sort((a, b) => b.volume - a.volume);
   const displayThemes = moneyThemes;
   const keywords = displayThemes.slice(0, limit).map(({ keyword, position, volume, url }) => {
     const opp = opportunityFor(keyword, volume);
