@@ -991,6 +991,17 @@ test("terminal webhook binds a qualified lead before invitee creation", async ()
 });
 
 test("integration providers use idempotent Kit enrollment and redact errors", async (t) => {
+  await t.test("late booking dispatch clears reminder eligibility before applying booked tag", async () => {
+    const originalFetch = globalThis.fetch;
+    const requests = [];
+    globalThis.fetch = async (url, options) => { requests.push({ url: String(url), body: JSON.parse(options.body) }); return Response.json({}, { status: 201 }); };
+    try {
+      await dispatchIntegrationJob({ KIT_API_KEY: "fixture" }, "kit.upsert_tag", { tag_id: 22494644, email: "qa@example.test", qualified_call_start: "2020-01-01T00:00:00Z", fields: { call_24h_eligible: "yes", call_2h_eligible: "yes" } });
+      assert.equal(requests[0].body.fields.call_24h_eligible, "no");
+      assert.equal(requests[0].body.fields.call_2h_eligible, "no");
+      assert.match(requests[1].url, /tags\/22494644\/subscribers$/);
+    } finally { globalThis.fetch = originalFetch; }
+  });
   await t.test("Kit tag enrollment ensures the subscriber first", async () => {
     const originalFetch = globalThis.fetch;
     const requests = [];

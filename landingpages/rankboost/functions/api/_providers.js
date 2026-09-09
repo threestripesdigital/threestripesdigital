@@ -1,3 +1,4 @@
+import { qualifiedReminderEmailFields } from "./_emailfields.js";
 const META_API_VERSION = "v21.0";
 const REQUEST_TIMEOUT_MS = 15000;
 
@@ -155,13 +156,16 @@ async function kitUpsertTag(env, payload, options) {
     "X-Kit-Api-Key": env.KIT_API_KEY,
     "Content-Type": "application/json",
   };
+  const fields = payload.qualified_call_start
+    ? { ...payload.fields, ...qualifiedReminderEmailFields(payload.qualified_call_start) }
+    : payload.fields;
   const subscriberResponse = await request("https://api.kit.com/v4/subscribers", {
     method: "POST",
     headers,
     body: JSON.stringify({
       email_address: payload.email,
       first_name: payload.first_name || "",
-      ...(payload.fields ? { fields: payload.fields } : {}),
+      ...(fields ? { fields } : {}),
     }),
   }, options);
   // The booked website state removes the unbooked state before enrollment.

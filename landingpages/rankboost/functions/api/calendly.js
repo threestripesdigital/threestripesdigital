@@ -191,7 +191,7 @@ function followupSmsJob(kind, { phone, firstName }, leadRef, sourceKey) {
   };
 }
 
-function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields) {
+function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields, callStartIso) {
   if (!tagId || !email) return null;
   return {
     leadRef,
@@ -203,6 +203,7 @@ function kitUpsertTagJob(tagId, email, firstName, leadRef, sourceKey, fields) {
       email,
       first_name: firstName || "",
       ...(fields ? { fields } : {}),
+      ...(callStartIso ? { qualified_call_start: callStartIso } : {}),
     },
   };
 }
@@ -845,7 +846,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         firstName,
         leadRef,
         sourceKey,
-        isWebsite ? undefined : qualifiedBookingEmailFields(start, p)
+        isWebsite ? undefined : qualifiedBookingEmailFields(start, p),
+        isWebsite ? undefined : start
       ),
       !isWebsite && bookingSmsJob(
         { phone, firstName, startIso: start, tz: p.timezone },
@@ -940,7 +942,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         recoveredFirstName,
         leadRef,
         recoveredSourceKey,
-        isWebsite ? undefined : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee)
+        isWebsite ? undefined : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee),
+        isWebsite ? undefined : recoveredBooking.start
       ),
       !isWebsite && bookingSmsJob(
         {
