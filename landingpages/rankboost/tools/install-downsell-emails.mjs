@@ -23,7 +23,7 @@ const excluded=[23211442,23211443,state.tags.stop,state.tags.attended,state.tags
 for(const [key,definition] of Object.entries(config.sequences)) {
  const seq={...definition,emails:[...definition.emails,...Array.from({length:definition.rotation_repetitions||0},()=>definition.rotation_pool).flat()]};
  const target=state.sequences[key] ||= {};
- if(!target.id){target.id=(await api('sequences','POST',{name:seq.name,email_address:config.email_address,email_template_id:config.template_id,active:false,repeat:false,hold:false,send_days:['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],send_hour:9,time_zone:'America/New_York',exclude_subscriber_sources:[{type:'tag',ids:key==='nurture'?[...excluded,23211441,state.tags.everBooked]:excluded}]})).sequence.id;save();}
+ if(!target.id){target.id=(await api('sequences','POST',{name:seq.name,email_address:config.email_address,email_template_id:config.template_id,active:false,repeat:false,hold:false,send_days:['monday','tuesday','wednesday','thursday','friday','saturday','sunday'],send_hour:9,time_zone:'America/New_York',exclude_subscriber_sources:[{type:'tag',ids:['nurture','monthly'].includes(key)?[...excluded,23211441,state.tags.everBooked]:excluded}]})).sequence.id;save();}
  const existing=(await api(`sequences/${target.id}/emails?include_content=true`)).emails;
  target.emails ||= [];
  for(let i=0;i<seq.emails.length;i++) {

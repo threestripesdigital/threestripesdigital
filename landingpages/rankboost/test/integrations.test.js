@@ -1755,3 +1755,14 @@ test("website timer queues once, ignores qualified and last-minute bookings", as
     assert.equal(JSON.parse(jobs[0].payload_json).website_sequence_id,WEBSITE_EMAILS.sequences.tomorrow);
   } finally {sqlite.close();}
 });
+
+
+test("long-term website tag enrolls monthly nurture without restarting the daily series", async () => {
+ const original=globalThis.fetch;const calls=[];
+ globalThis.fetch=async(url)=>{calls.push(url);return Response.json({subscriber:{id:123,state:'active'}});};
+ try {
+  await dispatchIntegrationJob({KIT_API_KEY:'test'},'kit.upsert_tag',{email:'qa@example.test',tag_id:WEBSITE_EMAILS.tags.longTerm,website_long_term:true});
+  assert.ok(calls.some(url=>url.includes('/sequences/'+WEBSITE_EMAILS.sequences.monthly+'/')));
+  assert.ok(!calls.some(url=>url.includes('/sequences/'+WEBSITE_EMAILS.sequences.nurture+'/')));
+ }finally{globalThis.fetch=original;}
+});
