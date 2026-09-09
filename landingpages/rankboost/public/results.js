@@ -227,11 +227,11 @@
       '<article class="downsell-proof"><span class="downsell-label">The path in practice</span><h2>Website first. Then Rank Boost.</h2>' +
       '<p>We rebuilt Vernsten Law’s website before running Rank Boost. Here’s what that looked like.</p>' +
       '<video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg" aria-label="Vernsten Law client testimonial"><source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4"></video>' +
-      '<p class="res-note">After your website is live, we can re-evaluate whether your firm qualifies for Rank Boost. A new website alone doesn’t qualify you for the boost. It puts you in position to qualify.</p></article>' +
+      '</article>' +
       '<div class="downsell-call"><h2>Leave the call with a clear next step.</h2><p>Bilal pulls up your current website on the call, walks through what’s keeping it from showing up on Google, and shows you what a new build would look like for your firm specifically. If a new website is the right move, you’ll talk through scope and price right there. If it’s not, he’ll tell you that too. No pressure, no pitch deck, just an honest look at what your site needs.</p></div>' +
       '<div class="downsell-faq"><details><summary>Do I definitely need a new website?</summary><p>Not necessarily. Missing rankings don’t automatically mean you need a rebuild. Bilal reviews your current site with you on the call and tells you straight up what the right next step is.</p></details>' +
       '<details><summary>Can I get the free boost after the rebuild?</summary><p>After your website is live, we can re-evaluate whether your firm qualifies for Rank Boost. The website puts you in position. The boost pushes you up.</p></details>' +
-      '<details><summary>What if I am already on page one?</summary><p>Page-one keywords can qualify too. Rank Boost helps move your keywords higher within Google’s first five pages. A keyword already at number one has nowhere higher to go, but your other keywords can still qualify.</p></details></div>' +
+      '</div>' +
       '<a class="btn btn-primary btn-lg downsell-cta" href="book?offer=website">Book my free website consultation</a>' +
       '<p class="res-note"><a class="step-back" href="' + STEP1 + '">Check a different website</a></p></div>'
     );
