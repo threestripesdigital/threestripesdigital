@@ -56,7 +56,7 @@
     var completed = number === 3 || flow.rankingsReady ? 2 : 1;
     progressBar.style.setProperty("--progress", (completed / 3 * 100) + "%");
     progressBar.setAttribute("aria-valuenow", String(completed));
-    progressBar.setAttribute("aria-valuetext", completed === 2 ? (flow.lead && flow.lead.offer === "website" ? "Your website plan is ready. Book your consultation to finish." : "Your rankings are ready. Book your call to finish.") : "Your details are submitted. Checking your rankings.");
+    progressBar.setAttribute("aria-valuetext", completed === 2 ? (flow.lead && flow.lead.offer === "website" ? "Your next step is ready. Book your consultation to finish." : "Your rankings are ready. Book your call to finish.") : "Your details are submitted. Checking your rankings.");
     toggle.hidden = true;
     toggle.setAttribute("aria-expanded", "true");
     form.hidden = number !== 1;
@@ -83,9 +83,9 @@
       var website = offer === "website";
       dialog.setAttribute("aria-label", website ? "Your website consultation" : "Your Rank Boost results");
       resume.textContent = website ? "Continue my website consultation" : "View my Rank Boost results";
-      tracker.querySelectorAll("li > span:last-child")[1].textContent = website ? "Your website plan" : "Your rankings";
+      tracker.querySelectorAll("li > span:last-child")[1].textContent = website ? "Your next step" : "Your rankings";
       tracker.querySelectorAll("li > span:last-child")[2].textContent = website ? "Website consultation" : "Book your call";
-      results.querySelector(".inline-eyebrow").textContent = website ? "Step 2 of 3 · Your website plan" : "Step 2 of 3 · Your rankings";
+      results.querySelector(".inline-eyebrow").textContent = website ? "Step 2 of 3 · Your next step" : "Step 2 of 3 · Your rankings";
       document.getElementById("booking-heading").textContent = website ? "Book your free website consultation" : "Book Your Call";
       booking.querySelector(".res-sub").textContent = website ? "Choose 30 minutes with Bilal to review your site, explore a custom rebuild and discuss the scope and fixed price. Your details are already filled in." : "Choose a free 30-minute call with Bilal. We’ll review your keywords, pick the right opportunity, and plan your free boost together.";
       booking.querySelector(".res-note").textContent = website ? "No pressure, no obligation and no preparation needed." : "No credit card, no contract, no site access needed.";
