@@ -1917,7 +1917,7 @@ test('first-place-only scan avoids website enrollment and returns an honest resu
     const db=rankCheckDb(); const waits=[];
     const response=await checkPost({request:new Request('https://threestripesdigital.com/rank-boost/law-firms/api/check',{
       method:'POST',headers:{'Content-Type':'application/json',Origin:'https://threestripesdigital.com','CF-Connecting-IP':'192.0.2.20'},
-      body:JSON.stringify({name:'QA',phone:'+15555550110',email:'qa@example.test',website_url:'https://example.test',event_id:'first-place-only-test'})
+      body:JSON.stringify({name:'QA',phone:'+15555550110',email:'qa@example.test',website_url:'https://example.test',event_id:'first-place-only-test',page_url:'https://threestripesdigital.com/rank-boost/law-firms/'})
     }),env:{DATAFORSEO_LOGIN:'test',DATAFORSEO_PASSWORD:'test',FUNNEL_SIGNING_KEY:'test-signing-key',LEADS_DB:db},waitUntil(p){waits.push(p)}});
     await Promise.all(waits);
     assert.equal(response.status,200);
