@@ -197,7 +197,7 @@ async function kitUpsertTag(env, payload, options) {
   const websiteCallExpired = payload.website_call_start && Date.parse(payload.website_call_start) <= Date.now() + 30 * 60000;
   if (websiteCallExpired) { await addTag(WEBSITE_EMAILS.tags.stop); return; }
   if (payload.website_sequence_id && (!subscriber?.fields?.website_call_date || !subscriber?.fields?.website_call_time)) throw new IntegrationError("website_booking_fields_missing", { retryable:true });
-  const sequenceId = payload.website_sequence_id || (payload.tag_id === WEBSITE_TAG_IDS.lead ? WEBSITE_EMAILS.sequences.nurture : payload.tag_id === WEBSITE_TAG_IDS.booked ? WEBSITE_EMAILS.sequences.precall : null);
+  const sequenceId = payload.website_sequence_id || (payload.tag_id === WEBSITE_TAG_IDS.lead ? WEBSITE_EMAILS.sequences.nurture : payload.tag_id === WEBSITE_TAG_IDS.booked ? WEBSITE_EMAILS.sequences.precall : payload.tag_id === WEBSITE_EMAILS.tags.longTerm ? WEBSITE_EMAILS.sequences.monthly : null);
   if (sequenceId) {
     if (!Object.values(WEBSITE_EMAILS.sequences).includes(sequenceId)) throw new IntegrationError("invalid_website_sequence", { retryable:false });
     await request(`https://api.kit.com/v4/sequences/${sequenceId}/subscribers`, {method:"POST",headers,body:JSON.stringify({email_address:payload.email})},options);

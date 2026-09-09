@@ -8,7 +8,7 @@ The live content and IDs are in `downsell-email-system.json` and `downsell-email
 - Flow 2B: after verified website booking, four emails on each of the first two days, then three per day from the rotation pool. The published runway covers approximately 92 days. Appointment cutoff normally stops it much sooner.
 - Separate immediate sequences deliver the 24-hour and two-hour reminders. The existing minute processor queues these only for the current appointment, in a 15-minute dispatch window, after booking fields are saved. Bookings made after a reminder's due time do not receive that reminder.
 - At 30 minutes before the appointment, the processor applies `rb_website_precall_stop`. All website pre-call sequences exclude that tag. The cutoff provides a buffer for Kit's sending queue.
-- After seven days without booking, new leads receive `rb_website_long_term` for the monthly nurture audience. This setup does not publish an ongoing monthly newsletter or a post-build re-engagement campaign.
+- After seven days without booking, new leads receive `rb_website_long_term` and enter the monthly nurture. The first value email follows 23 days later (approximately day 30 from opt-in), then every 30 days for a year. Booking or a terminal disposition excludes this sequence. Post-build re-engagement is a separate workflow.
 
 Kit uses the account's verified Bilal Amin sending identity at bilal@threestripesdigital.com. Replies go to that sending address. Timing is subject to Kit processing latency.
 
@@ -24,4 +24,4 @@ The processor rechecks the current lead and invitee before sending reminders or 
 
 Run `node tools/install-downsell-emails.mjs` with `KIT_API_KEY` in the environment to stage and verify resources. `--activate` activates verified sequences. The installer records IDs after every mutation and refuses mismatched existing subjects instead of overwriting unrelated content.
 
-Run `npm test`, then the standard funnel deployment. Verify all four Kit sequences are active, their exclusion lists contain the expected lifecycle tags, and their emails match the source manifest. No changes to the main-offer sequences are required.
+Run `npm test`, then the standard funnel deployment. Verify all five Kit sequences are active, their exclusion lists contain the expected lifecycle tags, and their emails match the source manifest. No changes to the main-offer sequences are required.

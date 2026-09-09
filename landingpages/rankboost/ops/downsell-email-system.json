@@ -176,6 +176,83 @@
           "delay_unit": "days"
         }
       ]
+    },
+    "monthly": {
+      "name": "Website downsell monthly nurture",
+      "emails": [
+        {
+          "subject": "A quick check of your website contact path",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your website on a phone. From a practice page, can you find the phone number and contact form without searching? Try the form too. A clear next step matters just as much as getting someone to the page.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 23,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Does each practice area have a useful page?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A useful practice page explains the matters your firm handles, the locations it serves and how someone can contact you. Check whether the pages reflect the work you actually want to attract.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "What a new visitor sees on mobile",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Visit your home page on a phone and read the first screen. Is it clear what your firm does and where it works? If visitors must guess, that is a useful place to start improving the site.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "One website speed check worth making",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Large images can make a page heavier than it needs to be. Review image sizes before adding more plugins or redesigning the whole site. Measure the page before and after any changes so you know whether they helped.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Before you change your website addresses",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A rebuild should include an inventory of existing page addresses. If a useful page moves, plan where the old address should redirect. Preserving a clear path for visitors is part of a careful launch.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Keep your business details consistent",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Check that your firm name, phone number, office address and hours are current on your website. Then compare the key listings your clients use. Correct details make it easier for people to reach the right office.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Which questions should your website answer?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Think about the questions your team hears before an initial consultation. Clear answers can help visitors understand your process and whether to get in touch. Have the appropriate person at your firm review legal content before publishing it.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Can visitors find your important pages?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start at your home page and follow the links to your main practice areas. Useful internal links help people explore related information. Check for broken links and pages that are difficult to reach.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Make your website easier to use",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Try navigating your site with a keyboard. Check whether text is readable and form fields have clear labels. Those are practical checks that can improve the experience for more visitors.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "What happens after someone contacts your firm?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Review how website enquiries reach your team. Confirm the right person receives them and that there is a consistent response process. A website project should account for the handoff after someone clicks or submits a form.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Does your site reflect your firm today?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Review your team, services, locations and contact details. Outdated information is easy to overlook when a site has been live for a while. A short review can uncover useful improvements without starting a full rebuild.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "Time for a fresh look at your website?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If your practice areas or priorities have changed, your website may need to change with them. We can review what is working, what needs attention and whether improving the current site or rebuilding is the better next step.</p><p>If you would like a second opinion on your website, reply to this email. I am happy to discuss it.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 30,
+          "delay_unit": "days"
+        }
+      ]
     }
   }
 }

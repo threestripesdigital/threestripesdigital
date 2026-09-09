@@ -13,6 +13,7 @@ export const WEBSITE_EMAILS = Object.freeze({
     "nurture": 2887768,
     "precall": 2887771,
     "tomorrow": 2887775,
-    "soon": 2887776
+    "soon": 2887776,
+    "monthly": 2887779
   }
 });
