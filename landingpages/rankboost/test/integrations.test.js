@@ -1,4 +1,9 @@
 import { WEBSITE_EMAILS } from "../functions/api/_websiteemailconfig.js";
+import { APPOINTMENT_EMAILS } from '../functions/api/_appointmentconfig.js';
+import { appointmentSlots, queueAppointmentTimers, appointmentCurrent, registerAppointment, localSmsHour, utcTime } from '../functions/api/_appointments.js';
+import { classifyReply, pollSmsReplies } from '../functions/api/_smsreplies.js';
+import { recoveryBookingLink } from '../functions/api/_bookinglinks.js';
+import { verifyLeadToken } from '../functions/api/_security.js';
 import { queueWebsiteEmailTimers, websiteEmailJobCurrent } from "../functions/api/_websiteemails.js";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -47,6 +52,7 @@ function migratedSqlite() {
     "0003_reliable_integrations.sql",
     "0004_lifecycle_operations.sql",
     "0005_job_dependencies.sql",
+    "0006_appointment_followup.sql",
   ]) {
     db.exec(readFileSync(new URL(`../migrations/${name}`, import.meta.url), "utf8"));
   }
@@ -1765,4 +1771,127 @@ test("long-term website tag enrolls monthly nurture without restarting the daily
   assert.ok(calls.some(url=>url.includes('/sequences/'+WEBSITE_EMAILS.sequences.monthly+'/')));
   assert.ok(!calls.some(url=>url.includes('/sequences/'+WEBSITE_EMAILS.sequences.nurture+'/')));
  }finally{globalThis.fetch=original;}
+});
+
+function appointmentFixture(db, {offer='boost', startHours=72}={}) {
+  const now=Date.now(), booked=new Date(now-60000).toISOString(), start=new Date(now+startHours*3600000).toISOString();
+  db.prepare("INSERT INTO leads(lead_ref,email,phone,qualified,status,calendly_invitee_uri) VALUES ('appointment-lead','qa@example.test','2025550100',?1,'booked','invitee-current')").run(offer==='boost'?1:0);
+  db.prepare("INSERT INTO calendly_invitees(invitee_uri,event_type_uri,lead_ref,status,scheduled_start_at,created_at) VALUES ('invitee-current','test-event','appointment-lead','booked',?1,?2)").run(start,booked);
+  db.prepare("INSERT INTO appointment_followup(invitee_uri,lead_ref,offer,email,phone,first_name,timezone,starts_at,journey_started_at,booked_at) VALUES ('invitee-current','appointment-lead',?1,'qa@example.test','12025550100','QA','America/New_York',?2,?3,?3)").run(offer,start,booked);
+  return {now,booked,start};
+}
+
+test('appointment scheduler preserves both approved cadences and repeats the rotation',()=>{
+  const origin=Date.parse('2026-09-09T12:00:00Z');
+  const row={offer:'boost',starts_at:'2026-10-09T12:00:00Z',journey_started_at:'2026-09-09 12:00:00',booked_at:'2026-09-09 12:00:00'};
+  assert.equal(utcTime(row.booked_at),origin);
+  for(const [hours,key] of [[0,'Q01'],[10,'Q06'],[24,'Q07'],[34,'Q12'],[48,'Q13'],[184,'Q13']])assert.ok(appointmentSlots(row,origin+hours*3600000).some(s=>s.key===key));
+  row.offer='website';
+  for(const [hours,key] of [[0,'W0'],[9,'W3'],[24,'W4'],[42,'W7'],[50,'P0'],[114,'P0']])assert.ok(appointmentSlots(row,origin+hours*3600000).some(s=>s.key===key));
+  assert.deepEqual(appointmentSlots(row,Date.parse(row.starts_at)-29*60000),[]);
+  assert.equal(localSmsHour('America/New_York',Date.parse('2026-09-09T13:00:00Z')),9);
+  assert.equal(localSmsHour(''),null);
+});
+
+test('appointment timers are idempotent and obsolete/cutoff jobs cannot send',async()=>{
+  for(const offer of ['boost','website']) {
+    const db=migratedSqlite(),{now}=appointmentFixture(db,{offer}),env={LEADS_DB:d1Sqlite(db),APPOINTMENT_FOLLOWUP_ENABLED:'true'};
+    assert.equal((await queueAppointmentTimers(env,now)).queued,2);
+    assert.equal((await queueAppointmentTimers(env,now)).queued,0);
+    const email=JSON.parse(db.prepare("SELECT payload_json FROM integration_jobs WHERE kind='kit.appointment_email'").get().payload_json);
+    assert.equal(await appointmentCurrent(env.LEADS_DB,email,now),true);
+    db.prepare("UPDATE leads SET calendly_invitee_uri='replacement'").run();
+    assert.equal(await appointmentCurrent(env.LEADS_DB,email,now),false);
+    db.prepare("UPDATE leads SET calendly_invitee_uri='invitee-current'").run();
+    db.prepare("UPDATE appointment_followup SET starts_at=?1").run(new Date(now+29*60000).toISOString());
+    assert.equal(await appointmentCurrent(env.LEADS_DB,email,now),false);
+    assert.equal((await queueAppointmentTimers(env,now)).queued,1);
+    assert.equal(db.prepare("SELECT COUNT(*) AS n FROM integration_jobs WHERE kind='kit.appointment_stop'").get().n,1);
+    db.close();
+  }
+});
+
+test('reschedules preserve journey position but get new appointment reminder keys',async()=>{
+  const db=migratedSqlite(),{booked}=appointmentFixture(db),env={LEADS_DB:d1Sqlite(db)};
+  const start=new Date(Date.now()+72*3600000).toISOString();
+  db.prepare("INSERT INTO calendly_invitees(invitee_uri,event_type_uri,lead_ref,status,scheduled_start_at,old_invitee_uri) VALUES ('replacement','test-event','appointment-lead','booked',?1,'invitee-current')").run(start);
+  db.prepare("UPDATE leads SET calendly_invitee_uri='replacement'").run();
+  assert.equal(await registerAppointment(env,{lead_ref:'appointment-lead',appointment_invitee:'replacement',qualified_call_start:start,email:'qa@example.test'}),true);
+  assert.equal(db.prepare("SELECT journey_started_at FROM appointment_followup WHERE invitee_uri='replacement'").get().journey_started_at,booked);
+  assert.equal(await registerAppointment(env,{lead_ref:'appointment-lead',appointment_invitee:'invitee-current',email:'qa@example.test'}),false);
+  const row={offer:'boost',starts_at:'2026-09-15T12:00:00Z',journey_started_at:booked,booked_at:'2026-09-10T12:00:00Z'};
+  assert.ok(appointmentSlots(row,Date.parse('2026-09-14T12:01:00Z')).some(s=>s.key==='R01'));
+  row.booked_at='2026-09-14T13:00:00Z';
+  assert.ok(!appointmentSlots(row,Date.parse('2026-09-14T12:01:00Z')).some(s=>s.key==='R01'));
+  db.close();
+});
+
+test('recovery URLs carry verifiable attribution instead of a generic calendar',async()=>{
+  const env={FUNNEL_SIGNING_KEY:'recovery-test-secret'},link=await recoveryBookingLink(env,'qualified-page-one');
+  const url=new URL(link),claims=await verifyLeadToken(env.FUNNEL_SIGNING_KEY,url.searchParams.get('lead_token'));
+  assert.equal(url.pathname,'/rank-boost/law-firms/book');assert.equal(claims.ref,'qualified-page-one');
+});
+
+test('SMS replies confirm the current appointment and STOP persists without duplicate notifications',async()=>{
+  const db=migratedSqlite(),{booked}=appointmentFixture(db),env={LEADS_DB:d1Sqlite(db),APPOINTMENT_FOLLOWUP_ENABLED:'true',ROEZAN_API_KEY:'test'};
+  const original=globalThis.fetch;
+  globalThis.fetch=async url=>Response.json(String(url).includes('/messages?')?{messages:[{id:1,content:'YES',created_at:new Date(Date.parse(booked)+1000).toISOString()},{id:2,content:'STOP',created_at:new Date(Date.parse(booked)+2000).toISOString()}]}:{contact:{id:55,opted_in:1}});
+  try {
+    assert.equal((await pollSmsReplies(env)).received,2);
+    assert.ok(db.prepare('SELECT confirmed_at FROM appointment_followup').get().confirmed_at);
+    assert.equal(db.prepare('SELECT phone FROM sms_suppression').get().phone,'12025550100');
+    db.prepare('UPDATE appointment_followup SET reply_checked_at=NULL').run();
+    assert.equal((await pollSmsReplies(env)).received,0);
+    assert.equal(db.prepare("SELECT COUNT(*) AS n FROM integration_jobs WHERE kind='slack.webhook'").get().n,2);
+    assert.equal(classifyReply('I have a question'),'needs_reply');
+  } finally {globalThis.fetch=original;db.close();}
+});
+
+test('managed appointment registration suppresses legacy delivery before clearing cancellations',async()=>{
+  const db=migratedSqlite();appointmentFixture(db);db.prepare('DELETE FROM appointment_followup').run();
+  const env={LEADS_DB:d1Sqlite(db),APPOINTMENT_FOLLOWUP_ENABLED:'true',KIT_API_KEY:'test'};
+  const original=globalThis.fetch,calls=[];
+  globalThis.fetch=async(url,opts)=>{calls.push({url:String(url),method:opts.method});return Response.json({subscriber:{id:11,state:'active'}});};
+  try {
+    await dispatchIntegrationJob(env,'kit.upsert_tag',{tag_id:22494644,email:'qa@example.test',lead_ref:'appointment-lead',appointment_invitee:'invitee-current',qualified_call_start:new Date(Date.now()+72*3600000).toISOString()});
+    const managed=calls.findIndex(c=>c.url.includes('/tags/'+APPOINTMENT_EMAILS.tags.managed+'/'));
+    assert.ok(managed>=0&&managed<calls.findIndex(c=>c.method==='DELETE'));
+    assert.ok(!calls.some(c=>c.url.includes('/sequences/')));
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM appointment_followup').get().n,1);
+  } finally {globalThis.fetch=original;db.close();}
+});
+
+test('appointment email repeats target only the verified subscriber and stop for obsolete appointments',async()=>{
+  const db=migratedSqlite();appointmentFixture(db);const original=globalThis.fetch;const sends=[];let stopped=false;
+  globalThis.fetch=async(url,options={})=>{
+    const path=new URL(url).pathname;
+    if(path==='/v4/subscribers')return Response.json({subscribers:[{id:11,state:'active'}]});
+    if(path==='/v4/subscribers/11/tags')return Response.json({tags:stopped?[{id:23211559}]:[]});
+    if(path.endsWith('/subscribers')&&path.includes('/sequences/')){sends.push(JSON.parse(options.body));return Response.json({subscriber:{id:11}});}
+    throw Error('Unexpected provider request');
+  };
+  const payload={email:'qa@example.test',sequence_id:APPOINTMENT_EMAILS.boost.R01.id,appointment_invitee:'invitee-current',appointment_timer:true};
+  try {
+    for(let i=0;i<2;i++)await dispatchIntegrationJob({KIT_API_KEY:'test',LEADS_DB:d1Sqlite(db)},'kit.appointment_email',payload);
+    assert.equal(sends.length,2);assert.deepEqual(sends[0],{email_address:'qa@example.test'});
+    stopped=true;
+    await dispatchIntegrationJob({KIT_API_KEY:'test',LEADS_DB:d1Sqlite(db)},'kit.appointment_email',payload);
+    assert.equal(sends.length,2);
+    db.prepare("UPDATE leads SET status='no_show'").run();stopped=false;
+    await dispatchIntegrationJob({KIT_API_KEY:'test',LEADS_DB:d1Sqlite(db)},'kit.appointment_email',payload);
+    assert.equal(sends.length,2);
+  } finally {globalThis.fetch=original;db.close();}
+});
+
+test('SMS sends honor both local suppression and the provider opt-out state',async()=>{
+  const db=migratedSqlite();appointmentFixture(db);const original=globalThis.fetch,calls=[];
+  const env={APPOINTMENT_FOLLOWUP_ENABLED:'true',LEADS_DB:d1Sqlite(db),ROEZAN_API_KEY:'test'};
+  const payload={phone:'2025550100',message:'Test',appointment_timezone:'America/New_York'};
+  globalThis.fetch=async url=>{calls.push(String(url));return Response.json({contact:{opted_in:0}});};
+  try {
+    db.prepare("INSERT INTO sms_suppression(phone) VALUES ('12025550100')").run();
+    await dispatchIntegrationJob(env,'roezan.sms',payload);assert.equal(calls.length,0);
+    db.prepare('DELETE FROM sms_suppression').run();
+    await dispatchIntegrationJob(env,'roezan.sms',payload);assert.equal(calls.length,1);assert.ok(!calls[0].includes('/send'));
+  } finally {globalThis.fetch=original;db.close();}
 });

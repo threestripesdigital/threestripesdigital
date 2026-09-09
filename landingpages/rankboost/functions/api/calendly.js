@@ -1,4 +1,6 @@
 import { WEBSITE_EMAILS } from "./_websiteemailconfig.js";
+import { recoveryBookingLink } from "./_bookinglinks.js";
+import { lifecycleEnabled } from "./_appointments.js";
 import { WEBSITE_EVENT_TYPE_URI, WEBSITE_TAG_IDS, websiteEligible } from "./_offers.js";
 import { qualifiedBookingEmailFields } from "./_emailfields.js";
 // POST /api/calendly — Calendly webhook receiver (invitee.created / canceled).
@@ -175,10 +177,9 @@ function bookingSmsJob({ phone, firstName, startIso, tz }, leadRef, sourceKey) {
   };
 }
 
-function followupSmsJob(kind, { phone, firstName }, leadRef, sourceKey) {
+async function followupSmsJob(env, kind, { phone, firstName }, leadRef, sourceKey) {
   if (!phone) return null;
-  const bookingUrl =
-    "https://calendly.com/bilal-threestripesdigital/three-stripes-digital-rank-boost";
+  const bookingUrl = await recoveryBookingLink(env, leadRef);
   const message = kind === "no_show"
     ? `Hey ${firstName || "there"}, Bilal here. We missed you for your Rank Boost call. ` +
       `You can pick a new time here: ${bookingUrl}. Reply STOP to opt out.`
@@ -855,7 +856,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         isWebsite ? websiteBookingFields(start, p) : qualifiedBookingEmailFields(start, p),
         start
       ),
-      !isWebsite && bookingSmsJob(
+      !lifecycleEnabled(env) && !isWebsite && bookingSmsJob(
         { phone, firstName, startIso: start, tz: p.timezone },
         leadRef,
         sourceKey
@@ -879,7 +880,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         leadRef,
         sourceKey
       ),
-      !isWebsite && followupSmsJob("no_show", { phone, firstName }, leadRef, sourceKey)
+      !isWebsite && await followupSmsJob(env, "no_show", { phone, firstName }, leadRef, sourceKey)
     );
     if (leadRef) {
       jobs.push(
@@ -894,7 +895,8 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   } else if (leadRef && !isRescheduledCancel) {
     jobs.push(
       isWebsite && kitUpsertTagJob(WEBSITE_TAG_IDS.canceled, email, firstName, leadRef, sourceKey),
-      !isWebsite && followupSmsJob("canceled", { phone, firstName }, leadRef, sourceKey)
+      !isWebsite && lifecycleEnabled(env) && kitTagExistingJob(Number(env.KIT_TAG_CANCELED_ID)||22622480,email,leadRef,sourceKey),
+      !isWebsite && await followupSmsJob(env, "canceled", { phone, firstName }, leadRef, sourceKey)
     );
     if (leadRef) {
       jobs.push(
@@ -951,7 +953,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         isWebsite ? websiteBookingFields(recoveredBooking.start, recoveredInvitee) : qualifiedBookingEmailFields(recoveredBooking.start, recoveredInvitee),
         recoveredBooking.start
       ),
-      !isWebsite && bookingSmsJob(
+      !lifecycleEnabled(env) && !isWebsite && bookingSmsJob(
         {
           phone: recoveredPhone,
           firstName: recoveredFirstName,
@@ -973,6 +975,19 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
         recoveredSourceKey
       ),
     ].filter(Boolean);
+  }
+
+  if (lifecycleEnabled(env)) {
+    for (const [list, uri, invitee] of [[jobs, inviteeUri, p], [recoveredJobs, recoveredBooking?.inviteeUri, recoveredInvitee]]) {
+      for (const job of list.filter(Boolean)) {
+        if(!isWebsite&&job.kind==='kit.tag_existing')job.payload.fields={rank_boost_booking_link:await recoveryBookingLink(env,leadRef)};
+        if (job.kind === 'kit.upsert_tag' && (job.payload.qualified_call_start || job.payload.website_call_start)) {
+          Object.assign(job.payload, {lead_ref:leadRef, appointment_invitee:uri,
+            appointment_timezone:invitee?.timezone||'', appointment_phone:answerFor(invitee?.questions_and_answers||[], 'phone')});
+        }
+        if(job.kind==='roezan.sms') Object.assign(job.payload,{email,lead_ref:leadRef,appointment_timezone:invitee?.timezone||''});
+      }
+    }
   }
 
   // The receipt is an audit key; the remaining statements stay idempotent so

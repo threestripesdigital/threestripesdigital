@@ -1,4 +1,5 @@
 import { WEBSITE_TAG_IDS, WEBSITE_BOOKING_URL } from "./_offers.js";
+import { boostBookingLink } from "./_bookinglinks.js";
 import { qualifiedKeywordEmailFields } from "./_emailfields.js";
 // POST /api/check — instant DataForSEO qualify check for the rank-boost LP.
 // Body: { name, phone, website_url }
@@ -266,6 +267,7 @@ function kitJobForLead(lead, leadRef, leadToken) {
     domain: lead.domain || "",
     phone: lead.phone || "",
     boost_fits: String(lead.total || 0),
+    rank_boost_booking_link: boostBookingLink(leadToken),
   };
   if (kws[0]) {
     fields.top_keyword = kws[0].keyword;

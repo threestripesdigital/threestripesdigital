@@ -1,0 +1,304 @@
+{
+  "tags": {
+    "managed": 23238159,
+    "stop": 23238160
+  },
+  "boost": {
+    "Q01": {
+      "id": 2887914,
+      "email_id": 10287319,
+      "verified": true,
+      "active": true
+    },
+    "Q02": {
+      "id": 2887915,
+      "email_id": 10287320,
+      "verified": true,
+      "active": true
+    },
+    "Q03": {
+      "id": 2887916,
+      "email_id": 10287321,
+      "verified": true,
+      "active": true
+    },
+    "Q04": {
+      "id": 2887917,
+      "email_id": 10287322,
+      "verified": true,
+      "active": true
+    },
+    "Q05": {
+      "id": 2887918,
+      "email_id": 10287323,
+      "verified": true,
+      "active": true
+    },
+    "Q06": {
+      "id": 2887919,
+      "email_id": 10287324,
+      "verified": true,
+      "active": true
+    },
+    "Q07": {
+      "id": 2887920,
+      "email_id": 10287325,
+      "verified": true,
+      "active": true
+    },
+    "Q08": {
+      "id": 2887921,
+      "email_id": 10287326,
+      "verified": true,
+      "active": true
+    },
+    "Q09": {
+      "id": 2887922,
+      "email_id": 10287327,
+      "verified": true,
+      "active": true
+    },
+    "Q10": {
+      "id": 2887923,
+      "email_id": 10287328,
+      "verified": true,
+      "active": true
+    },
+    "Q11": {
+      "id": 2887924,
+      "email_id": 10287329,
+      "verified": true,
+      "active": true
+    },
+    "Q12": {
+      "id": 2887925,
+      "email_id": 10287330,
+      "verified": true,
+      "active": true
+    },
+    "Q13": {
+      "id": 2887926,
+      "email_id": 10287331,
+      "verified": true,
+      "active": true
+    },
+    "Q14": {
+      "id": 2887927,
+      "email_id": 10287332,
+      "verified": true,
+      "active": true
+    },
+    "Q15": {
+      "id": 2887928,
+      "email_id": 10287333,
+      "verified": true,
+      "active": true
+    },
+    "Q16": {
+      "id": 2887929,
+      "email_id": 10287334,
+      "verified": true,
+      "active": true
+    },
+    "Q17": {
+      "id": 2887930,
+      "email_id": 10287335,
+      "verified": true,
+      "active": true
+    },
+    "Q18": {
+      "id": 2887931,
+      "email_id": 10287336,
+      "verified": true,
+      "active": true
+    },
+    "Q19": {
+      "id": 2887932,
+      "email_id": 10287337,
+      "verified": true,
+      "active": true
+    },
+    "Q20": {
+      "id": 2887933,
+      "email_id": 10287338,
+      "verified": true,
+      "active": true
+    },
+    "Q21": {
+      "id": 2887934,
+      "email_id": 10287339,
+      "verified": true,
+      "active": true
+    },
+    "Q22": {
+      "id": 2887935,
+      "email_id": 10287340,
+      "verified": true,
+      "active": true
+    },
+    "Q23": {
+      "id": 2887936,
+      "email_id": 10287341,
+      "verified": true,
+      "active": true
+    },
+    "Q24": {
+      "id": 2887937,
+      "email_id": 10287342,
+      "verified": true,
+      "active": true
+    },
+    "Q25": {
+      "id": 2887938,
+      "email_id": 10287343,
+      "verified": true,
+      "active": true
+    },
+    "Q26": {
+      "id": 2887939,
+      "email_id": 10287344,
+      "verified": true,
+      "active": true
+    },
+    "Q27": {
+      "id": 2887940,
+      "email_id": 10287345,
+      "verified": true,
+      "active": true
+    },
+    "Q28": {
+      "id": 2887941,
+      "email_id": 10287346,
+      "verified": true,
+      "active": true
+    },
+    "Q29": {
+      "id": 2887942,
+      "email_id": 10287347,
+      "verified": true,
+      "active": true
+    },
+    "R01": {
+      "id": 2887943,
+      "email_id": 10287348,
+      "verified": true,
+      "active": true
+    },
+    "R02": {
+      "id": 2887944,
+      "email_id": 10287349,
+      "verified": true,
+      "active": true
+    }
+  },
+  "website": {
+    "W0": {
+      "id": 2887945,
+      "email_id": 10287350,
+      "verified": true,
+      "active": true
+    },
+    "W1": {
+      "id": 2887946,
+      "email_id": 10287351,
+      "verified": true,
+      "active": true
+    },
+    "W2": {
+      "id": 2887947,
+      "email_id": 10287352,
+      "verified": true,
+      "active": true
+    },
+    "W3": {
+      "id": 2887948,
+      "email_id": 10287353,
+      "verified": true,
+      "active": true
+    },
+    "W4": {
+      "id": 2887949,
+      "email_id": 10287354,
+      "verified": true,
+      "active": true
+    },
+    "W5": {
+      "id": 2887950,
+      "email_id": 10287355,
+      "verified": true,
+      "active": true
+    },
+    "W6": {
+      "id": 2887951,
+      "email_id": 10287356,
+      "verified": true,
+      "active": true
+    },
+    "W7": {
+      "id": 2887952,
+      "email_id": 10287357,
+      "verified": true,
+      "active": true
+    },
+    "P0": {
+      "id": 2887953,
+      "email_id": 10287358,
+      "verified": true,
+      "active": true
+    },
+    "P1": {
+      "id": 2887954,
+      "email_id": 10287359,
+      "verified": true,
+      "active": true
+    },
+    "P2": {
+      "id": 2887955,
+      "email_id": 10287360,
+      "verified": true,
+      "active": true
+    },
+    "P3": {
+      "id": 2887956,
+      "email_id": 10287361,
+      "verified": true,
+      "active": true
+    },
+    "P4": {
+      "id": 2887957,
+      "email_id": 10287362,
+      "verified": true,
+      "active": true
+    },
+    "P5": {
+      "id": 2887958,
+      "email_id": 10287363,
+      "verified": true,
+      "active": true
+    },
+    "P6": {
+      "id": 2887959,
+      "email_id": 10287364,
+      "verified": true,
+      "active": true
+    },
+    "P7": {
+      "id": 2887960,
+      "email_id": 10287365,
+      "verified": true,
+      "active": true
+    },
+    "R01": {
+      "id": 2887961,
+      "email_id": 10287366,
+      "verified": true,
+      "active": true
+    },
+    "R02": {
+      "id": 2887962,
+      "email_id": 10287367,
+      "verified": true,
+      "active": true
+    }
+  }
+}
