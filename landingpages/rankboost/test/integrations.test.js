@@ -1,3 +1,5 @@
+import { WEBSITE_EMAILS } from "../functions/api/_websiteemailconfig.js";
+import { queueWebsiteEmailTimers, websiteEmailJobCurrent } from "../functions/api/_websiteemails.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -1712,6 +1714,44 @@ test("website Kit transition removes prior lifecycle tags before setting the new
   globalThis.fetch=async (url,options)=>{calls.push([url,options.method]);return Response.json({subscriber:{id:123}});};
   try {
     await dispatchIntegrationJob({KIT_API_KEY:'test'},'kit.upsert_tag',{email:'qa@example.test',tag_id:23211441,remove_tag_ids:[23211440]});
-    assert.deepEqual(calls,[['https://api.kit.com/v4/subscribers','POST'],['https://api.kit.com/v4/tags/23211440/subscribers/123','DELETE'],['https://api.kit.com/v4/tags/23211441/subscribers','POST']]);
+    assert.deepEqual(calls,[['https://api.kit.com/v4/subscribers','POST'],[`https://api.kit.com/v4/tags/${WEBSITE_EMAILS.tags.everBooked}/subscribers`,'POST'],['https://api.kit.com/v4/tags/23211440/subscribers/123','DELETE'],['https://api.kit.com/v4/tags/23211441/subscribers','POST'],[`https://api.kit.com/v4/sequences/${WEBSITE_EMAILS.sequences.precall}/subscribers`,'POST']]);
   } finally {globalThis.fetch=original;}
+});
+
+
+test("website reminder guard rejects qualified, canceled, replaced, and overdue appointments", () => {
+  const payload={website_invitee:'current',website_deadline:'2030-01-01T12:15:00Z'};
+  const lead={qualified:0,status:'booked',calendly_invitee_uri:'current'};
+  const now=Date.parse('2030-01-01T12:00:00Z');
+  assert.equal(websiteEmailJobCurrent(payload,lead,now),true);
+  for(const changed of [{qualified:1},{status:'no_show'},{status:'booking_canceled'},{calendly_invitee_uri:'new'}])assert.equal(websiteEmailJobCurrent(payload,{...lead,...changed},now),false);
+  assert.equal(websiteEmailJobCurrent(payload,lead,now+16*60000),false);
+});
+
+test("website unsubscribes never enroll and late booking jobs apply stop instead", async () => {
+  const original=globalThis.fetch; const calls=[]; let state='cancelled';
+  globalThis.fetch=async(url,options)=>{calls.push(url);return Response.json({subscriber:{id:123,state}});};
+  try {
+    await dispatchIntegrationJob({KIT_API_KEY:'test'},'kit.upsert_tag',{email:'qa@example.test',tag_id:23211441});
+    assert.equal(calls.length,1);
+    calls.length=0;state='active';
+    await dispatchIntegrationJob({KIT_API_KEY:'test'},'kit.upsert_tag',{email:'qa@example.test',tag_id:23211441,website_call_start:'2020-01-01T00:00:00Z'});
+    assert.ok(calls.some(url=>url.includes('/tags/'+WEBSITE_EMAILS.tags.stop+'/')));
+    assert.ok(!calls.some(url=>url.includes('/sequences/')));
+  } finally {globalThis.fetch=original;}
+});
+
+test("website timer queues once, ignores qualified and last-minute bookings", async () => {
+  const sqlite=migratedSqlite(); const db=d1Sqlite(sqlite);
+  try {
+    for(const [ref,qualified,age] of [['website',0,'-2 days'],['main',1,'-2 days'],['late',0,'-1 minute']]) {
+      sqlite.prepare("INSERT INTO leads (lead_ref,email,qualified,status,calendly_invitee_uri) VALUES (?,?,?,'booked',?)").run(ref,'qa@example.test',qualified,ref);
+      sqlite.prepare("INSERT INTO calendly_invitees (invitee_uri,event_type_uri,lead_ref,status,scheduled_start_at,created_at) VALUES (?,'website',?,'booked',strftime('%Y-%m-%dT%H:%M:%SZ','now','+24 hours','-2 minutes'),datetime('now',?))").run(ref,ref,age);
+    }
+    assert.equal((await queueWebsiteEmailTimers({LEADS_DB:db})).queued,1);
+    assert.equal((await queueWebsiteEmailTimers({LEADS_DB:db})).queued,0);
+    const jobs=sqlite.prepare('SELECT lead_ref,payload_json FROM integration_jobs').all();
+    assert.equal(jobs[0].lead_ref,'website');
+    assert.equal(JSON.parse(jobs[0].payload_json).website_sequence_id,WEBSITE_EMAILS.sequences.tomorrow);
+  } finally {sqlite.close();}
 });

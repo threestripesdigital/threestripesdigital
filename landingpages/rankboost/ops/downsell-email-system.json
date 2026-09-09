@@ -1,0 +1,181 @@
+{
+  "source": "rank_boost_email_handoff_instructions.pdf, Flow 2A and Flow 2B",
+  "sender": "Bilal",
+  "email_address": "bilal@threestripesdigital.com",
+  "template_id": 5261662,
+  "sequences": {
+    "nurture": {
+      "name": "Rank Boost website downsell nurture (Flow 2A)",
+      "emails": [
+        {
+          "subject": "Here is what the scan found for your site",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The scan did not find supported, non-branded legal keywords in positions 1 to 50 with at least 10 monthly searches in our US ranking data.</p><p>Already being on page one is not a disqualifier. The scan checks keyword eligibility; it does not diagnose your site speed or code.</p><p>A website consultation is the next step I can offer. We will look at whether improving your current site or building a custom site makes sense.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 0,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "What I would check on your website",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan gives us a starting point. It does not prove that your website needs replacing.</p><p>On a consultation, I will look at how your practice pages are organised, how easily visitors can contact you, and the SEO foundations that deserve a closer look. If a rebuild makes sense, I will explain why.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Rank Boost or a new website: which comes first?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Rank Boost targets eligible keywords your firm already ranks for, including page-one positions. A new website addresses a different question: does your site properly support the practice you want to grow?</p><p>Your current scan did not return an eligible keyword. A rebuild is one possible next step, not an automatic qualification. We recheck the site after it goes live.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "What a custom website build includes",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The build includes custom HTML/CSS, SEO foundations from the start, and unlimited revisions. We plan the structure, page speed, schema, internal linking and meta tags as part of the build.</p><p>The turnaround is 3 to 4 weeks. We will scope your project and discuss the fixed price on the consultation.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Vernsten Law: website first, then Rank Boost",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. That is a real example of the site-first approach.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>We will review your own site and recheck eligibility after any rebuild. The right next step depends on your firm.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "A practical next step for your website",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If your website is not supporting the enquiries you want, it is worth understanding the cause before spending more on marketing.</p><p>We can review your practice areas, the way your site presents them, and what you want a visitor to do next. You will leave knowing what I would prioritise and why.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "The door is open when you are ready",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>This is the last email in this short website follow-up series. If now is not the right time, no problem.</p><p>If your priorities change or you want a second opinion on your site, the consultation link is below. You can also reply directly. I read the replies.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will review your site with you and discuss the scope and fixed price on the call.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 24,
+          "delay_unit": "hours"
+        }
+      ]
+    },
+    "precall": {
+      "name": "Rank Boost website consultation pre-call (Flow 2B)",
+      "emails": [
+        {
+          "subject": "Your website consultation is confirmed",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is confirmed for {{ subscriber.website_call_date | default: \"the date in your calendar invitation\" }} at {{ subscriber.website_call_time | default: \"the time in your calendar invitation\" }}.</p><p>Please accept the calendar invitation in your inbox. I will review {{ subscriber.domain | default: \"your website\" }} with you, explain what I would prioritise, and walk through whether a custom rebuild fits. We will cover scope and pricing on the call.</p><p>No preparation needed. Bring any questions you have.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 0,
+          "delay_unit": "days"
+        },
+        {
+          "subject": "The website foundations we will review",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A keyword scan cannot tell us whether your site is slow, hard to use or poorly structured. Those are things we need to examine separately.</p><p>On the call, we will review your site together and identify which improvements matter. The recommendation will be based on your site and goals.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 3,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Vernsten Law: the site-first example",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. That is a real example of the site-first approach.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>We will review your own site and recheck eligibility after any rebuild. The right next step depends on your firm.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 3,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "What your website build would include",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The build includes custom HTML/CSS, SEO foundations from the start, and unlimited revisions. We plan the structure, page speed, schema, internal linking and meta tags as part of the build.</p><p>The turnaround is 3 to 4 weeks. We will scope your project and discuss the fixed price on the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 3,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Where your website should support your practice",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Think about the practice areas you most want to grow and the questions prospective clients ask before contacting you. Your website should make those services easy to find and the next step clear.</p><p>We can use those priorities to decide what deserves attention first. No homework required.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 15,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "A reminder about your website consultation",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website consultation is {{ subscriber.website_call_date | default: \"on your calendar\" }} at {{ subscriber.website_call_time | default: \"the time on your invitation\" }}.</p><p>We will review your site, discuss options and cover pricing. If you have a partner who should be involved, they are welcome to join.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 6,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Can we improve your current site instead?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Possibly. A rebuild should solve a specific problem. I will explain what I would retain, what I would change, and whether the current setup gives us a workable starting point.</p><p>The consultation is where we make that distinction together.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 6,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "No preparation needed for our call",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I have your website address. You do not need to put together a deck, send logins or prepare a brief before the consultation.</p><p>We will review the site live and discuss what makes sense for your firm. Pricing and scope are covered there.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 6,
+          "delay_unit": "hours"
+        }
+      ],
+      "rotation_pool": [
+        {
+          "subject": "Where Rank Boost fits after a rebuild",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The website comes first when its structure or content needs work. After it goes live, we run the keyword scan again. If it meets the eligibility criteria, we can discuss Rank Boost.</p><p>Page-one rankings remain eligible. A rebuild does not guarantee eligibility or a particular ranking.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "Keep what is working on your current site",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A good rebuild starts with an inventory of useful pages, existing search visibility and the parts clients already use. We want the plan to account for those assets, including page addresses and redirects where needed.</p><p>We can discuss this in the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "What if you only want Rank Boost?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>That is fine to ask. Your current scan did not return an eligible keyword, so I cannot offer the free test on that result.</p><p>We can review what the scan found and whether a fresh check or website improvements are the sensible next step. Buying a website is not a promise of later qualification.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "A real website client to hear from",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. That is a real example of the site-first approach.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>We will review your own site and recheck eligibility after any rebuild. The right next step depends on your firm.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "A foundation for organic, local and AI discovery",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Clear practice pages, accurate business information, useful content and sensible internal links support how people and search systems understand your firm.</p><p>A website is one part of that work. We will discuss your organic search, local visibility and AI discovery priorities without treating any one tactic as a guaranteed result.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "How the 3 to 4 week build is organised",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We start by agreeing the scope and page structure. Design and development follow, then revisions, launch checks and deployment.</p><p>On the call, we will agree the details for your firm, including content, feedback and who needs to review the site. Unlimited revisions are included.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "What prospective clients need from your site",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Can a visitor quickly tell which matters you handle, where you work and how to contact you? Those are practical questions to bring to a website review.</p><p>We can compare the experience you want to provide with what your current site offers and choose the right priorities.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        },
+        {
+          "subject": "What we will decide together on the consultation",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We will review your site, talk about what needs to improve, and decide whether a custom rebuild is appropriate. If it is, I will explain the scope, timeline and fixed price.</p><p>You do not need to make a decision before the conversation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 8,
+          "delay_unit": "hours"
+        }
+      ],
+      "rotation_repetitions": 34
+    },
+    "tomorrow": {
+      "name": "Website consultation tomorrow",
+      "emails": [
+        {
+          "subject": "Your website consultation is tomorrow",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is tomorrow at {{ subscriber.website_call_time }}. We will review your site together and talk through the next steps. No preparation needed.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 0,
+          "delay_unit": "days"
+        }
+      ]
+    },
+    "soon": {
+      "name": "Website consultation in two hours",
+      "emails": [
+        {
+          "subject": "See you in a couple of hours",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We are scheduled for {{ subscriber.website_call_time }}. Use the meeting link in your calendar invitation. I look forward to reviewing your site with you.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Bilal<br>Three Stripes Digital</p>",
+          "delay_value": 0,
+          "delay_unit": "days"
+        }
+      ]
+    }
+  }
+}

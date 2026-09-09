@@ -1,3 +1,5 @@
+import { WEBSITE_TAG_IDS } from "./_offers.js";
+import { WEBSITE_EMAILS } from "./_websiteemailconfig.js";
 import { qualifiedReminderEmailFields } from "./_emailfields.js";
 const META_API_VERSION = "v21.0";
 const REQUEST_TIMEOUT_MS = 15000;
@@ -164,13 +166,20 @@ async function kitUpsertTag(env, payload, options) {
     headers,
     body: JSON.stringify({
       email_address: payload.email,
-      first_name: payload.first_name || "",
+      ...(payload.first_name !== undefined ? { first_name: payload.first_name || "" } : {}),
       ...(fields ? { fields } : {}),
     }),
   }, options);
+  const subscriberData = await subscriberResponse.json();
+  // Kit retains an existing unsubscribe. Never enroll an inactive subscriber.
+  const subscriber = subscriberData.subscriber;
+  const website = Object.values(WEBSITE_TAG_IDS).includes(payload.tag_id) || Object.values(WEBSITE_EMAILS.tags).includes(payload.tag_id);
+  if (website && subscriber?.state && subscriber.state !== "active") return;
+  const addTag = async (tagId) => request(`https://api.kit.com/v4/tags/${tagId}/subscribers`, { method:"POST", headers, body:JSON.stringify({email_address:payload.email}) }, options);
+  if (payload.tag_id === WEBSITE_TAG_IDS.booked) await addTag(WEBSITE_EMAILS.tags.everBooked);
   // The booked website state removes the unbooked state before enrollment.
   if (Array.isArray(payload.remove_tag_ids) && payload.remove_tag_ids.length) {
-    const data = await subscriberResponse.json();
+    const data = subscriberData;
     const subscriberId = Number(data.subscriber && data.subscriber.id);
     if (!Number.isSafeInteger(subscriberId) || subscriberId <= 0) throw new IntegrationError("kit_subscriber_id_missing");
     for (const tagId of payload.remove_tag_ids) {
@@ -185,6 +194,14 @@ async function kitUpsertTag(env, payload, options) {
     headers,
     body: JSON.stringify({ email_address: payload.email }),
   }, options);
+  const websiteCallExpired = payload.website_call_start && Date.parse(payload.website_call_start) <= Date.now() + 30 * 60000;
+  if (websiteCallExpired) { await addTag(WEBSITE_EMAILS.tags.stop); return; }
+  if (payload.website_sequence_id && (!subscriber?.fields?.website_call_date || !subscriber?.fields?.website_call_time)) throw new IntegrationError("website_booking_fields_missing", { retryable:true });
+  const sequenceId = payload.website_sequence_id || (payload.tag_id === WEBSITE_TAG_IDS.lead ? WEBSITE_EMAILS.sequences.nurture : payload.tag_id === WEBSITE_TAG_IDS.booked ? WEBSITE_EMAILS.sequences.precall : null);
+  if (sequenceId) {
+    if (!Object.values(WEBSITE_EMAILS.sequences).includes(sequenceId)) throw new IntegrationError("invalid_website_sequence", { retryable:false });
+    await request(`https://api.kit.com/v4/sequences/${sequenceId}/subscribers`, {method:"POST",headers,body:JSON.stringify({email_address:payload.email})},options);
+  }
 }
 
 async function kitTagExisting(env, payload, options) {
