@@ -1,3 +1,4 @@
+import { queuePrebookingSms, pollPrebookingReplies } from './_prebooking.js';
 import { queueWebsiteEmailTimers } from "./_websiteemails.js";
 import { queueAppointmentTimers } from "./_appointments.js";
 import { pollSmsReplies } from './_smsreplies.js';
@@ -132,6 +133,7 @@ export async function onRequestPost({ request, env }) {
     const deadlineAt = Date.now() + 25000;
     const websiteEmails = await queueWebsiteEmailTimers(env);
     const appointments = await queueAppointmentTimers(env);
+    const prebookingSms = await queuePrebookingSms(env);
     const jobs = await processIntegrationJobs(env, {
       limit: body.limit || 4,
       budgetMs: Math.min(Number(body.budget_ms) || 10000, 10000),
@@ -145,6 +147,7 @@ export async function onRequestPost({ request, env }) {
       timeoutMs: pollTimeoutMs,
     });
     const smsReplies = Date.now()<deadlineAt-6500 ? await pollSmsReplies(env) : {skipped:'deadline'};
+    const prebookingReplies = Date.now()<deadlineAt-6500 ? await pollPrebookingReplies(env) : {skipped:'deadline'};
     await recordPollAlerts(env, noShows);
     const retention = Date.now() < deadlineAt - 2000
       ? await runOperationalRetention(env)
@@ -155,7 +158,7 @@ export async function onRequestPost({ request, env }) {
           timeoutMs: Math.min(4000, remaining - 250),
         })
       : { pending: 0, notified: 0, skipped: "deadline" };
-    return json({ ok: true, jobs, noShows, retention, notifications, websiteEmails, appointments, smsReplies });
+    return json({ ok: true, jobs, noShows, retention, notifications, websiteEmails, appointments, smsReplies, prebookingSms, prebookingReplies });
   } catch (error) {
     console.log("job_processor_error", String(error).slice(0, 200));
     try {
