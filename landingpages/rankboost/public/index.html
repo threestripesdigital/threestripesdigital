@@ -397,19 +397,6 @@
               <p class="video-quote">“We were able to turn off all paid marketing and rely entirely on his SEO.”</p>
             </div>
           </article>
-          <article class="video-card" data-video-slot="wisconsinimmigration">
-            <div class="video-frame">
-              <video controls playsinline preload="metadata">
-                <source src="https://threestripesdigital.com/case-studies/assets/wisconsin-immigration/testimonial.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="video-meta">
-              <p class="video-stat">Statewide visibility</p>
-              <h3>Will Bortz</h3>
-              <p class="video-role">Immigration Law · Wisconsin</p>
-              <p class="video-quote">“Three Stripes Digital transformed our online presence completely.”</p>
-            </div>
-          </article>
         </div>
         <div class="cta-inline">
           <a class="btn btn-primary btn-lg" href="#qualify">Get my free boost</a>
@@ -588,7 +575,23 @@
           }
 
           var nameInput = document.getElementById("name");
-          if (nameInput) nameInput.focus();
+          if (nameInput) nameInput.focus({ preventScroll: true });
+        });
+
+        document.querySelectorAll('a[href="#qualify"]').forEach(function (link) {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            var resume = document.getElementById("boost-resume");
+            // Continue an existing scan or booking without discarding its state.
+            if (resume && !resume.hidden) {
+              resume.click();
+              return;
+            }
+            formToggle.click();
+            form.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+            var nameInput = document.getElementById("name");
+            if (nameInput) nameInput.focus({ preventScroll: true });
+          });
         });
       }
 

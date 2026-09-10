@@ -1,3 +1,4 @@
+import { slackJobForLead } from "./_slacklead.js";
 import { WEBSITE_TAG_IDS, WEBSITE_BOOKING_URL } from "./_offers.js";
 import { boostBookingLink } from "./_bookinglinks.js";
 import { qualifiedKeywordEmailFields } from "./_emailfields.js";
@@ -16,8 +17,6 @@ import { qualifiedKeywordEmailFields } from "./_emailfields.js";
 import {
   moneyKeywordTest,
   caseValueFor,
-  ctrFor,
-  opportunityFor,
   buildThemes,
   projectKeywords,
   fetchRankedKeywords,
@@ -40,82 +39,6 @@ function json(data, status = 200) {
       "Cache-Control": "no-store",
     },
   });
-}
-
-function slackJobForLead(lead, leadRef) {
-  // Skip noisy statuses; a rate-limited flood should not spam Slack.
-  if (
-    lead.status === "rate_limited" ||
-    lead.status === "not_configured" ||
-    lead.status === "missing_email"
-  ) return;
-
-  const flag = lead.qualified
-    ? "✅ QUALIFIED"
-    : lead.status === "no_fit"
-      ? "❌ no boost fits"
-      : "⚠️ " + lead.status + " (run manually)";
-
-  // One labelled line per field. Internal partner lookups are titled and
-  // routed differently so they never read like a real inbound lead.
-  const internal = lead.source === "partner";
-  const isMoney = moneyKeywordTest(lead.domain);
-  const money = (lead.keywords || []).filter((k) => isMoney(k.keyword));
-  const shown = (money.length ? money : lead.keywords || []).slice(0, 3);
-
-  // Total monthly gap across the shown money keywords, the same figure the
-  // prospect sees on step 2.
-  let totalGap = 0;
-  for (const k of shown) {
-    const opp = opportunityFor(k.keyword, k.volume);
-    const now = Math.round(((Number(k.volume) || 0) * ctrFor(k.position) * 0.1 * 0.2 * opp.caseValue) / 100) * 100;
-    totalGap += Math.max(0, opp.monthly - now);
-  }
-  const money$ = (n) => "$" + Number(n).toLocaleString("en-US");
-
-  // Blocks are joined with a blank line between them so the message is
-  // scannable instead of a wall of text.
-  const lines = [];
-  lines.push(internal
-    ? ":mag: *Partner rank lookup* (internal, not a lead)"
-    : ":rotating_light: *New rank-boost lead*");
-  if (!internal) {
-    lines.push(`*Name:*  ${lead.name || "—"}`);
-    lines.push(`*Phone:*  ${lead.phone || "—"}`);
-    lines.push(`*Email:*  ${lead.email || "—"}`);
-  } else {
-    lines.push(`*Looked up by:*  ${lead.partner || "partner"}`);
-  }
-  lines.push(`*Website:*  ${lead.domain || "—"}`);
-  lines.push(`*Status:*  ${flag}`);
-  lines.push(`*Keywords in 1 to 50:*  ${lead.total || 0}`);
-  if (totalGap > 0) {
-    lines.push(`*Opportunity:*  ${money$(totalGap)}/mo across their top ${shown.length} money keyword${shown.length === 1 ? "" : "s"}`);
-  }
-  if (shown.length) {
-    const kws = shown.map((k) => {
-      const opp = opportunityFor(k.keyword, k.volume);
-      const url = k.url ? `\n      ${k.url}` : "";
-      return `*${k.keyword}*\n      #${k.position} · ${Number(k.volume).toLocaleString("en-US")} searches/mo · ${money$(opp.monthly)}/mo at #1${url}`;
-    });
-    lines.push("*Top money keywords*");
-    lines.push(...kws);
-  }
-  const text = lines.join("\n\n");
-
-  // Partner lookups go to their own channel when one is configured, so the
-  // real lead channel stays clean.
-  return {
-    leadRef,
-    kind: "slack.webhook",
-    dedupeKey: `lead:${leadRef}:slack`,
-    payload: {
-      text,
-      destination: internal ? "partner" : "leads",
-      unfurl_links: false,
-      unfurl_media: false,
-    },
-  };
 }
 
 // Real client IP / country. When served via the threestripesdigital.com
