@@ -24,9 +24,7 @@ for(const seq of [2862358,2862378]) {
   for(const e of emails) {
     if(!backup.emails.some(x=>x.id===e.id)){backup.emails.push({...e,sequence_id:seq});fs.writeFileSync(backupFile,JSON.stringify(backup,null,2)+'\n');}
     let content=e.content.replaceAll(old,replacement);
-    const eligibilityCopy=seq===2862358&&(content.includes('11 through 50')||e.position===0);
-    if(seq===2862358)content=content.replaceAll('11 through 50','1 through 50');
-    if(eligibilityCopy && !content.includes('Page-one firms qualify too'))content+='<p>Page-one firms qualify too, including position one. Your existing page-one visibility does not disqualify you from Rank Boost.</p>';
+    // Eligibility copy is maintained in the email manifest, not appended by a link repair.
     if(content!==e.content){changed++;if(apply){
       // Live verification found content writes ignored while published. Pause
       // the sequence and unpublish this same email ID before editing its body.

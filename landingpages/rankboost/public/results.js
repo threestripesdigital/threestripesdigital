@@ -53,15 +53,6 @@
     return "bad";
   }
 
-  function statPair(k) {
-    return '<div class="opp-stats">' +
-      '<div class="opp-stat"><span class="s-l">Current rank</span>' +
-      '<span class="s-v ' + rankClass(k.position) + '">#' + escHtml(k.position) + '</span></div>' +
-      '<div class="opp-stat"><span class="s-l">Searches / month</span>' +
-      '<span class="s-v">' + Number(k.volume).toLocaleString() + '</span></div>' +
-      '</div>';
-  }
-
   function mathTable(k, open) {
     function row(label, why, now, one, strong) {
       var s = strong ? " strong" : "";
@@ -116,61 +107,38 @@
       '</div>';
   }
 
-  // Every keyword card collapses, including the first one, which merely
-  // starts open.
-  function wireToggles() {
-    resultEl.querySelectorAll(".opp-toggle").forEach(function (row) {
-      row.addEventListener("click", function () {
-        var math = row.parentNode.querySelector(".opp-math");
-        if (!math) return;
-        math.hidden = !math.hidden;
-        row.classList.toggle("opp-open", !math.hidden);
-        row.setAttribute("aria-expanded", String(!math.hidden));
-      });
-      row.addEventListener("keydown", function (event) {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        event.preventDefault();
-        row.click();
-      });
-    });
-  }
-
   function renderFit(data) {
     var kws = data.keywords || [];
     function gapOf(k) {
       return Math.max(0, (Number(k.opp_value) || 0) - (Number(k.now_value) || 0));
     }
-    var total = kws.reduce(function (s, k) { return s + gapOf(k); }, 0);
-    var cards = kws.map(function (k, i) {
-      var open = i === 0;
-      return '<div class="opp-card' + (open ? " first" : "") + '">' +
-        '<div class="opp-toggle' + (open ? " opp-open" : "") + '" role="button" tabindex="0" aria-expanded="' + String(open) + '">' +
-        '<div class="opp-kw">' + escHtml(k.keyword) + '</div>' +
-        (k.url ? '<div class="opp-url">' + escHtml(displayUrl(k.url)) + '</div>' : '') +
-        statPair(k) +
-        '<div class="opp-val">' + fmtMoney(gapOf(k)) +
-        '<small>/mo modeled upside <span class="opp-caret">▸ assumptions</span></small></div>' +
-        '</div>' + mathTable(k, open) +
-        '</div>';
+    var total = kws.reduce(function (sum, k) { return sum + gapOf(k); }, 0);
+    var rows = kws.map(function (k) {
+      return '<tr><th scope="row">' + escHtml(k.keyword) + '</th>' +
+        '<td class="rank-' + rankClass(k.position) + '">#' + escHtml(k.position) + '</td>' +
+        '<td>' + Number(k.volume).toLocaleString() + '</td>' +
+        '<td class="fit-upside">' + fmtMoney(gapOf(k)) + '</td></tr>';
+    }).join("");
+    var assumptions = kws.map(function (k) {
+      return '<details class="fit-assumption"><summary>' + escHtml(k.keyword) + '</summary>' +
+        (k.url ? '<p class="fit-ranking-url">Ranking page: ' + escHtml(displayUrl(k.url)) + '</p>' : '') +
+        mathTable(k, true) + '</details>';
     }).join("");
     var totalTxt = data.total > 1 ? data.total + " keywords" : "1 keyword";
-    show(
+    show('<div class="fit-results">' +
       '<p class="res-badge">✓ Boost fits found</p>' +
       '<h1 class="step-h">' + escHtml(data.domain) + ' qualifies.</h1>' +
       '<p class="res-sub">We found <strong>' + totalTxt + '</strong> ranking in Google’s first five pages. ' +
-      'Page-one rankings qualify too. Here is an illustrative opportunity model:</p>' +
+      'Here are your keyword opportunities:</p>' +
       ctaBlock(true) +
-      '<div class="opp-list">' +
-      '<div class="opp-total">' +
-      '<div class="opp-total-lbl">Illustrative monthly opportunity at #1</div>' +
-      '<div class="opp-total-num">' + fmtMoney(total) + '<small>/month</small></div>' +
-      '<div class="opp-total-sub">across ' + kws.length + ' money keyword' + (kws.length === 1 ? '' : 's') +
-      ' on pages 1 to 5 · estimates use stated assumptions, not guaranteed outcomes</div>' +
-      '</div>' +
-      cards + '</div>' +
-      ctaBlock(false)
-    );
-    wireToggles();
+      '<div class="fit-summary"><span>Modeled monthly upside at #1</span><strong>' + fmtMoney(total) + '<small>/month</small></strong>' +
+      '<p>Across ' + kws.length + ' money keywords. Estimates, not guaranteed outcomes.</p></div>' +
+      '<div class="fit-table-wrap"><table class="fit-table"><caption>Your keyword opportunities</caption>' +
+      '<colgroup><col class="fit-col-keyword"><col class="fit-col-rank"><col class="fit-col-search"><col class="fit-col-value"></colgroup>' +
+      '<thead><tr><th scope="col">Keyword</th><th scope="col">Rank</th><th scope="col">Searches<small>/month</small></th>' +
+      '<th scope="col">Modeled upside<small>/month</small></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<details class="fit-assumptions"><summary>How these estimates are calculated</summary>' + assumptions + '</details>' +
+      ctaBlock(false) + '</div>');
     mountStickyCta(total);
   }
 

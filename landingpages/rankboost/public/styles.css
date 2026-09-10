@@ -2242,3 +2242,38 @@ section.qualify.hero-qualify {
   #boost-dialog .inline-panel { padding: 20px 16px; }
   #boost-dialog .downsell-reason, #boost-dialog .downsell-offer, #boost-dialog .downsell-proof, #boost-dialog .downsell-call { padding: 16px; }
 }
+/* Qualified results remain a compact table on phones. */
+.fit-results .step-h { overflow-wrap: anywhere; }
+.fit-results .step-cta-wrap.hero { margin: 1rem 0; padding: .8rem; }
+.fit-results .step-cta-note { margin-top: .5rem; font-size: .8rem; }
+.fit-summary { padding: 1rem; border: 1px solid rgba(214,181,89,.4); border-radius: 12px 12px 0 0; background: rgba(214,181,89,.06); }
+.fit-summary > span { display: block; font-size: .75rem; color: #94a3b8; }
+.fit-summary > strong { display: block; font-size: 1.8rem; color: #d6b559; }
+.fit-summary small { font-size: .85rem; color: #94a3b8; }
+.fit-summary p { margin: .25rem 0 0; font-size: .75rem; color: #94a3b8; }
+.fit-table-wrap { border: 1px solid rgba(255,255,255,.14); border-top: 0; border-radius: 0 0 12px 12px; overflow: hidden; }
+.fit-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .9rem; text-align: center; }
+.fit-table caption { text-align: left; padding: .75rem; font-weight: 600; }
+.fit-col-keyword { width: 40%; }.fit-col-rank { width: 12%; }.fit-col-search { width: 20%; }.fit-col-value { width: 28%; }
+.fit-table th, .fit-table td { padding: .85rem .5rem; border-top: 1px solid rgba(255,255,255,.14); vertical-align: middle; }
+.fit-table thead th { font-size: .75rem; color: #94a3b8; font-weight: 600; background: rgba(255,255,255,.03); }
+.fit-table thead th:first-child, .fit-table tbody th { text-align: left; }
+.fit-table tbody th { font-weight: 500; overflow-wrap: anywhere; }
+.fit-table td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fit-table small { display: block; font-size: .65rem; font-weight: 400; }
+.fit-table .fit-upside { color: #d6b559; font-weight: 700; }
+.fit-table .rank-bad { color: #ff7373; }.fit-table .rank-warn { color: #d6b559; }
+.fit-assumptions { text-align: left; margin: 1rem 0; border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: .8rem; }
+.fit-assumptions summary { cursor: pointer; font-size: .85rem; font-weight: 600; }
+.fit-assumption { margin-top: .75rem; border-top: 1px solid rgba(255,255,255,.14); padding-top: .75rem; }
+.fit-ranking-url { overflow-wrap: anywhere; font-size: .75rem; color: #94a3b8; }
+@media (max-width: 520px) {
+  .fit-results .step-h { font-size: 1.4rem; }
+  .fit-results .res-sub { font-size: .9rem; line-height: 1.55; }
+  .fit-results .step-cta { font-size: 1rem; padding: .8rem 1rem; }
+  .fit-table { font-size: .75rem; }
+  .fit-table th, .fit-table td { padding: .7rem .3rem; }
+  .fit-table thead th { font-size: .65rem; }
+  .fit-table small { font-size: .6rem; }
+  .fit-summary > strong { font-size: 1.55rem; }
+}
