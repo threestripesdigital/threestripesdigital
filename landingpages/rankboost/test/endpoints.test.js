@@ -557,7 +557,8 @@ test("static responses enforce transport and browser security policy", async () 
 
 test("hero VSL renders the Wistia embed and the CSP allows it", async () => {
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
-  assert.ok(index.includes('<wistia-player media-id="8uioqg3047" aspect="1.7777777777777777"></wistia-player>'));
+  assert.match(index, /<wistia-player\b[^>]*media-id="8uioqg3047"[^>]*><\/wistia-player>/);
+  assert.ok(index.includes('poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.png"'));
   assert.ok(index.includes("https://fast.wistia.com/player.js"));
   assert.ok(index.includes("https://fast.wistia.com/embed/8uioqg3047.js"));
   assert.doesNotMatch(index, /hero-vsl-placeholder/);

@@ -88,6 +88,7 @@ async function slackMessage(env, payload, options) {
     : env.SLACK_WEBHOOK_URL;
   const message = {
     text: payload.text,
+    ...(Array.isArray(payload.blocks) ? { blocks: payload.blocks } : {}),
     unfurl_links: payload.unfurl_links === true,
     unfurl_media: payload.unfurl_media === true,
   };
