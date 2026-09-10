@@ -1,0 +1,47 @@
+{
+  "reason": "Confirmed-qualified copy and removal of unnecessary page-one qualification reminders. No timing, enrollment, or subject changes.",
+  "emails": [
+    {
+      "sequence_id": 2862358,
+      "id": 10208224,
+      "published": true,
+      "subject": "You left something behind",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan confirmed that <strong>{{ subscriber.domain | default: \"your website\" }}</strong> qualifies for Rank Boost. You have not booked your free boost call yet.</p><p>We found <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong> at position {{ subscriber.top_position | default: \"the position shown in your scan\" }}.</p>{% if subscriber.opp_value != blank %}<p>At number one, our model estimates <strong>{{ subscriber.opp_value }}/month in potential case value</strong> for that keyword alone. Your results table shows the estimated increase from your current position.</p><p>This is an estimate based on search volume and conversion assumptions, not guaranteed revenue.</p>{% endif %}<p>Book your 30-minute call and we will walk through your keyword opportunity and plan your free boost. No payment required. No contract, site access, or logins needed.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>, or reply with your questions.</p><p>Bilal</p>"
+    },
+    {
+      "sequence_id": 2862358,
+      "id": 10208228,
+      "published": true,
+      "subject": "Examples, with the right context",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We use real client ranking records rather than generic claims. You can review a documented divorce-lawyer example here: <a href=\"https://threestripesdigital.com/rank-boost/law-firms/wins/divorce-lawyer-westlake-village.webp\">view the rank image</a>.</p><p>Examples reflect particular keywords, markets, websites, and campaigns. They do not predict a result for {{ subscriber.top_keyword | default: \"your keyword\" }}.</p><p>Your scan found a qualifying keyword. On your free 30-minute call, we will review the opportunity and plan your test. <a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book the call</a>.</p><p>Bilal</p>"
+    },
+    {
+      "sequence_id": 2862358,
+      "id": 10208230,
+      "published": true,
+      "subject": "A measured test, not a ranking promise",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The test is designed for law-firm keywords already appearing around positions 2 through 50. Its purpose is to measure whether a targeted visibility push changes the organic result for an agreed keyword.</p><p>Search engines control rankings. Results and timing vary, and no page-one placement or fixed hold period is promised. If the keyword is not suitable, we say so before proceeding.</p><p>There is no card, contract, or site access. <a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book a free 30-minute call</a> to review fit.</p><p>Bilal</p>"
+    },
+    {
+      "sequence_id": 2862358,
+      "id": 10208235,
+      "published": true,
+      "subject": "Questions worth asking any provider",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Ask any marketing provider which keyword is being measured, what the baseline is, what assumptions sit behind projected value, and what their work does and does not include.</p><p>For this free test, we start with a keyword already around positions 2 through 50, require no card, contract, or site access, and do not promise a specific ranking or timeline.</p><p>Bring those questions to a free 30-minute call. <a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book here</a>.</p><p>Bilal</p>"
+    },
+    {
+      "sequence_id": 2862358,
+      "id": 10208241,
+      "published": true,
+      "subject": "What qualifying positions tell us",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Existing positions around 1 through 50 give us a measurable baseline. They do not establish that a keyword will move, reach a specific result, or produce a particular business outcome.</p><p>Website strength, competition, search behavior, and market conditions all matter. A free call lets us determine whether a targeted visibility test is reasonable for {{ subscriber.domain | default: \"your website\" }}.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book the 30-minute call</a>.</p><p>Bilal</p>"
+    },
+    {
+      "sequence_id": 2862358,
+      "id": 10208259,
+      "published": true,
+      "subject": "A final invitation to assess fit",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If {{ subscriber.top_keyword | default: \"your keyword\" }} is currently around positions 2 through 50, we can assess whether a free targeted test intended to improve organic visibility is appropriate for your firm.</p><p>The test needs no credit card, contract, site access, or logins. Search outcomes and timing vary, past examples do not predict future results, and no specific position, duration, traffic level, or revenue result is promised.</p><p>If you would like to discuss the baseline and review approach, <a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">book a free 30-minute call</a>. Otherwise, reply if you have a question. I monitor replies.</p><p>Bilal</p>"
+    }
+  ]
+}

@@ -394,7 +394,7 @@ test("landing page keeps the simplified VSL structure", async () => {
   assert.ok(index.includes("Cruz Gold &amp; Associates"));
   assert.ok(index.includes("Señor Ticket"));
   assert.ok(index.includes("Stuart Allen Law Firm"));
-  assert.ok(index.includes("Page-one keywords can qualify too."));
+  assert.doesNotMatch(index, /Page-one keywords can qualify too|Already on page one/);
   const sectionIds = [...index.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>/g)].map(
     (match) => match[1]
   );
@@ -440,7 +440,7 @@ test("results UI distinguishes durable fallback from unsaved failures", async ()
   assert.match(source, /requestCheck\(attempt \+ 1\)/);
   assert.match(source, /tsd_rb_pending_track/);
   assert.match(source, /pending\.lead_token !== payload\.lead_token/);
-  assert.match(source, /event\.key !== "Enter" && event\.key !== " "/);
+  assert.match(source, /<details class="fit-assumptions"><summary>/);
   assert.match(source, /heading\.focus\(\{ preventScroll: true \}\)/);
   assert.match(source, /<h1 class="step-h">/);
   assert.doesNotMatch(source, /<h2 class="step-h">/);

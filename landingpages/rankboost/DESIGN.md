@@ -76,3 +76,5 @@ Use Jeremy’s approved September 9 rewrite: “We can’t boost what isn’t th
 Do not show a qualification caption beneath the Vernsten testimonial or a page-one FAQ in the website downsell popup, per the owner’s screenshot-directed removal.
 
 The hero VSL uses the approved Watch how to reach page 1 in 48 hours graphic as both its loading background and Wistia poster, served from the production funnel assets. Keep the native player control.
+
+- Qualified keyword results use one compact semantic table on desktop and phones: keyword, rank, monthly searches, and modeled monthly upside. Keep numbers centered, keywords left aligned, and assumptions collapsed. Do not restore tall per-keyword cards or automatically expand the first model.
