@@ -1,3 +1,4 @@
+import { prebookingStatement, prebookingText, prebookingCurrent, queuePrebookingSms, checkPrebookingReplies } from '../functions/api/_prebooking.js';
 import { WEBSITE_EMAILS } from "../functions/api/_websiteemailconfig.js";
 import { APPOINTMENT_EMAILS } from '../functions/api/_appointmentconfig.js';
 import { appointmentSlots, queueAppointmentTimers, appointmentCurrent, registerAppointment, localSmsHour, utcTime } from '../functions/api/_appointments.js';
@@ -53,6 +54,7 @@ function migratedSqlite() {
     "0004_lifecycle_operations.sql",
     "0005_job_dependencies.sql",
     "0006_appointment_followup.sql",
+    "0007_prebooking_sms.sql",
   ]) {
     db.exec(readFileSync(new URL(`../migrations/${name}`, import.meta.url), "utf8"));
   }
@@ -1927,4 +1929,97 @@ test('first-place-only scan avoids website enrollment and returns an honest resu
     assert.equal(queuedJobs(db).some(j=>j.kind==='kit.upsert_tag'),false);
     assert.equal(db.batches[0].find(s=>s.sql.includes('INSERT INTO leads')).args[7],'already_first');
   } finally {globalThis.fetch=originalFetch;}
+});
+
+function prebookingFixture(db,offer='boost',ageMinutes=11) {
+ const status=offer==='boost'?'qualified':'no_fit';
+ db.prepare('INSERT INTO leads(lead_ref,name,email,phone,domain,status,qualified) VALUES (?,?,?,?,?,?,?)').run('pre-lead','QA','qa@example.test','+1 (202) 555-0100','example.test',status,offer==='boost'?1:0);
+ db.prepare(`INSERT INTO prebooking_sms(lead_ref,offer,email,phone,first_name,domain,booking_url,keyword,position,opp_value,started_at)
+ VALUES ('pre-lead',?,'qa@example.test','12025550100','QA','example.test',?,'immigration lawyer',25,'$5,000',?)`).run(offer,offer==='boost'?'https://threestripesdigital.com/rank-boost/law-firms/book?lead_token=test':'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation?utm_content=test',new Date(Date.now()-ageMinutes*60000).toISOString());
+ return {LEADS_DB:d1Sqlite(db),APPOINTMENT_FOLLOWUP_ENABLED:'true',ROEZAN_API_KEY:'test'};
+}
+test('prebooking SMS is new-submission-only, correctly timed and deduplicated for both offers',async()=>{
+ for(const offer of ['boost','website']) {
+  const db=migratedSqlite();const env=prebookingFixture(db,offer,9);
+  assert.equal((await queuePrebookingSms(env)).queued,0);
+  db.prepare("UPDATE prebooking_sms SET started_at=datetime('now','-11 minutes')").run();
+  assert.equal((await queuePrebookingSms(env)).queued,1);assert.equal((await queuePrebookingSms(env)).queued,0);
+  const p=JSON.parse(db.prepare('SELECT payload_json FROM integration_jobs').get().payload_json);
+  assert.match(p.message,/Reply STOP to opt out/);
+  assert.equal(p.message.includes('website-consultation'),offer==='website');
+  assert.equal(p.message.includes('You qualify for Rank Boost'),offer==='boost');
+  db.prepare('DELETE FROM prebooking_sms').run();
+  assert.equal((await queuePrebookingSms(env)).queued,0);
+ }
+});
+test('prebooking ignores failed checks and registers qualified and website submissions with their own links',async()=>{
+ const db=migratedSqlite(),env={LEADS_DB:d1Sqlite(db),APPOINTMENT_FOLLOWUP_ENABLED:'true'};
+ const lead={phone:'2025550100',name:'QA',email:'qa@example.test',domain:'example.test',keywords:[]};
+ assert.equal(prebookingStatement(env,{...lead,status:'check_failed'},'failed','token'),null);
+ for(const status of ['qualified','no_fit'])await prebookingStatement(env,{...lead,status},status,'token').run();
+ const rows=db.prepare('SELECT * FROM prebooking_sms ORDER BY offer').all();
+ assert.match(rows[0].booking_url,/\/book\?lead_token=token/);assert.match(rows[1].booking_url,/website-consultation\?utm_content=token/);
+});
+test('prebooking suppresses obsolete scans and booking either offer, including same phone with changed email',async()=>{
+ const db=migratedSqlite(),env=prebookingFixture(db),payload={prebooking_lead:'pre-lead'};
+ assert.equal(await prebookingCurrent(env.LEADS_DB,payload),true);
+ db.prepare("INSERT INTO leads(lead_ref,email,phone,status) VALUES ('newer','different@example.test','2025550100','check_failed')").run();
+ assert.equal(await prebookingCurrent(env.LEADS_DB,payload),false);
+ db.prepare("DELETE FROM leads WHERE lead_ref='newer'").run();
+ db.prepare("INSERT INTO leads(id,lead_ref,email,phone,status) VALUES (0,'older-booking','different@example.test','+1 202 555 0100','booked')").run();
+ assert.equal(await prebookingCurrent(env.LEADS_DB,payload),false);
+ db.prepare("DELETE FROM leads WHERE lead_ref='older-booking'").run();
+ assert.equal(await prebookingCurrent(env.LEADS_DB,{...payload,sms_deadline:new Date(Date.now()-1000).toISOString()}),false);
+});
+test('late prebooking processor selects one slot and maintains spacing after quiet-hour delays',async()=>{
+ const db=migratedSqlite(),env=prebookingFixture(db,'boost',73*60);
+ assert.equal((await queuePrebookingSms(env)).queued,1);
+ assert.match(db.prepare('SELECT dedupe_key FROM integration_jobs').get().dedupe_key,/:2$/);
+ db.prepare("UPDATE integration_jobs SET status='completed',completed_at=CURRENT_TIMESTAMP").run();
+ assert.equal((await queuePrebookingSms(env)).queued,0);
+});
+test('every prebooking reply stops follow-up and creates one escaped Slack notification; STOP suppresses the phone',async()=>{
+ const db=migratedSqlite(),env=prebookingFixture(db),original=globalThis.fetch;
+ let content='<@everyone> Can we talk?',id='reply-1';
+ globalThis.fetch=async()=>new Response(JSON.stringify({messages:[{id,content,created_at:new Date().toISOString()}]}));
+ try {
+  const row=db.prepare('SELECT * FROM prebooking_sms').get();
+  assert.equal((await checkPrebookingReplies(env,row,{id:11,opted_in:1})).received,1);
+  assert.equal(await prebookingCurrent(env.LEADS_DB,{prebooking_lead:'pre-lead'}),false);
+  assert.equal((await checkPrebookingReplies(env,row,{id:11,opted_in:1})).received,0);
+  const p=JSON.parse(db.prepare("SELECT payload_json FROM integration_jobs WHERE kind='slack.webhook'").get().payload_json);
+  assert.equal(p.blocks[2].text.type,'plain_text');assert.equal(p.blocks[2].text.text,content);
+  content='STOP';id='reply-2';await checkPrebookingReplies(env,row,{id:11,opted_in:1});
+  assert.equal(db.prepare('SELECT phone FROM sms_suppression').get().phone,'12025550100');
+ }finally {globalThis.fetch=original;}
+});
+test('prebooking provider rechecks inbound messages before sending and fails closed on reply lookup errors',async()=>{
+ const db=migratedSqlite(),env=prebookingFixture(db),original=globalThis.fetch;let sends=0,fail=false;
+ const payload={prebooking_lead:'pre-lead',phone:'12025550100',message:'QA',sms_deadline:new Date(Date.now()+3600000).toISOString()};
+ globalThis.fetch=async url=>{
+  if(String(url).includes('/message/send')){sends++;return new Response('{}');}
+  if(String(url).includes('/messages?'))return fail?new Response('{}',{status:503}):new Response(JSON.stringify({messages:[{id:'inbound',content:'YES',created_at:new Date().toISOString()}]}));
+  return new Response(JSON.stringify({contact:{id:11,opted_in:1}}));
+ };
+ try {
+  await dispatchIntegrationJob(env,'roezan.sms',payload);assert.equal(sends,0);
+  db.prepare('UPDATE prebooking_sms SET stopped_at=NULL').run();fail=true;
+  await assert.rejects(dispatchIntegrationJob(env,'roezan.sms',payload),/roezan_reply_http_503/);assert.equal(sends,0);
+ }finally {globalThis.fetch=original;}
+});
+test('unbooked SMS sends once in safe hours and suppresses opt-outs before provider send',async()=>{
+ const db=migratedSqlite(),env=prebookingFixture(db),original=globalThis.fetch;let sends=0;
+ const tz=['UTC','Asia/Tokyo','America/New_York','Pacific/Honolulu'].find(zone=>{const hour=localSmsHour(zone);return hour>=9&&hour<20;});
+ globalThis.fetch=async(url,options)=>{
+  if(String(url).includes('/message/send')){sends++;assert.match(JSON.parse(options.body).message,/free boost call/);return new Response('{}');}
+  if(String(url).includes('/messages?'))return new Response(JSON.stringify({messages:[]}));
+  return new Response(JSON.stringify({contact:{id:11,opted_in:1,timezone:tz}}));
+ };
+ try {
+  await queuePrebookingSms(env);
+  const summary=await processIntegrationJobs(env,{limit:4,budgetMs:10000});assert.equal(summary.completed,1);assert.equal(sends,1);
+  await queuePrebookingSms(env);await processIntegrationJobs(env,{limit:4,budgetMs:10000});assert.equal(sends,1);
+  db.prepare("INSERT INTO sms_suppression(phone) VALUES ('12025550100')").run();
+  await dispatchIntegrationJob(env,'roezan.sms',{prebooking_lead:'pre-lead',phone:'12025550100',message:'blocked'});assert.equal(sends,1);
+ }finally {globalThis.fetch=original;}
 });

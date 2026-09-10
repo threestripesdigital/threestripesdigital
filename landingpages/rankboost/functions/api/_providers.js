@@ -1,3 +1,4 @@
+import { prebookingCurrent, checkPrebookingReplies } from './_prebooking.js';
 import { WEBSITE_TAG_IDS } from "./_offers.js";
 import { WEBSITE_EMAILS } from "./_websiteemailconfig.js";
 import { qualifiedReminderEmailFields } from "./_emailfields.js";
@@ -245,6 +246,7 @@ async function kitTagExisting(env, payload, options) {
 }
 
 async function roezanSms(env, payload, options) {
+  if(payload.prebooking_lead && !await prebookingCurrent(env.LEADS_DB,payload))return;
   if (!env.ROEZAN_API_KEY) throw missing("ROEZAN_API_KEY");
   if(lifecycleEnabled(env)) {
     const phone=normalizedPhone(payload.phone);
@@ -258,6 +260,11 @@ async function roezanSms(env, payload, options) {
       contact=(await found.json()).contact;
     } catch(error) {if(error.status!==404)throw error;}
     if(contact&&(Number(contact.opted_in)===0||contact.opted_out_at||Number(contact.invalid)===1||Number(contact.deleted)===1))return;
+    if(payload.prebooking_lead) {
+      const row=await env.LEADS_DB.prepare('SELECT * FROM prebooking_sms WHERE lead_ref=?1').bind(payload.prebooking_lead).first();
+      await checkPrebookingReplies(env,row,contact);
+      if(!await prebookingCurrent(env.LEADS_DB,payload))return;
+    }
     const hour=localSmsHour(payload.appointment_timezone||contact?.timezone||contact?.timezone_detected);
     // Unknown timezones use a conservative shared daytime window for US leads.
     const safe=hour===null?(new Date().getUTCHours()>=17&&new Date().getUTCHours()<20):(hour>=Math.max(9,Number(contact?.safe_sending_start_hour)||9)&&hour<Math.min(20,Number(contact?.safe_sending_end_hour)||20));

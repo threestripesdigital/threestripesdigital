@@ -1,3 +1,4 @@
+import { prebookingStatement } from './_prebooking.js';
 import { slackJobForLead } from "./_slacklead.js";
 import { WEBSITE_TAG_IDS, WEBSITE_BOOKING_URL } from "./_offers.js";
 import { boostBookingLink } from "./_bookinglinks.js";
@@ -332,6 +333,7 @@ async function saveLead(context, lead, submission, responseStatus, buildResponse
       submission.submissionId,
       Number(lead.cost || 0)
     ),
+    ...[prebookingStatement(context.env,lead,leadRef,leadToken)].filter(Boolean),
     ...jobs.map((job) => jobStatement(db, job)),
     db
       .prepare(

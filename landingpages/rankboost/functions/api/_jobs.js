@@ -1,3 +1,4 @@
+import { prebookingCurrent } from './_prebooking.js';
 import { websiteEmailJobCurrent } from "./_websiteemails.js";
 import { appointmentCurrent } from "./_appointments.js";
 import { WEBSITE_TAG_IDS } from "./_offers.js";
@@ -181,6 +182,7 @@ async function claimJob(db, job, leaseToken) {
 
 async function sourceIsCurrent(db, job) {
   const emailPayload = JSON.parse(job.payload_json || "{}");
+  if (emailPayload.prebooking_lead) return prebookingCurrent(db,emailPayload);
   if (emailPayload.appointment_timer) return appointmentCurrent(db,emailPayload);
   if (emailPayload.website_invitee || emailPayload.website_long_term) {
     if (emailPayload.website_sequence_id) {
