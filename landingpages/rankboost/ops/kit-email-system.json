@@ -644,7 +644,7 @@
         {
           "key": "K6",
           "subject": "What does your ranking dashboard show?",
-          "offset_value": 2,
+          "offset_value": 0,
           "offset_unit": "days",
           "state": "retired",
           "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your dashboard and compare the latest position for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} with the starting position. Check desktop and mobile separately.</p><p>Reply with a screenshot and any questions. I will take a look before our follow-up.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
@@ -653,7 +653,7 @@
         {
           "key": "K7",
           "subject": "Keep the ranking and intake notes together",
-          "offset_value": 6,
+          "offset_value": 0,
           "offset_unit": "days",
           "state": "retired",
           "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Save the latest dashboard screenshot for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. If new inquiries came in, note which practice areas they asked about and how they found you.</p><p>Bring those notes to our follow-up. We will have the ranking movement and the conversations in one place.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
@@ -662,7 +662,7 @@
         {
           "key": "K8",
           "subject": "Ready to review your boost results?",
-          "offset_value": 10,
+          "offset_value": 18,
           "offset_unit": "days",
           "state": "intended_active",
           "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>At our follow-up, we will compare where {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} started with its latest ranking. Have your dashboard open so you can follow along.</p><p>Once we have reviewed the movement, we can discuss whether you want to continue and what that would involve.</p><p>Use the follow-up invitation we booked together. If you need help finding it, reply and I will help.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
