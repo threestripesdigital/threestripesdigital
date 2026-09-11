@@ -846,7 +846,7 @@
       "id": 10287362,
       "sequence_id": 2887957,
       "subject": "Make your services easy to find",
-      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A visitor should be able to reach your main practice pages from the home page without guessing where to click.</p><p>We will plan a clear menu, useful links between related services, and a direct contact path. Those details help people find the right page and understand your firm.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A visitor should be able to reach your main practice pages from the home page without guessing where to click.</p><p>We will plan a clear menu, useful links between related services, and a direct contact path. Those details help people, search engines and AI find the right page and understand your firm.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
       "published": true,
       "delay_value": 0,
       "delay_unit": "hours",
@@ -1047,7 +1047,7 @@
       "sequence_id": 2887956,
       "subject": "Put your strongest client proof near the contact button",
       "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A prospective client deciding whether to call wants to know what it is like to work with your firm. Put a relevant client review or testimonial near the next step on your practice page.</p><p>On our consultation, we will look at where your existing proof belongs so visitors can find it while they are deciding to contact you.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
-      "published": true,
+      "published": false,
       "delay_value": 0,
       "delay_unit": "hours",
       "position": 0
@@ -1107,7 +1107,7 @@
       "sequence_id": 2887960,
       "subject": "What we will decide together on the consultation",
       "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We will review your site, talk about what needs to improve, and decide whether a custom rebuild is appropriate. If it is, I will explain the scope, timeline and fixed price.</p><p>You do not need to make a decision before the conversation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
-      "published": true,
+      "published": false,
       "delay_value": 0,
       "delay_unit": "hours",
       "position": 0
