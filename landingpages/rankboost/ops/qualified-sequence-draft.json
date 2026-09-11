@@ -57,10 +57,10 @@
     },
     {
       "key": "Q05",
-      "subject": "Our clients’ first 24 to 48 hours",
+      "subject": "What clients report after getting found",
       "delay_value": 2,
       "delay_unit": "hours",
-      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Every client we have boosted has seen ranking movement within 24 to 48 hours.</p><p>For your firm, we start with {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. You will have daily dashboard updates and a follow-up booked before the boost begins.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is what a client reported about calls and website activity after the boost:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Ask new inquiries how they found you and save the answer. Those notes become useful context alongside the ranking dashboard.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
     },
     {
       "key": "Q06",
@@ -197,10 +197,10 @@
     },
     {
       "key": "Q25",
-      "subject": "What clients report after getting found",
+      "subject": "Our clients’ first 24 to 48 hours",
       "delay_value": 8,
       "delay_unit": "hours",
-      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is a client message about calls and website activity:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Ask new inquiries how they found you and save the answer. Those notes become useful context alongside the ranking dashboard.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Every client we have boosted has seen ranking movement within 24 to 48 hours.</p><p>For your firm, we start with {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. You will have daily dashboard updates and a follow-up booked before the boost begins.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
     },
     {
       "key": "Q26",
