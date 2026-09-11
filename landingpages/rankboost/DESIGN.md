@@ -80,3 +80,7 @@ The hero VSL uses the approved Watch how to reach page 1 in 48 hours graphic as 
 - Qualified keyword results use one compact semantic table on desktop and phones: keyword, rank, monthly searches, and modeled monthly upside. Keep numbers centered, keywords left aligned, and assumptions collapsed. Do not restore tall per-keyword cards or automatically expand the first model.
 
 Qualified results use “Upside at #1” for each monthly incremental estimate and “Total Upside at #1” for their sum, following Jeremy’s review.
+
+## Email copy and proof
+
+Use direct language for confirmed-qualified leads, the known incremental case-value opportunity, and line-by-line equations. Remove repeated caveats and premature paid-service discussion before the free boost. Book the follow-up before activation. Show organic ranking evidence inline, with accurate firm and keyword captions; do not substitute Maps grids. Preview generators must preserve proof images and show the same body as the saved email. Every email ends with Bilal personally reading replies. Keep website offers separate and re-evaluate Rank Boost after the website is live.

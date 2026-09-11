@@ -1,0 +1,1116 @@
+{
+  "review_date": "2026-09-11",
+  "reason": "Full editorial audit against owner annotations. Preserve lifecycle and cadence. Retire AI email only. Inline organic proof and personal reply closing.",
+  "emails": [
+    {
+      "id": 10208224,
+      "sequence_id": 2862358,
+      "subject": "You left something behind",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan confirmed that <strong>{{ subscriber.domain | default: \"your website\" }}</strong> qualifies for Rank Boost. You have not booked your free boost call yet.</p><p>We found <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong> at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Your free 30-minute call is the next step: we choose the keyword, book a follow-up to review the movement, and get your boost started. No contract, site access, or logins needed.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10208225,
+      "sequence_id": 2862358,
+      "subject": "{% if subscriber.opp_upside != blank %}{{ subscriber.first_name | default: \"Hey\" }}, can you afford to miss this {{ subscriber.opp_upside }}/month opportunity?{% else %}Your keyword opportunity, line by line{% endif %}",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.top_volume != blank and subscriber.ctr_position_1 != blank and subscriber.opp_clicks != blank and subscriber.lead_conversion_rate != blank and subscriber.opp_leads != blank and subscriber.close_rate != blank and subscriber.cases_per_month != blank and subscriber.case_value != blank and subscriber.opp_value != blank %}<p>Here is the monthly breakdown for <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong>:</p><p>{{ subscriber.top_volume }} searches × {{ subscriber.ctr_position_1 }} clicking at #1<br>= <strong>{{ subscriber.opp_clicks }} visits</strong></p><p>{{ subscriber.opp_clicks }} visits × {{ subscriber.lead_conversion_rate }} becoming inquiries<br>= <strong>{{ subscriber.opp_leads }} inquiries</strong></p><p>{{ subscriber.opp_leads }} inquiries × {{ subscriber.close_rate }} becoming clients<br>= <strong>{{ subscriber.cases_per_month }} cases</strong></p><p>{{ subscriber.cases_per_month }} cases × {{ subscriber.case_value }} per case<br>= <strong>{{ subscriber.opp_value }}/month in potential case value at #1</strong></p>{% else %}<p>The calculation follows four steps: monthly searches × click share = visitors; visitors × inquiry rate = inquiries; inquiries × close rate = cases; cases × average case value = monthly potential case value. We will fill in any missing inputs together.</p>{% endif %}{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>The gap is the opportunity above your current position. Let’s put your qualifying keyword to work with the free boost.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 12,
+      "delay_unit": "hours",
+      "position": 1
+    },
+    {
+      "id": 10208227,
+      "sequence_id": 2862358,
+      "subject": "From #18 to #1. Here is the result.",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Every client we have boosted has seen ranking movement within 24 to 48 hours.</p><p>This result for \"traffic ticket lawyer los angeles\" went from #18 to #1 between January 27 and January 29. Take a look:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/traffic-ticket-lawyer-los-angeles.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/traffic-ticket-lawyer-los-angeles.png\" alt=\"Traffic ticket lawyer Los Angeles: rank 18 to 1 from January 27 to January 29\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Your keyword already qualifies. The next step is to start your free boost and watch your own ranking in the dashboard.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 3
+    },
+    {
+      "id": 10208228,
+      "sequence_id": 2862358,
+      "subject": "Another keyword moved onto the first page",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>For \"divorce lawyer rockford il,\" the recorded ranking moved from #27 to #10 between March 4 and March 5.</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/divorce-lawyer-rockford-il.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/divorce-lawyer-rockford-il.png\" alt=\"Divorce lawyer Rockford IL: rank 27 to 10 from March 4 to March 5\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>A specific keyword. A starting position. A visible change. That is what we will track for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 4
+    },
+    {
+      "id": 10208229,
+      "sequence_id": 2862358,
+      "subject": "Your first boost costs $0",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your free boost includes a qualifying keyword, a recorded starting position, and dashboard access so you can follow the ranking yourself.</p><p>We book the results review for 2 to 3 days after activation. You see what happened before deciding what comes next. No payment required, no contract, and no website logins.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 5
+    },
+    {
+      "id": 10208230,
+      "sequence_id": 2862358,
+      "subject": "We already found the keyword. Let’s move it.",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Google already shows {{ subscriber.domain | default: \"your website\" }} for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. Your scan recorded position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p><p>We do not need to start from zero. We focus the boost on an existing ranking, record where it starts, and check the movement on desktop and mobile.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 6
+    },
+    {
+      "id": 10208231,
+      "sequence_id": 2862358,
+      "subject": "You get to watch the ranking yourself",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>After I activate your free boost, I give you your dashboard login on the call.</p><p>You can check the keyword, the starting position, and the daily desktop and mobile updates yourself. Save the login and compare the same keyword each day. You will have your own view of the progress before our follow-up.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "position": 7
+    },
+    {
+      "id": 10208232,
+      "sequence_id": 2862358,
+      "subject": "The firms above you get the first chance",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>People searching for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" are looking for legal help. {% if subscriber.top_volume != blank %}Your scan found {{ subscriber.top_volume }} searches a month for that term.{% endif %}</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}{% if subscriber.boost_fits != blank %}<p>Your scan found {{ subscriber.boost_fits }} eligible keywords. This is the opportunity for just the top keyword.</p>{% endif %}<p>While your firm sits at position {{ subscriber.top_position | default: \"the position in your scan\" }}, the firms above you get the first chance to win those inquiries. Another month of waiting leaves that opportunity open to them. Let’s start closing the gap.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "hours",
+      "position": 8
+    },
+    {
+      "id": 10208233,
+      "sequence_id": 2862358,
+      "subject": "These three firms started with a free boost",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law, Cruz Gold, and Ticket Crushers all started with free boosts.</p><p>They could see their own ranking movement before deciding to continue. Your firm gets the same starting step: one free boost and a dashboard to follow it.</p><p>Here is the recorded movement for \"immigration lawyer philadelphia\": #39 to #2.</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\" alt=\"Immigration lawyer Philadelphia: rank 39 to 2\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 12,
+      "delay_unit": "hours",
+      "position": 9
+    },
+    {
+      "id": 10208234,
+      "sequence_id": 2862358,
+      "subject": "What happens in the 2 to 3 days after your boost?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Before I activate your boost, we put the follow-up in the calendar for 2 to 3 days later.</p><p>You leave the first call with dashboard access. Between calls, you can see the daily ranking updates. At the follow-up, we pull up the starting position and the latest result together.</p><p>You will know which keyword moved and how far. That is the point of starting free.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 12,
+      "delay_unit": "hours",
+      "position": 10
+    },
+    {
+      "id": 10208235,
+      "sequence_id": 2862358,
+      "subject": "Three questions to ask about any ranking result",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Ask: Which keyword moved? Where did it start? Can I see the result myself?</p><p>For your firm, the keyword is {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}, and your scan recorded position {{ subscriber.top_position | default: \"the position in your scan\" }}. Your dashboard supplies the daily updates. Keep those three facts together so you can judge the progress for yourself.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 12,
+      "delay_unit": "hours",
+      "position": 11
+    },
+    {
+      "id": 10208236,
+      "sequence_id": 2862358,
+      "subject": "What clients say after the phone starts ringing",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is a client message about calls and website activity:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>A useful habit: ask new callers what they searched for and keep their answer in your intake notes. That helps connect the keywords you work on with the conversations reaching your team.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 12
+    },
+    {
+      "id": 10208237,
+      "sequence_id": 2862358,
+      "subject": "You can start without touching your website",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your qualifying page is already in Google. The free boost does not require a rebuild, a new plugin, or changes to your website copy.</p><p>We work from the keyword and URL in your scan. Keep your website and existing marketing running while we track the boost. You do not need to arrange a developer handoff first.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 13
+    },
+    {
+      "id": 10208238,
+      "sequence_id": 2862358,
+      "subject": "Bring one answer. I already have the rest.",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Which kind of case would you most like more of? That is the useful question to bring to our call.</p><p>I already have your website, {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}, and position {{ subscriber.top_position | default: \"the position in your scan\" }}. We will match the keyword to the cases you want, activate the free boost, and schedule the results review. No deck, keyword spreadsheet, or logins to prepare.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 14
+    },
+    {
+      "id": 10208239,
+      "sequence_id": 2862358,
+      "subject": "See your own result before making a commitment",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A case study shows someone else’s result. Your free boost gives you a result to inspect for your own firm.</p><p>We record the starting position, give you dashboard access, and review the movement together. Your first step is free and does not lock you into ongoing work.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 15
+    },
+    {
+      "id": 10208240,
+      "sequence_id": 2862358,
+      "subject": "Which cases do you actually want more of?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search volume is only useful when the search matches work your firm wants.</p><p>Our starting keyword is {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. {% if subscriber.keyword_two != blank %}Your scan also found {{ subscriber.keyword_two }}.{% endif %} Tell me which practice area matters most, so the boost supports the right business priority.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 16
+    },
+    {
+      "id": 10208241,
+      "sequence_id": 2862358,
+      "subject": "Google has already found your page",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. That means there is an existing ranking to build on.</p><p>Rank Boost adds momentum to that ranking. We start with the page Google already connects to the search, instead of asking you to build a whole new website first.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 17
+    },
+    {
+      "id": 10208242,
+      "sequence_id": 2862358,
+      "subject": "Keep desktop and mobile side by side",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your desktop and mobile rankings can differ. Check each one separately in your dashboard rather than comparing a phone search one day with a laptop search the next.</p><p>We record both at the start of your boost. That gives you a like-for-like view of the movement at our follow-up.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 18
+    },
+    {
+      "id": 10208243,
+      "sequence_id": 2862358,
+      "subject": "No password hunt before your call",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You will not need to find your WordPress login, Google password, or analytics permissions for the free boost.</p><p>Your scan gives us the keyword and page. I provide your ranking dashboard login after activation. Your own accounts stay with you.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 19
+    },
+    {
+      "id": 10208244,
+      "sequence_id": 2862358,
+      "subject": "What #39 to #2 looks like",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is the recorded movement for \"immigration lawyer philadelphia\":</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\" alt=\"Immigration lawyer Philadelphia: rank 39 to 2\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Notice how much room there was above the original position. Your scan gives us the same starting question for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}: how far can we move your existing ranking?</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 20
+    },
+    {
+      "id": 10208245,
+      "sequence_id": 2862358,
+      "subject": "Ask this one question on your next intake call",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>“What did you search for before you found us?”</p><p>Write down the answer alongside the practice area and whether the inquiry became a consultation. You will start seeing which searches bring relevant people to your firm. That is useful context alongside your {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} ranking.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 21
+    },
+    {
+      "id": 10208246,
+      "sequence_id": 2862358,
+      "subject": "Your current SEO team can stay in place",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You do not need to replace your current provider to try the free boost.</p><p>We identify the keyword and page, then track the ranking in your dashboard. Keep a note of any other changes made to that page so the follow-up conversation has the full picture. Your team is welcome to bring questions.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 22
+    },
+    {
+      "id": 10208247,
+      "sequence_id": 2862358,
+      "subject": "An organic result prospects can actually see",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is Rensch & Rensch appearing in the organic results for \"personal injury lawyer omaha\":</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\" alt=\"Google organic search screenshot: Rensch and Rensch for personal injury lawyer Omaha\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>The page title tells the searcher the service and location before they click. Look at your own listing for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}: does it make that connection just as clearly?</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 23
+    },
+    {
+      "id": 10208248,
+      "sequence_id": 2862358,
+      "subject": "Track the inquiry after the click",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Make a simple list: inquiry date, practice area, source, consultation booked, case signed.</p><p>Your dashboard shows ranking movement. Your intake list shows what happened after people reached the firm. Keeping both gives you a much more useful picture than counting website visits alone.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 24
+    },
+    {
+      "id": 10208249,
+      "sequence_id": 2862358,
+      "subject": "Save the starting screenshot",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Before your boost begins, we record the starting ranking. Keep that screenshot beside the latest dashboard result.</p><p>A comparison of the same keyword, location, and device shows the change clearly. Your scan already gives us {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }} to start from.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 25
+    },
+    {
+      "id": 10208250,
+      "sequence_id": 2862358,
+      "subject": "Why I start with a free boost",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>It is easier to make a decision when you can see something working on your own keyword.</p><p>That is why I start with a free boost. You get dashboard access, then we review the movement 2 to 3 days after activation. The first step is seeing the result for yourself.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 26
+    },
+    {
+      "id": 10208251,
+      "sequence_id": 2862358,
+      "subject": "The short version to forward to your partner",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website qualifies for a free Rank Boost. The scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>The call takes 30 minutes. We choose the keyword, activate the free boost, receive a dashboard login, and book the results review. No payment, contract, or website access required.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 27
+    },
+    {
+      "id": 10208252,
+      "sequence_id": 2862358,
+      "subject": "Your 30-minute call has a clear finish line",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>By the end of the call, you should know the keyword we are boosting, its starting position, where to check updates, and when we will review the result.</p><p>We book the follow-up before activation so the next step is already in your calendar. You leave with a plan you can follow.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 28
+    },
+    {
+      "id": 10208253,
+      "sequence_id": 2862358,
+      "subject": "Who answers when a new prospect calls?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Call your firm the way a new prospect would. If it goes unanswered, what happens next?</p><p>Check that someone owns the callback and that the message reaches the right person. A clear handoff helps you make the most of the inquiries your visibility brings.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 29
+    },
+    {
+      "id": 10208254,
+      "sequence_id": 2862358,
+      "subject": "Try your inquiry form on your phone",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open the page that ranks for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} on your phone. Submit a test inquiry and confirm it reaches the right inbox.</p><p>Check the confirmation message too. A prospect should know the inquiry went through and what to expect next. That is a useful five-minute check before we start your boost.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 30
+    },
+    {
+      "id": 10208255,
+      "sequence_id": 2862358,
+      "subject": "A good keyword sounds like the client you want",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A prospective client searching for a lawyer in your city is different from someone researching a general legal definition.</p><p>Your keyword, {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}, gives us a specific service and search to focus on. Tell me which matters your firm wants more of so we can connect that search to your priorities.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 31
+    },
+    {
+      "id": 10208256,
+      "sequence_id": 2862358,
+      "subject": "Check the page Google is sending people to",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search your keyword and look at the page address under your result. Is it the right practice page?</p><p>A focused page can answer the visitor’s immediate question and offer a clear next step. Your free boost starts with the keyword and URL recorded in your scan.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 32
+    },
+    {
+      "id": 10208257,
+      "sequence_id": 2862358,
+      "subject": "Give every website inquiry an owner",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Before the next inquiry arrives, decide who receives it, who calls back, and who covers when that person is unavailable.</p><p>Keep those responsibilities simple and visible. More visibility is worth more to your firm when each new conversation has someone ready to handle it.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 33
+    },
+    {
+      "id": 10208258,
+      "sequence_id": 2862358,
+      "subject": "The opportunity above your current ranking",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>That is the difference between the current-position calculation and the #1 calculation for one keyword.</p><p>Your free boost gives us a practical next step: move the ranking and track what happens.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 34
+    },
+    {
+      "id": 10208259,
+      "sequence_id": 2862358,
+      "subject": "Your scan is ready. Your free boost is next.",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your site qualifies. We have {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }} in your scan.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>You do not need another report to get started. Choose a call time and we will turn the scan into your free boost, dashboard access, and a booked results review.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 35
+    },
+    {
+      "id": 10208226,
+      "sequence_id": 2862358,
+      "subject": "What this can and cannot say about AI search",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Organic visibility and AI recommendations are related topics, but they are separate systems. A targeted organic test for {{ subscriber.top_keyword | default: \"your keyword\" }} is not an AI-placement offer, and no AI recommendation is promised.</p><p>One client shared an experience with ChatGPT during a broader campaign: <a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/anon/email-10-clients.webp\">view the anonymized email</a>. That example does not predict future results.</p><p>If AI visibility matters to your law firm, we can explain the distinction on a free 30-minute call. <a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Choose a time</a>.</p><p>Bilal</p>",
+      "published": false,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 2
+    },
+    {
+      "id": 10287319,
+      "sequence_id": 2887914,
+      "subject": "Your free boost call is confirmed",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}Your call is confirmed for {{ subscriber.call_date }} at {{ subscriber.call_time }}.{% else %}Your call is confirmed. The joining details are in your calendar invitation.{% endif %}</p><p>Your scan found <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong> at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>On the call, I will show you the ranking on desktop and mobile, explain how the boost works, and get your free boost started.</p><p>Before activation, we book your follow-up for 2 to 3 days later. You get your dashboard login on the call so you can watch the daily updates yourself. No payment required. No preparation needed.</p>{% if subscriber.calendly_link != blank %}<p>Need a different time? <a href=\"{{ subscriber.calendly_link }}\">Reschedule your call here</a>.</p>{% else %}<p>Need a different time? Use the reschedule link in your Calendly confirmation.</p>{% endif %}{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287320,
+      "sequence_id": 2887915,
+      "subject": "Your keyword’s case-value opportunity: the math",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}{% if subscriber.top_volume != blank and subscriber.ctr_position_1 != blank and subscriber.opp_clicks != blank and subscriber.lead_conversion_rate != blank and subscriber.opp_leads != blank and subscriber.close_rate != blank and subscriber.cases_per_month != blank and subscriber.case_value != blank and subscriber.opp_value != blank %}<p>Here is the monthly breakdown for <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong>:</p><p>{{ subscriber.top_volume }} searches × {{ subscriber.ctr_position_1 }} clicking at #1<br>= <strong>{{ subscriber.opp_clicks }} visits</strong></p><p>{{ subscriber.opp_clicks }} visits × {{ subscriber.lead_conversion_rate }} becoming inquiries<br>= <strong>{{ subscriber.opp_leads }} inquiries</strong></p><p>{{ subscriber.opp_leads }} inquiries × {{ subscriber.close_rate }} becoming clients<br>= <strong>{{ subscriber.cases_per_month }} cases</strong></p><p>{{ subscriber.cases_per_month }} cases × {{ subscriber.case_value }} per case<br>= <strong>{{ subscriber.opp_value }}/month in potential case value at #1</strong></p>{% else %}<p>The calculation follows four steps: monthly searches × click share = visitors; visitors × inquiry rate = inquiries; inquiries × close rate = cases; cases × average case value = monthly potential case value. We will fill in any missing inputs together.</p>{% endif %}<p>The final line is the total potential at #1. The gap above is the additional opportunity compared with the current-position calculation.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287321,
+      "sequence_id": 2887916,
+      "subject": "See the actual search result",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>An agency report should point to something you can see. Here is Rensch & Rensch in the organic results for \"personal injury lawyer omaha\":</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\" alt=\"Google organic search screenshot: Rensch and Rensch for personal injury lawyer Omaha\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>For your boost, we will track {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} from its recorded position of {{ subscriber.top_position | default: \"the position in your scan\" }}. After activation, you get your own dashboard login.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287322,
+      "sequence_id": 2887917,
+      "subject": "Why your first boost is free",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I want you to see movement on your own keyword before deciding what comes next.</p><p>We start the boost, you watch your dashboard, and we review the result 2 to 3 days later. The first boost is free. No payment required.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287323,
+      "sequence_id": 2887918,
+      "subject": "Our clients’ first 24 to 48 hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Every client we have boosted has seen ranking movement within 24 to 48 hours.</p><p>For your firm, we start with {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. You will have daily dashboard updates and a follow-up booked before the boost begins.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287324,
+      "sequence_id": 2887919,
+      "subject": "Your keyword and your market",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I do not run the same boost keyword for two firms in the same market. We will confirm the keyword and market together on the call.</p><p>Bring the practice area you most want to grow. I already have the scan, so we can spend the time on the opportunity that matters to your firm.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287325,
+      "sequence_id": 2887920,
+      "subject": "A ranking moved from #39 to #2",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is the recorded result for \"immigration lawyer philadelphia\":</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/immigration-lawyer-philadelphia.png\" alt=\"Immigration lawyer Philadelphia: rank 39 to 2\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Cruz Gold started with a free boost. Your next step is the same: start free and follow your own ranking in the dashboard.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287326,
+      "sequence_id": 2887921,
+      "subject": "From #27 to #10 in one day",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The recorded result for \"divorce lawyer rockford il\" moved from #27 on March 4 to #10 on March 5.</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/divorce-lawyer-rockford-il.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/divorce-lawyer-rockford-il.png\" alt=\"Divorce lawyer Rockford IL: rank 27 to 10 from March 4 to March 5\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>For your boost, we will record {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} and compare the daily updates with its starting position.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287327,
+      "sequence_id": 2887922,
+      "subject": "Exactly what happens on your free boost call",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>1. We pull up your keyword and its desktop and mobile rankings.</p><p>2. We walk through the case-value opportunity already in your scan.</p><p>3. I explain the boost and answer your questions.</p><p>4. We book the results review for 2 to 3 days later.</p><p>5. I activate the free boost and give you your dashboard login. No payment required.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287328,
+      "sequence_id": 2887923,
+      "subject": "One keyword gives us a clear starting point",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan may show several opportunities. We begin with one keyword so you can see exactly what we are working on and where it starts.</p><p>Our starting point is {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. A focused first boost makes the result easy to follow.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287329,
+      "sequence_id": 2887924,
+      "subject": "The dashboard belongs in your bookmarks",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Once your boost is active, bookmark your ranking dashboard. It shows the keyword and daily desktop and mobile positions.</p><p>Use that same view when you check progress. You will have the login before our first call ends.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287330,
+      "sequence_id": 2887925,
+      "subject": "Your call is booked. No homework needed.",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I have your scan and {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} ready. You do not need to prepare a keyword list or send website logins.</p><p>A partner is welcome to join. The agenda is your free boost, your dashboard, and the follow-up review.</p>{% if subscriber.calendly_link != blank %}<p>Need a different time? <a href=\"{{ subscriber.calendly_link }}\">Reschedule your call here</a>.</p>{% else %}<p>Need a different time? Use the reschedule link in your Calendly confirmation.</p>{% endif %}{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287331,
+      "sequence_id": 2887926,
+      "subject": "Make the next click easy",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your ranking page on a phone. Can a prospective client quickly find your phone number or inquiry form?</p><p>A clear contact path helps turn attention into conversations. This is a useful check alongside the boost, and you can do it without rebuilding your site.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287332,
+      "sequence_id": 2887927,
+      "subject": "From #18 to #1 in two days",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The recorded result for \"traffic ticket lawyer los angeles\" moved from #18 on January 27 to #1 on January 29.</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/traffic-ticket-lawyer-los-angeles.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/traffic-ticket-lawyer-los-angeles.png\" alt=\"Traffic ticket lawyer Los Angeles: rank 18 to 1 from January 27 to January 29\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Ticket Crushers started with a free boost. On our call, we get your first boost underway and give you the dashboard to follow it.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287333,
+      "sequence_id": 2887928,
+      "subject": "Start the way these firms did",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law, Cruz Gold, and Ticket Crushers all started with free boosts.</p><p>The useful part is that you get to see your own movement too. We record your ranking, activate the boost, and give you direct access to the daily updates.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287334,
+      "sequence_id": 2887929,
+      "subject": "Tell me which cases matter most",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. If your priorities have changed, tell me which matters you want more of.</p><p>We can use your other qualifying keywords to choose a starting point that matches the work you actually want.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287335,
+      "sequence_id": 2887930,
+      "subject": "Your ranking already gives us something to build on",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Google already connects your page with {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. Your scan recorded position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p><p>That existing visibility is what we add momentum to. We will use the same keyword and page when we start the free boost.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287336,
+      "sequence_id": 2887931,
+      "subject": "Look at who the searcher sees first",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} and read the listings above yours. Notice the services and locations they lead with.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Those firms get the first chance to earn the click. On our call, we start working on moving your existing ranking higher.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287337,
+      "sequence_id": 2887932,
+      "subject": "Your SEO provider is welcome to bring questions",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your existing team can keep working. The free boost does not require them to hand over your website or Google accounts.</p><p>If they have questions about the keyword, page, or dashboard, bring them to the call. We will make the starting point clear.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287338,
+      "sequence_id": 2887933,
+      "subject": "Which intake number matters most?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Take last month’s relevant inquiries and divide the cases signed by that number. That gives you your firm’s inquiry-to-client close rate.</p><p>Bring it if you already have it. We can compare it with the {{ subscriber.close_rate | default: \"close rate\" }} used in your opportunity calculation. The closer the inputs are to your practice, the more useful the number becomes.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287339,
+      "sequence_id": 2887934,
+      "subject": "The gap is already in your scan",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan recorded {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Our call is about acting on that opportunity. We will start the free boost and give you a way to watch the ranking change.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287340,
+      "sequence_id": 2887935,
+      "subject": "Keep the comparison simple",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Compare the same keyword, location, and device each time you check the ranking. Changing those between checks makes it harder to see the movement.</p><p>Your dashboard keeps the daily updates together. We will use that view at the results review.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287341,
+      "sequence_id": 2887936,
+      "subject": "You will leave with a login and a follow-up time",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Before I activate your boost, we book the follow-up. After activation, I give you your dashboard login.</p><p>Save both. You will know where to look and when we will review the result together. The first boost is free.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287342,
+      "sequence_id": 2887937,
+      "subject": "Why we book the results review first",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your boost should have a clear next step. That is why we book the follow-up for 2 to 3 days later before activation.</p><p>You can check the dashboard between calls, then bring any questions to the review. We will pull up the starting position and the latest update side by side.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287343,
+      "sequence_id": 2887938,
+      "subject": "What clients report after getting found",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is a client message about calls and website activity:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Ask new inquiries how they found you and save the answer. Those notes become useful context alongside the ranking dashboard.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287344,
+      "sequence_id": 2887939,
+      "subject": "A real result you can inspect",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is Rensch & Rensch appearing for \"personal injury lawyer omaha\":</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/rensch-omaha.png\" alt=\"Google organic search screenshot: Rensch and Rensch for personal injury lawyer Omaha\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Look at the practice area, city, and landing page in the result. Your boost will focus on the specific keyword and page we choose together.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287345,
+      "sequence_id": 2887940,
+      "subject": "What does your page ask the visitor to do?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Read the page that ranks for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. Is there one clear next step, such as calling your office or requesting a consultation?</p><p>Make that action easy to find on a phone. A visitor should not have to search the whole website to contact you.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287346,
+      "sequence_id": 2887941,
+      "subject": "Your free boost steps, in one place",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan is ready. We will review the keyword, explain the boost, book the follow-up, and activate your free boost.</p><p>You get your dashboard login on the call. We review the results together 2 to 3 days later.</p>{% if subscriber.calendly_link != blank %}<p>Need a different time? <a href=\"{{ subscriber.calendly_link }}\">Reschedule your call here</a>.</p>{% else %}<p>Need a different time? Use the reschedule link in your Calendly confirmation.</p>{% endif %}{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287347,
+      "sequence_id": 2887942,
+      "subject": "The opportunity is already there",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Your firm already ranks for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. Higher listings get seen first, and the scan shows the case-value opportunity above your current position.</p><p>Your booked call is the next step toward closing that gap. No payment or website logins needed to start the free boost.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287348,
+      "sequence_id": 2887943,
+      "subject": "Tomorrow at {{ subscriber.call_time }}: see you then",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your call is tomorrow at {{ subscriber.call_time }}. We will start with \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" and your scan. No prep needed.</p>{% if subscriber.calendly_link != blank %}<p>If you need to move the call, <a href=\"{{ subscriber.calendly_link }}\">reschedule here</a>.</p>{% else %}<p>If you need to move the call, use the reschedule link in your Calendly confirmation.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287349,
+      "sequence_id": 2887944,
+      "subject": "See you in a couple of hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>See you at {{ subscriber.call_time }}. I have \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\" and your scan ready for our conversation. Talk soon.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10212331,
+      "sequence_id": 2862378,
+      "subject": "Let’s get your free boost call back on the calendar",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We missed you for your call. Your scan already confirmed {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} qualifies.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Choose a new time and we will pick up with your keyword, free boost, and dashboard.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10212332,
+      "sequence_id": 2862378,
+      "subject": "Your scan is ready whenever you are",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You do not need to run the scan again to rebook. I already have {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} and the recorded position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p><p>The call is 30 minutes. We get your free boost started and put the results review in the calendar.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 1,
+      "delay_unit": "days",
+      "position": 1
+    },
+    {
+      "id": 10212333,
+      "sequence_id": 2862378,
+      "subject": "Still want your free boost?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>This is the last reminder in this short rebooking series. Your qualifying keyword is {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}.</p><p>If you still want to get started, choose a new call time below. If now is not the time, no problem.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 2
+    },
+    {
+      "id": 10208265,
+      "sequence_id": 2864787,
+      "subject": "Your free boost is live",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your boost for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} is now active. Open the ranking dashboard using the login I gave you on our call.</p><p>Check the starting position and save the dashboard in your bookmarks. Your daily updates will appear there, ready for our results review.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10208266,
+      "sequence_id": 2864787,
+      "subject": "What does your ranking dashboard show?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your dashboard and compare the latest position for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} with the starting position. Check desktop and mobile separately.</p><p>Reply with a screenshot and any questions. I will take a look before our follow-up.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 2,
+      "delay_unit": "days",
+      "position": 1
+    },
+    {
+      "id": 10208267,
+      "sequence_id": 2864787,
+      "subject": "Keep the ranking and intake notes together",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Save the latest dashboard screenshot for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. If new inquiries came in, note which practice areas they asked about and how they found you.</p><p>Bring those notes to our follow-up. We will have the ranking movement and the conversations in one place.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 6,
+      "delay_unit": "days",
+      "position": 2
+    },
+    {
+      "id": 10208268,
+      "sequence_id": 2864787,
+      "subject": "Ready to review your boost results?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>At our follow-up, we will compare where {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} started with its latest ranking. Have your dashboard open so you can follow along.</p><p>Once we have reviewed the movement, we can discuss whether you want to continue and what that would involve.</p><p>Use the follow-up invitation we booked together. If you need help finding it, reply and I will help.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 10,
+      "delay_unit": "days",
+      "position": 3
+    },
+    {
+      "id": 10286526,
+      "sequence_id": 2887768,
+      "subject": "First, let’s get your firm showing up",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our scan did not find the law-firm searches we need to boost {{ subscriber.domain | default: \"your website\" }} in Google’s first five pages.</p><p>A boost adds fuel to an existing flame. First, we need to build that flame: useful pages for your practice areas and locations, a fast website, and a clear path for people to contact you.</p><p>On the consultation, we will look at your current site and plan the work that helps it start showing up.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "days",
+      "position": 0
+    },
+    {
+      "id": 10286527,
+      "sequence_id": 2887768,
+      "subject": "Does each practice area have its own page?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Pick the service you most want to grow. Does it have a page that explains the matters you handle, where you help clients, and how to get in touch?</p><p>A single list of every service leaves very little room to answer a prospective client’s questions. Clear practice pages give each service somewhere useful to show up in search.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 1
+    },
+    {
+      "id": 10286528,
+      "sequence_id": 2887768,
+      "subject": "Build the flame before adding fuel",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A website built for search gives your main services their own pages, connects those pages clearly, and makes the firm’s locations easy to understand.</p><p>That is the baseline we want to build. After the website is live, we can re-evaluate the Rank Boost system.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 2
+    },
+    {
+      "id": 10286529,
+      "sequence_id": 2887768,
+      "subject": "A website built around the cases you want",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We plan your practice pages, design a custom site for your firm, and build in the search essentials from the start: fast pages, clear titles, and links that help people find the right service.</p><p>The build includes unlimited revisions and a 3 to 4 week turnaround. The consultation is where we map out your project.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 3
+    },
+    {
+      "id": 10286530,
+      "sequence_id": 2887768,
+      "subject": "Vernsten Law started with the website",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. The site gave the firm a place to present its services clearly before the boost came next.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>Your consultation starts with the same practical question: what does your website need to help the right clients find and contact you?</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 4
+    },
+    {
+      "id": 10286531,
+      "sequence_id": 2887768,
+      "subject": "Try this five-minute website check",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your website on a phone. Can you tell what the firm does, where it works, and how to call from the first screen?</p><p>Then open your main practice page and try the contact form. If any part is confusing or broken, make a note. These are useful places to start your website plan.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 5
+    },
+    {
+      "id": 10286532,
+      "sequence_id": 2887768,
+      "subject": "A useful website starts with one priority",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Choose the practice area you want the site to do more for. Read its page as though you were a new client: does it answer your first questions and make contacting the firm easy?</p><p>This is the last email in this short series. When you want a fresh look at your site, the consultation link is here.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 24,
+      "delay_unit": "hours",
+      "position": 6
+    },
+    {
+      "id": 10287351,
+      "sequence_id": 2887946,
+      "subject": "The three things I will look at first",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We will open {{ subscriber.domain | default: \"your website\" }} and look at the pages for your main services, how those pages connect, and how easily a visitor can contact you.</p><p>I will show you what I would keep and what I would change. You leave with clear priorities for the website.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287358,
+      "sequence_id": 2887953,
+      "subject": "Build the baseline for getting found",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your practice areas need useful pages, your location needs to be clear, and visitors need an easy way to contact you. That is the baseline we will plan on the consultation.</p><p>After the website is live, we can re-evaluate the Rank Boost system.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287360,
+      "sequence_id": 2887955,
+      "subject": "Which page should we improve first?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start with the service you most want to grow. We will look at the page that represents it and check whether it answers the questions prospective clients bring.</p><p>That gives the website project a business priority, so the design supports the work you want to attract.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287362,
+      "sequence_id": 2887957,
+      "subject": "Make your services easy to find",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A visitor should be able to reach your main practice pages from the home page without guessing where to click.</p><p>We will plan a clear menu, useful links between related services, and a direct contact path. Those details help people find the right page and understand your firm.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10286822,
+      "sequence_id": 2887779,
+      "subject": "A quick check of your website contact path",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your website on a phone. From a practice page, can you find the phone number and contact form without searching? Try the form too. A clear next step matters just as much as getting someone to the page.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 23,
+      "delay_unit": "days",
+      "position": 0
+    },
+    {
+      "id": 10286823,
+      "sequence_id": 2887779,
+      "subject": "Does each practice area have a useful page?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A useful practice page explains the matters your firm handles, the locations it serves and how someone can contact you. Check whether the pages reflect the work you actually want to attract.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 1
+    },
+    {
+      "id": 10286824,
+      "sequence_id": 2887779,
+      "subject": "What a new visitor sees on mobile",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Visit your home page on a phone and read the first screen. Is it clear what your firm does and where it works? If visitors must guess, that is a useful place to start improving the site.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 2
+    },
+    {
+      "id": 10286825,
+      "sequence_id": 2887779,
+      "subject": "One website speed check worth making",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Large images can make a page heavier than it needs to be. Review image sizes before adding more plugins or redesigning the whole site. Measure the page before and after any changes so you know whether they helped.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 3
+    },
+    {
+      "id": 10286826,
+      "sequence_id": 2887779,
+      "subject": "Before you change your website addresses",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A rebuild should include an inventory of existing page addresses. If a useful page moves, plan where the old address should redirect. Preserving a clear path for visitors is part of a careful launch.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 4
+    },
+    {
+      "id": 10286827,
+      "sequence_id": 2887779,
+      "subject": "Keep your business details consistent",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Check that your firm name, phone number, office address and hours are current on your website. Then compare the key listings your clients use. Correct details make it easier for people to reach the right office.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 5
+    },
+    {
+      "id": 10286828,
+      "sequence_id": 2887779,
+      "subject": "Which questions should your website answer?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Think about the questions your team hears before an initial consultation. Clear answers can help visitors understand your process and whether to get in touch. Have the appropriate person at your firm review legal content before publishing it.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 6
+    },
+    {
+      "id": 10286829,
+      "sequence_id": 2887779,
+      "subject": "Can visitors find your important pages?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start at your home page and follow the links to your main practice areas. Useful internal links help people explore related information. Check for broken links and pages that are difficult to reach.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 7
+    },
+    {
+      "id": 10286830,
+      "sequence_id": 2887779,
+      "subject": "Make your website easier to use",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Try navigating your site with a keyboard. Check whether text is readable and form fields have clear labels. Those are practical checks that can improve the experience for more visitors.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 8
+    },
+    {
+      "id": 10286831,
+      "sequence_id": 2887779,
+      "subject": "What happens after someone contacts your firm?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Review how website enquiries reach your team. Confirm the right person receives them and that there is a consistent response process. A website project should account for the handoff after someone clicks or submits a form.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 9
+    },
+    {
+      "id": 10286832,
+      "sequence_id": 2887779,
+      "subject": "Does your site reflect your firm today?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Review your team, services, locations and contact details. Outdated information is easy to overlook when a site has been live for a while. A short review can uncover useful improvements without starting a full rebuild.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 10
+    },
+    {
+      "id": 10286833,
+      "sequence_id": 2887779,
+      "subject": "Time for a fresh look at your website?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If your practice areas or priorities have changed, your website may need to change with them. We can review what is working, what needs attention and whether improving the current site or rebuilding is the better next step.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 30,
+      "delay_unit": "days",
+      "position": 11
+    },
+    {
+      "id": 10287352,
+      "sequence_id": 2887947,
+      "subject": "Vernsten Law: the site-first example",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. That is a real example of the site-first approach.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287350,
+      "sequence_id": 2887945,
+      "subject": "Your website consultation is confirmed",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is confirmed for {{ subscriber.website_call_date | default: \"the date in your calendar invitation\" }} at {{ subscriber.website_call_time | default: \"the time in your calendar invitation\" }}.</p><p>Please accept the calendar invitation in your inbox. I will review {{ subscriber.domain | default: \"your website\" }} with you, explain what I would prioritise, and walk through whether a custom rebuild fits. We will cover scope and pricing on the call.</p><p>No preparation needed. Bring any questions you have.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287355,
+      "sequence_id": 2887950,
+      "subject": "A reminder about your website consultation",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website consultation is {{ subscriber.website_call_date | default: \"on your calendar\" }} at {{ subscriber.website_call_time | default: \"the time on your invitation\" }}.</p><p>We will review your site, discuss options and cover pricing. If you have a partner who should be involved, they are welcome to join.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287353,
+      "sequence_id": 2887948,
+      "subject": "What your website build would include",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The build includes custom HTML/CSS, SEO foundations from the start, and unlimited revisions. We plan the structure, page speed, schema, internal linking and meta tags as part of the build.</p><p>The turnaround is 3 to 4 weeks. We will scope your project and discuss the fixed price on the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287354,
+      "sequence_id": 2887949,
+      "subject": "Where your website should support your practice",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Think about the practice areas you most want to grow and the questions prospective clients ask before contacting you. Your website should make those services easy to find and the next step clear.</p><p>We can use those priorities to decide what deserves attention first. No homework required.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287356,
+      "sequence_id": 2887951,
+      "subject": "Can we improve your current site instead?",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Possibly. A rebuild should solve a specific problem. I will explain what I would retain, what I would change, and whether the current setup gives us a workable starting point.</p><p>The consultation is where we make that distinction together.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287357,
+      "sequence_id": 2887952,
+      "subject": "No preparation needed for our call",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I have your website address. You do not need to put together a deck, send logins or prepare a brief before the consultation.</p><p>We will review the site live and discuss what makes sense for your firm. Pricing and scope are covered there.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287361,
+      "sequence_id": 2887956,
+      "subject": "Put your strongest client proof near the contact button",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A prospective client deciding whether to call wants to know what it is like to work with your firm. Put a relevant client review or testimonial near the next step on your practice page.</p><p>On our consultation, we will look at where your existing proof belongs so visitors can find it while they are deciding to contact you.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287359,
+      "sequence_id": 2887954,
+      "subject": "Keep what is working on your current site",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A good rebuild starts with an inventory of useful pages, existing search visibility and the parts clients already use. We want the plan to account for those assets, including page addresses and redirects where needed.</p><p>We can discuss this in the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287363,
+      "sequence_id": 2887958,
+      "subject": "How the 3 to 4 week build is organised",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We start by agreeing the scope and page structure. Design and development follow, then revisions, launch checks and deployment.</p><p>On the call, we will agree the details for your firm, including content, feedback and who needs to review the site. Unlimited revisions are included.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287364,
+      "sequence_id": 2887959,
+      "subject": "What prospective clients need from your site",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Can a visitor quickly tell which matters you handle, where you work and how to contact you? Those are practical questions to bring to a website review.</p><p>We can compare the experience you want to provide with what your current site offers and choose the right priorities.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287366,
+      "sequence_id": 2887961,
+      "subject": "Your website consultation is tomorrow",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is tomorrow at {{ subscriber.website_call_time }}. We will review your site together and talk through the next steps. No preparation needed.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287367,
+      "sequence_id": 2887962,
+      "subject": "See you in a couple of hours",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We are scheduled for {{ subscriber.website_call_time }}. Use the meeting link in your calendar invitation. I look forward to reviewing your site with you.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    },
+    {
+      "id": 10287365,
+      "sequence_id": 2887960,
+      "subject": "What we will decide together on the consultation",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We will review your site, talk about what needs to improve, and decide whether a custom rebuild is appropriate. If it is, I will explain the scope, timeline and fixed price.</p><p>You do not need to make a decision before the conversation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "published": true,
+      "delay_value": 0,
+      "delay_unit": "hours",
+      "position": 0
+    }
+  ]
+}
