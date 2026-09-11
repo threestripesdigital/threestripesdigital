@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const plan=JSON.parse(fs.readFileSync(new URL('../ops/qualified-copy-refresh.json',import.meta.url)));
+const selected=process.argv.find(arg=>arg.startsWith('--email-id='));
+if(selected) {plan.emails=plan.emails.filter(e=>e.id===Number(selected.split('=')[1]));assert.equal(plan.emails.length,1,'Select one known email ID');}
 async function kit(path,method='GET',body) {
   const r=await fetch('https://api.kit.com/v4/'+path,{method,headers:{'X-Kit-Api-Key':process.env.KIT_API_KEY,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
   if(!r.ok)throw Error(`Kit ${r.status}: ${path}`);
