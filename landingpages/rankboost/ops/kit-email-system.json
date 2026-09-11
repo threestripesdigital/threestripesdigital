@@ -274,7 +274,7 @@
           "offset_value": 0,
           "offset_unit": "hours",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan confirmed that <strong>{{ subscriber.domain | default: \"your website\" }}</strong> qualifies for Rank Boost. You have not booked your free boost call yet.</p><p>We found <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong> at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Your free 30-minute call is the next step: we choose the keyword, book a follow-up to review the movement, and get your boost started. No contract, site access, or logins needed.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan confirmed that <strong>{{ subscriber.domain | default: \"your website\" }}</strong> qualifies for Rank Boost. You have not booked your free boost call yet.</p><p>We found <strong>{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}</strong> at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>Your free 30-minute call is the next step: we use the keyword already in your scan, book a follow-up to review the movement, and get your boost started. No contract, site access, or logins needed.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E2",
@@ -371,7 +371,7 @@
           "offset_value": 1,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is what a client reported about calls and website activity after the boost:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>A useful habit: ask new callers what they searched for and keep their answer in your intake notes. That helps connect the keywords you work on with the conversations reaching your team.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Here is what a client reported about calls and website activity after the boost:</p><p><a href=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\"><img src=\"https://threestripesdigital.com/rank-boost/law-firms/proof/organic/client-calls-feedback.png\" alt=\"Client email describing calls and website activity\" width=\"560\" style=\"display:block;width:100%;max-width:560px;height:auto;border:0;\"></a></p><p>Getting found puts your firm in front of people looking for legal help. Your first boost is free too. Let’s get your qualifying keyword moving.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E14",
@@ -439,11 +439,11 @@
         },
         {
           "key": "E22",
-          "subject": "Ask this one question on your next intake call",
+          "subject": "Be there when they search for your service",
           "offset_value": 1,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>“What did you search for before you found us?”</p><p>Write down the answer alongside the practice area and whether the inquiry became a consultation. You will start seeing which searches bring relevant people to your firm. That is useful context alongside your {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} ranking.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>People searching for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} are looking for the service your firm provides. Your scan found you at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p><p>The firms above you get seen first. Your free boost starts with the ranking you already have and works on moving it higher.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E23",
@@ -451,7 +451,7 @@
           "offset_value": 1,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You do not need to replace your current provider to try the free boost.</p><p>We identify the keyword and page, then track the ranking in your dashboard. Keep a note of any other changes made to that page so the follow-up conversation has the full picture. Your team is welcome to bring questions.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You do not need to replace your current provider to try the free boost.</p><p>We use the keyword and page already in your scan, then track the ranking in your dashboard. Keep a note of any other changes made to that page so the follow-up conversation has the full picture. Your team is welcome to bring questions.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E24",
@@ -463,11 +463,11 @@
         },
         {
           "key": "E25",
-          "subject": "Track the inquiry after the click",
+          "subject": "Turn an existing ranking into more visibility",
           "offset_value": 1,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Make a simple list: inquiry date, practice area, source, consultation booked, case signed.</p><p>Your dashboard shows ranking movement. Your intake list shows what happened after people reached the firm. Keeping both gives you a much more useful picture than counting website visits alone.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}. Google already connects your page with that search.</p><p>We have a starting point. Your free boost focuses on moving that ranking so your firm is easier to find.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E26",
@@ -491,7 +491,7 @@
           "offset_value": 2,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website qualifies for a free Rank Boost. The scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>The call takes 30 minutes. We choose the keyword, activate the free boost, receive a dashboard login, and book the results review. No payment, contract, or website access required.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website qualifies for a free Rank Boost. The scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your current position and #1 for \"{{ subscriber.top_keyword | default: \"your qualifying keyword\" }}\".</p>{% endif %}<p>The call takes 30 minutes. We use the keyword already in the scan, book the results review, activate the free boost, and receive a dashboard login. No payment, contract, or website access required.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E29",
@@ -503,19 +503,19 @@
         },
         {
           "key": "E30",
-          "subject": "Who answers when a new prospect calls?",
+          "subject": "Which firm gets seen before yours?",
           "offset_value": 2,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Call your firm the way a new prospect would. If it goes unanswered, what happens next?</p><p>Check that someone owns the callback and that the message reaches the right person. A clear handoff helps you make the most of the inquiries your visibility brings.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} and look at which firms appear first. Your last scan recorded your firm at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your scanned position and #1 for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}.</p>{% endif %}<p>Let’s work on closing that visibility gap. Your first boost is free.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E31",
-          "subject": "Try your inquiry form on your phone",
+          "subject": "Search your keyword on your phone",
           "offset_value": 2,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open the page that ranks for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} on your phone. Submit a test inquiry and confirm it reaches the right inbox.</p><p>Check the confirmation message too. A prospect should know the inquiry went through and what to expect next. That is a useful five-minute check before we start your boost.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open Google on your phone and search {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}. Can you find your firm?</p><p>Your scan recorded position {{ subscriber.top_position | default: \"the position in your scan\" }}. We will track the desktop and mobile rankings as your free boost runs, so you can see the movement.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E32",
@@ -531,15 +531,15 @@
           "offset_value": 2,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search your keyword and look at the page address under your result. Is it the right practice page?</p><p>A focused page can answer the visitor’s immediate question and offer a clear next step. Your free boost starts with the keyword and URL recorded in your scan.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Search your keyword and look at the page address under your result. Is it the right practice page?</p><p>That is the page Google already connects with the service people are searching for. Your free boost starts with the keyword and URL recorded in your scan.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E34",
-          "subject": "Give every website inquiry an owner",
+          "subject": "Another month leaves the opportunity open",
           "offset_value": 2,
           "offset_unit": "days",
           "state": "intended_active",
-          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Before the next inquiry arrives, decide who receives it, who calls back, and who covers when that person is unavailable.</p><p>Keep those responsibilities simple and visible. More visibility is worth more to your firm when each new conversation has someone ready to handle it.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+          "html_body": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The firms above you for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} get the first chance to be found.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your scanned position and #1 for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}.</p>{% endif %}<p>Your qualifying keyword is ready. Book your free boost call and let’s start working on that gap.</p><p><a href=\"{{ subscriber.rank_boost_booking_link | default: 'https://threestripesdigital.com/rank-boost/law-firms/#qualify' }}\">Book your free boost call</a>. No payment required.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
         },
         {
           "key": "E35",
