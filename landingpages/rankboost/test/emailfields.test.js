@@ -4,8 +4,10 @@ import { qualifiedKeywordEmailFields, qualifiedBookingEmailFields, qualifiedRemi
 
 test("email opportunity figures match the scan including fractional cases", () => {
   const fields = qualifiedKeywordEmailFields({ keyword: "immigration lawyer", volume: 125, position: 27 });
-  assert.deepEqual(fields, { ctr_position_1: "40%", current_ctr: "0.3%", current_clicks_per_month: "0", lead_conversion_rate: "10%", close_rate: "20%", cases_per_month: "1", opp_clicks: "50", opp_leads: "5", case_value: "$5,000", opp_value: "$5,000" });
+  assert.deepEqual(fields, { ctr_position_1: "40%", current_ctr: "0.3%", current_clicks_per_month: "0", lead_conversion_rate: "10%", close_rate: "20%", cases_per_month: "1", opp_clicks: "50", opp_leads: "5", case_value: "$5,000", opp_value: "$5,000", opp_upside: "$5,000" });
   assert.equal(qualifiedKeywordEmailFields({ keyword: "lawyer", volume: 15, position: 1 }).cases_per_month, "0.12");
+  assert.equal(qualifiedKeywordEmailFields({ keyword: "immigration attorney philadelphia", volume: 2900, position: 25 }).opp_upside, "$115,100");
+  assert.equal(qualifiedKeywordEmailFields({ keyword: "immigration lawyer", volume: 2900, position: 1 }).opp_upside, "$0");
 });
 
 test("Kit reminder timestamps use account local time across daylight saving", () => {

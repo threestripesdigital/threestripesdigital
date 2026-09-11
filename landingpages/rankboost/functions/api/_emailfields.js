@@ -13,6 +13,7 @@ export function qualifiedKeywordEmailFields(keyword) {
     cases_per_month: number(opportunity.cases), opp_clicks: number(opportunity.clicks),
     opp_leads: number(opportunity.leads), case_value: "$" + number(opportunity.caseValue),
     opp_value: "$" + number(opportunity.monthly),
+    opp_upside: "$" + number(Math.max(0, opportunity.monthly - current.monthly)),
   };
 }
 
