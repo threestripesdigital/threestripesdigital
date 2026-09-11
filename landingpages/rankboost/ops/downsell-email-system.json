@@ -9,14 +9,14 @@
       "emails": [
         {
           "subject": "First, let’s get your firm showing up",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You are not ranking on Google’s first five pages for any of the keywords in our scan.</p><p>A boost adds fuel to an existing flame. First, we need to build that flame: useful pages for your practice areas and locations, a fast website, and a clear path for people to contact you.</p><p>On the consultation, we will look at your current site and plan the work that helps it start showing up.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You are not ranking on Google’s first five pages for any of the keywords in our scan.</p><p>Before a boost, your firm needs a website Google can find and understand: pages for your services and locations, connected so search engines and AI can discover them.</p><p>On your free consultation, we will look at what your website needs to start appearing for those searches.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 0,
           "delay_unit": "days",
           "published": true
         },
         {
-          "subject": "Does each practice area have its own page?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Pick the service you most want to grow. Does it have a page that explains the matters you handle, where you help clients, and how to get in touch?</p><p>A single list of every service leaves very little room to answer a prospective client’s questions. Clear practice pages give each service somewhere useful to show up in search.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Give Google a page for each service",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Each practice area you want to grow needs content that clearly explains the service and where you provide it.</p><p>Those pages help Google and AI connect your firm with the searches people make when they need that service. Let’s look at which opportunities your website is missing.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 24,
           "delay_unit": "hours",
           "published": true
@@ -29,15 +29,15 @@
           "published": true
         },
         {
-          "subject": "A website built around the cases you want",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We plan your practice pages, design a custom site for your firm, and build in the search essentials from the start: fast pages, clear titles, and links that help people find the right service.</p><p>The build includes unlimited revisions and a 3 to 4 week turnaround. The consultation is where we map out your project.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "A website built to get your firm found",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We build your practice-area and location pages around the services you want people to find on Google and AI.</p><p>Clear content, connected pages and a site search engines can read are part of the foundation. On your consultation, we will identify what your firm needs to show up for relevant searches.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 24,
           "delay_unit": "hours",
           "published": true
         },
         {
           "subject": "Vernsten Law started with the website",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. The site gave the firm a place to present its services clearly before the boost came next.</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p>Your consultation starts with the same practical question: what does your website need to help the right clients find and contact you?</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Vernsten Law rebuilt its website with us, then used Rank Boost. The website came first as the foundation for its search presence.</p><p>Your consultation starts with the same question: what does your website need so Google and AI can find your firm for the services you provide?</p><p><a href=\"https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4\">Watch the Vernsten Law client video</a>.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 24,
           "delay_unit": "hours",
           "published": true
@@ -63,7 +63,7 @@
       "emails": [
         {
           "subject": "Your website consultation is confirmed",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is confirmed for {{ subscriber.website_call_date | default: \"the date in your calendar invitation\" }} at {{ subscriber.website_call_time | default: \"the time in your calendar invitation\" }}.</p><p>Please accept the calendar invitation in your inbox. I will review {{ subscriber.domain | default: \"your website\" }} with you, explain what I would prioritise, and walk through whether a custom rebuild fits. We will cover scope and pricing on the call.</p><p>No preparation needed. Bring any questions you have.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website consultation is confirmed for {{ subscriber.website_call_date }} at {{ subscriber.website_call_time }}. Please accept your calendar invitation.</p><p>We will look at how Google can find your website and understand your services and locations. The focus is getting your firm found by people searching for the work you want.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 0,
           "delay_unit": "days",
           "published": true
@@ -83,8 +83,8 @@
           "published": true
         },
         {
-          "subject": "What your website build would include",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>The build includes custom HTML/CSS, SEO foundations from the start, and unlimited revisions. We plan the structure, page speed, schema, internal linking and meta tags as part of the build.</p><p>The turnaround is 3 to 4 weeks. We will scope your project and discuss the fixed price on the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Build search visibility into your website",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your services and locations should be clear to Google and AI from the start. That means useful practice-area pages, connections between those pages and content search engines can read.</p><p>On our consultation, we will look at which parts of that foundation your firm needs to get found.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 3,
           "delay_unit": "hours",
           "published": true
@@ -97,22 +97,22 @@
           "published": true
         },
         {
-          "subject": "A reminder about your website consultation",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website consultation is {{ subscriber.website_call_date | default: \"on your calendar\" }} at {{ subscriber.website_call_time | default: \"the time on your invitation\" }}.</p><p>We will review your site, discuss options and cover pricing. If you have a partner who should be involved, they are welcome to join.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Your consultation: getting found on Google and AI",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our website consultation is {{ subscriber.website_call_date }} at {{ subscriber.website_call_time }}.</p><p>We will focus on what your website needs so Google and AI can discover your services and connect your firm with relevant searches.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 6,
           "delay_unit": "hours",
           "published": true
         },
         {
-          "subject": "Can we improve your current site instead?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Possibly. A rebuild should solve a specific problem. I will explain what I would retain, what I would change, and whether the current setup gives us a workable starting point.</p><p>The consultation is where we make that distinction together.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Can your current site help your firm get found?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We will look at whether your existing site gives Google clear, accessible information about your services and locations.</p><p>That tells us which improvements to focus on so your firm has a stronger foundation for being found.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 6,
           "delay_unit": "hours",
           "published": true
         },
         {
-          "subject": "No preparation needed for our call",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I have your website address. You do not need to put together a deck, send logins or prepare a brief before the consultation.</p><p>We will review the site live and discuss what makes sense for your firm. Pricing and scope are covered there.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Your website is the starting point for our call",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>I already have your website address. On our consultation, we will look at how Google and AI can discover your firm and understand the work you do.</p><p>We will focus on the services and locations you want prospective clients to find.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 6,
           "delay_unit": "hours",
           "published": true
@@ -120,22 +120,22 @@
       ],
       "rotation_pool": [
         {
-          "subject": "Build the baseline for getting found",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your practice areas need useful pages, your location needs to be clear, and visitors need an easy way to contact you. That is the baseline we will plan on the consultation.</p><p>After the website is live, we can re-evaluate the Rank Boost system.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Build the foundation for getting found",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your practice areas and locations need clear pages that Google can discover and understand. That gives search engines and AI useful information about where your firm belongs in relevant searches.</p><p>We will focus the consultation on building that foundation. Once your website is live, we can re-evaluate Rank Boost.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 8,
           "delay_unit": "hours",
           "published": true
         },
         {
-          "subject": "Keep what is working on your current site",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A good rebuild starts with an inventory of useful pages, existing search visibility and the parts clients already use. We want the plan to account for those assets, including page addresses and redirects where needed.</p><p>We can discuss this in the consultation.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Build on the pages Google already knows",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Any existing search visibility belongs in your website plan. We will look at the pages Google already knows and how they connect with your services.</p><p>The aim is to build on that foundation while creating the content your firm needs to be found for more relevant searches.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 8,
           "delay_unit": "hours",
           "published": true
         },
         {
-          "subject": "Which page should we improve first?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start with the service you most want to grow. We will look at the page that represents it and check whether it answers the questions prospective clients bring.</p><p>That gives the website project a business priority, so the design supports the work you want to attract.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Which service do you want Google to find you for?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start with the practice area you most want to grow. Your website needs a page that connects that service with the locations you serve.</p><p>On our consultation, we will look at whether Google can find that page and understand which searches it is relevant to.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 8,
           "delay_unit": "hours",
           "published": true
@@ -149,15 +149,15 @@
           "state": "retired"
         },
         {
-          "subject": "Make your services easy to find",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A visitor should be able to reach your main practice pages from the home page without guessing where to click.</p><p>We will plan a clear menu, useful links between related services, and a direct contact path. Those details help people, search engines and AI find the right page and understand your firm.</p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Make your services easy for Google and AI to find",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Links between your home page and practice-area pages help people, search engines and AI discover the services your firm provides.</p><p>On our consultation, we will look at how those pages connect and whether your important services are easy to discover.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 8,
           "delay_unit": "hours",
           "published": true
         },
         {
-          "subject": "How the 3 to 4 week build is organised",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We start by agreeing the scope and page structure. Design and development follow, then revisions, launch checks and deployment.</p><p>On the call, we will agree the details for your firm, including content, feedback and who needs to review the site. Unlimited revisions are included.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "A website plan built around getting found",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>We start with the services and locations you want to be found for on Google and AI. That guides the pages, content and connections your site needs.</p><p>On our consultation, we will identify the gaps and plan a website that supports your search presence.</p><p>{% if subscriber.website_reschedule_link != blank %}<a href=\"{{ subscriber.website_reschedule_link }}\">Reschedule your website consultation</a>{% else %}Need another time? Reply to this email and I will help.{% endif %}</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 8,
           "delay_unit": "hours",
           "published": true
@@ -213,8 +213,8 @@
           "published": true
         },
         {
-          "subject": "Does each practice area have a useful page?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A useful practice page explains the matters your firm handles, the locations it serves and how someone can contact you. Check whether the pages reflect the work you actually want to attract.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Give each service a chance to be found",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A clear practice-area page tells Google and AI which matters your firm handles and where you handle them.</p><p>When your important services are missing from the site, you are missing opportunities to be discovered for those searches. Let’s identify the pages your firm needs.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 30,
           "delay_unit": "days",
           "published": true
@@ -234,15 +234,15 @@
           "published": true
         },
         {
-          "subject": "Before you change your website addresses",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A rebuild should include an inventory of existing page addresses. If a useful page moves, plan where the old address should redirect. Preserving a clear path for visitors is part of a careful launch.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Keep Google connected when a page moves",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>When a page address changes, the old address should lead to its replacement. That helps Google and people following existing search results find the right content.</p><p>A website rebuild should account for the pages Google already knows, so your search presence stays part of the plan.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 30,
           "delay_unit": "days",
           "published": true
         },
         {
-          "subject": "Keep your business details consistent",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Check that your firm name, phone number, office address and hours are current on your website. Then compare the key listings your clients use. Correct details make it easier for people to reach the right office.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Help Google and AI understand where your firm operates",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website should clearly identify your firm, its services and its real office locations. Consistent business details help people and search tools understand which firm they have found.</p><p>Let’s look at whether your site clearly connects your services with the places you want to be found.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 30,
           "delay_unit": "days",
           "published": true
@@ -255,8 +255,8 @@
           "published": true
         },
         {
-          "subject": "Can visitors find your important pages?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Start at your home page and follow the links to your main practice areas. Useful internal links help people explore related information. Check for broken links and pages that are difficult to reach.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Can Google find your important pages?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your practice-area pages should be connected to the rest of your site through useful links. A page that is difficult to discover gives Google less opportunity to find and understand it.</p><p>On your free consultation, we will look at whether your site makes your most important services discoverable to search engines and AI.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 30,
           "delay_unit": "days",
           "published": true
@@ -278,15 +278,15 @@
           "state": "retired"
         },
         {
-          "subject": "Does your site reflect your firm today?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Review your team, services, locations and contact details. Outdated information is easy to overlook when a site has been live for a while. A short review can uncover useful improvements without starting a full rebuild.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Can Google find the services you offer today?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If your firm has added a practice area or location, your website needs to reflect it. Google and AI need clear information about the services you now provide.</p><p>Let’s look at whether your site gives those services the pages and content they need to be found.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 90,
           "delay_unit": "days",
           "published": true
         },
         {
-          "subject": "Time for a fresh look at your website?",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>If your practice areas or priorities have changed, your website may need to change with them. We can review what is working, what needs attention and whether improving the current site or rebuilding is the better next step.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Is your website helping your firm get found?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your website should support the services and locations you want people to find on Google and AI.</p><p>On your free consultation, we will look at where your search presence is missing and which website improvements can help your firm be discovered.</p><p><a href=\"{{ subscriber.website_calendly_link | default: 'https://calendly.com/bilal-threestripesdigital/three-stripes-digital-website-consultation' }}\">Book your free website consultation</a> and I will show you what I would improve first.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 30,
           "delay_unit": "days",
           "published": true

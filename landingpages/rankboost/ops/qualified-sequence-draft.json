@@ -162,10 +162,10 @@
     },
     {
       "key": "Q20",
-      "subject": "Which intake number matters most?",
+      "subject": "Your keyword already has a monthly opportunity",
       "delay_value": 8,
       "delay_unit": "hours",
-      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Take last month’s relevant inquiries and divide the cases signed by that number. That gives you your firm’s inquiry-to-client close rate.</p><p>Bring it if you already have it. We can compare it with the {{ subscriber.close_rate | default: \"close rate\" }} used in your opportunity calculation. The closer the inputs are to your practice, the more useful the number becomes.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Your scan found {{ subscriber.top_keyword | default: \"your qualifying keyword\" }} at position {{ subscriber.top_position | default: \"the position in your scan\" }}.</p>{% if subscriber.opp_upside != blank %}<p>Your scan shows <strong>{{ subscriber.opp_upside }}/month in potential additional case value</strong> between your scanned position and #1 for {{ subscriber.top_keyword | default: \"your qualifying keyword\" }}.</p>{% endif %}<p>I already have the calculation ready. On our call, we will put that opportunity into action with your first free boost.</p>{% if subscriber.call_date != blank and subscriber.call_time != blank %}<p>See you {{ subscriber.call_date }} at {{ subscriber.call_time }}. Use the meeting link in your calendar invitation.</p>{% else %}<p>Your calendar invitation has your call time and meeting link. See you there.</p>{% endif %}<p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>"
     },
     {
       "key": "Q21",
