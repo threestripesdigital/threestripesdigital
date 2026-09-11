@@ -805,8 +805,8 @@
     {
       "id": 10286532,
       "sequence_id": 2887768,
-      "subject": "A useful website starts with one priority",
-      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Choose the practice area you want the site to do more for. Read its page as though you were a new client: does it answer your first questions and make contacting the firm easy?</p><p>This is the last email in this short series. When you want a fresh look at your site, the consultation link is here.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+      "subject": "Get found for the services you want to grow",
+      "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Choose the service you want more clients for. When someone searches for it in your city, your firm needs to be there.</p><p>If your firm is missing from those results, the firms that appear get the first chance to win that client.</p><p>On your free consultation, I will show you what your website needs so Google and AI can find your firm for the services and locations you want to be known for.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. Let’s get your firm found.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
       "published": true,
       "delay_value": 24,
       "delay_unit": "hours",
