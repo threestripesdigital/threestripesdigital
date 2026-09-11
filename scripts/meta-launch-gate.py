@@ -4,6 +4,7 @@ p=argparse.ArgumentParser();p.add_argument('--campaign',required=True);p.add_arg
 if not args.campaign.isdecimal() or (args.entity_id and not args.entity_id.isdecimal()):p.error('Meta IDs must be numeric')
 base='https://rank-boost-command-center.bilal-17f.workers.dev'
 jar=http.cookiejar.CookieJar();op=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar),urllib.request.HTTPSHandler(context=ssl.create_default_context(cafile='/etc/ssl/cert.pem')))
+op.addheaders=[('User-Agent','Mozilla/5.0')]
 req=urllib.request.Request(base+'/login',data=json.dumps({'password':os.environ['RANK_BOOST_DASHBOARD_PASSWORD']}).encode(),headers={'Content-Type':'application/json','Origin':base});op.open(req,timeout=30).read()
 r=json.load(op.open(base+'/api/creative-qa?fresh=1',timeout=90));ads=[a for a in r['ads'] if a['campaign']['id']==args.campaign]
 failed=[{'id':a['id'],'issues':a['issues'],'visual_reviewed':a['reviewed']} for a in ads if not a['passed']]
