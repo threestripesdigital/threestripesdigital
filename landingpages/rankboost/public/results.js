@@ -131,12 +131,12 @@
       '<p class="res-sub">We found <strong>' + totalTxt + '</strong> ranking in Google’s first five pages. ' +
       'Here are your keyword opportunities:</p>' +
       ctaBlock(true) +
-      '<div class="fit-summary"><span>Modeled monthly upside at #1</span><strong>' + fmtMoney(total) + '<small>/month</small></strong>' +
+      '<div class="fit-summary"><span>Total Upside at #1</span><strong>' + fmtMoney(total) + '<small>/month</small></strong>' +
       '<p>Across ' + kws.length + ' money keywords. Estimates, not guaranteed outcomes.</p></div>' +
       '<div class="fit-table-wrap"><table class="fit-table"><caption>Your keyword opportunities</caption>' +
       '<colgroup><col class="fit-col-keyword"><col class="fit-col-rank"><col class="fit-col-search"><col class="fit-col-value"></colgroup>' +
       '<thead><tr><th scope="col">Keyword</th><th scope="col">Rank</th><th scope="col">Searches<small>/month</small></th>' +
-      '<th scope="col">Modeled upside<small>/month</small></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<th scope="col">Upside at #1<small>/month</small></th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<details class="fit-assumptions"><summary>How these estimates are calculated</summary>' + assumptions + '</details>' +
       ctaBlock(false) + '</div>');
     mountStickyCta(total);
