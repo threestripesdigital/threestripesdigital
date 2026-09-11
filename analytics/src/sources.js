@@ -60,6 +60,16 @@ export function wistiaValues(result) {
  }
  return values;
 }
+export function metaVideoValues(rows) {
+ if(!Array.isArray(rows)) throw Error('Wistia traffic response is invalid.');
+ // Exact UTM source matches only. Referrers and unknown traffic are not paid attribution.
+ const matching=rows.filter(r=>r.utm_source==='meta');
+ if(matching.length>1) throw Error('Wistia returned duplicate source groups.');
+ if(!matching.length) return {loads:0,plays:0,play_rate:null,engagement_rate:null};
+ const r=matching[0];
+ if(!Number.isInteger(r.loads)||r.loads<0||!Number.isInteger(r.plays)||r.plays<0) throw Error('Wistia traffic counts unavailable.');
+ return {loads:r.loads,plays:r.plays,play_rate:r.loads?r.plays/r.loads*100:null,engagement_rate:typeof r.engagement_rate==='number'?r.engagement_rate*100:null};
+}
 export async function syncWistia(env) {
  if(!env.WISTIA_API_TOKEN||!env.WISTIA_MEDIA_ID)return;
  try {
@@ -71,7 +81,16 @@ export async function syncWistia(env) {
    url.searchParams.set('start_date',start);url.searchParams.set('end_date',exclusiveEnd);
    const r=await fetch(url,{headers:{Authorization:'Bearer '+env.WISTIA_API_TOKEN,'X-Wistia-API-Version':'2026-07'},signal:AbortSignal.timeout(20000)});
    if(!r.ok)throw Error(`Wistia reporting failed (${r.status}). Check Read detailed stats permission and media access.`);
-   windows[days]={start,end,values:wistiaValues(await r.json())};
+   const values=wistiaValues(await r.json());
+   const trafficUrl=new URL(url);trafficUrl.pathname+='/traffic';
+   const metaStart=env.LAUNCH_AT?([start,dayIn(env.LAUNCH_AT,env.REPORTING_TIMEZONE)].sort().at(-1)):start;
+   trafficUrl.searchParams.set('start_date',metaStart);
+   trafficUrl.searchParams.set('group_by','utm_source');trafficUrl.searchParams.set('per_page','100');
+   const traffic=await fetch(trafficUrl,{headers:{Authorization:'Bearer '+env.WISTIA_API_TOKEN,'X-Wistia-API-Version':'2026-07'},signal:AbortSignal.timeout(20000)});
+   if(!traffic.ok)throw Error(`Wistia traffic reporting failed (${traffic.status}).`);
+   const rows=await traffic.json();
+   if(!Array.isArray(rows)||rows.length>=100)throw Error('Wistia traffic breakdown may be incomplete.');
+   windows[days]={start,end,values,metaStart,metaValues:metaVideoValues(rows)};
   }
   await setState(env,'wistia_snapshot',JSON.stringify({media:env.WISTIA_MEDIA_ID,windows}));
   await setState(env,'wistia_success',new Date().toISOString());await setState(env,'wistia_error','');

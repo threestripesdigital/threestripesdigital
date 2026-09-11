@@ -1,3 +1,11 @@
+function bookingSource(pageUrl) {
+  try {
+    const q = new URL(pageUrl).searchParams;
+    if (q.get('utm_source')?.toLowerCase() !== 'meta') return {};
+    return { utm_source: 'meta', utm_campaign: q.get('campaign_id') || q.get('utm_campaign') || '' };
+  } catch { return {}; }
+}
+
 import { WEBSITE_EVENT_TYPE_URI, WEBSITE_BOOKING_URL, websiteEligible } from "./_offers.js";
 // POST /api/booking — verify a booking against the signed lead and the
 // configured Rank Boost event before rendering confirmation details.
@@ -77,11 +85,11 @@ export async function onRequestPost({ request, env }) {
   if (body.action === "access") {
     try {
       const lead = await env.LEADS_DB
-        .prepare("SELECT qualified, status FROM leads WHERE lead_ref = ?1 LIMIT 1")
+        .prepare("SELECT qualified, status, page_url FROM leads WHERE lead_ref = ?1 LIMIT 1")
         .bind(claims.ref)
         .first();
       return (website ? websiteEligible(lead) : Number(lead && lead.qualified) === 1)
-        ? json(200, { eligible: true, offer: website ? "website" : "boost", ...(website ? { booking_url: WEBSITE_BOOKING_URL } : {}) })
+        ? json(200, { eligible: true, offer: website ? "website" : "boost", ...bookingSource(lead.page_url), ...(website ? { booking_url: WEBSITE_BOOKING_URL } : {}) })
         : json(403, { eligible: false });
     } catch (error) {
       console.log("booking_access_error", String(error).slice(0, 160));
