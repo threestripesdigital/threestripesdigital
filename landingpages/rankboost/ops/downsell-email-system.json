@@ -9,7 +9,7 @@
       "emails": [
         {
           "subject": "First, let’s get your firm showing up",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Our scan did not find the law-firm searches we need to boost {{ subscriber.domain | default: \"your website\" }} in Google’s first five pages.</p><p>A boost adds fuel to an existing flame. First, we need to build that flame: useful pages for your practice areas and locations, a fast website, and a clear path for people to contact you.</p><p>On the consultation, we will look at your current site and plan the work that helps it start showing up.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>You are not ranking on Google’s first five pages for any of the keywords in our scan.</p><p>A boost adds fuel to an existing flame. First, we need to build that flame: useful pages for your practice areas and locations, a fast website, and a clear path for people to contact you.</p><p>On the consultation, we will look at your current site and plan the work that helps it start showing up.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 0,
           "delay_unit": "days"
         },
@@ -21,7 +21,7 @@
         },
         {
           "subject": "Build the flame before adding fuel",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A website built for search gives your main services their own pages, connects those pages clearly, and makes the firm’s locations easy to understand.</p><p>That is the baseline we want to build. After the website is live, we can re-evaluate the Rank Boost system.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>A website built for search gives your main services their own pages, connects those pages clearly, and clearly identifies your firm’s locations so Google and AI can find you.</p><p>That is the baseline we want to build. After the website is live, we can re-evaluate the Rank Boost system.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 24,
           "delay_unit": "hours"
         },
@@ -38,8 +38,8 @@
           "delay_unit": "hours"
         },
         {
-          "subject": "Try this five-minute website check",
-          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open your website on a phone. Can you tell what the firm does, where it works, and how to call from the first screen?</p><p>Then open your main practice page and try the contact form. If any part is confusing or broken, make a note. These are useful places to start your website plan.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
+          "subject": "Search your service on Google. Does your firm appear?",
+          "content": "<p>Hi {{ subscriber.first_name | default: \"there\" }},</p><p>Open Google and search for a service you provide, followed by your city. For example, \"divorce lawyer\" and the city you serve.</p><p><strong>Does your firm appear?</strong></p><p>If you cannot find it, think about what a prospective client sees: other firms to call, with yours missing from the results.</p><p>On your free consultation, I will show you what your website needs to help your firm appear for those searches, starting with the services and locations that matter to your business.</p><p><a href=\"{{ subscriber.website_calendly_link }}\">Book your free website consultation</a>. I will show you what I would improve and why.</p><p>Have a question? Just hit reply. I personally read every reply.</p><p>Bilal<br>Three Stripes Digital</p>",
           "delay_value": 24,
           "delay_unit": "hours"
         },
