@@ -1,3 +1,5 @@
+import {syncFormFills} from './form-fills.js';
+import {inventory,preview,recordReview} from './creative-qa.js';
 import {syncMeta,dayIn,setState} from './meta.js';
 import {syncFunnel} from './funnel.js';
 import {syncGA4,syncWistia} from './sources.js';
@@ -6,7 +8,7 @@ import {authorized,cookie,equal,limited,readBody} from './auth.js';
 const json=(body,status=200,headers={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store',...headers}});
 async function assets(env,request,path) {const u=new URL(request.url);if(path)u.pathname=path;return env.ASSETS.fetch(new Request(u,request));}
 async function runSync(env) {
- const outcomes=await Promise.allSettled([syncMeta(env),syncFunnel(env),syncGA4(env),syncWistia(env)]);
+ const outcomes=await Promise.allSettled([syncMeta(env),syncFunnel(env),syncGA4(env),syncWistia(env),syncFormFills(env)]);
  await env.DB.prepare('DELETE FROM rate_limits WHERE expires < ?').bind(Date.now()).run();
  if(outcomes.some(x=>x.status==='rejected')) console.log('reporting_sync_failed');
 }
@@ -26,6 +28,9 @@ async function route(req,env,ctx) {
  if(!await authorized(req,env))return path.startsWith('/api/')?json({error:'Sign in required'},401):Response.redirect(url.origin+'/login',302);
  if(!['GET','HEAD'].includes(req.method)&&req.headers.get('Origin')!==url.origin) return json({error:'Invalid origin'},403);
  if(path==='/logout'&&req.method==='POST')return json({ok:true},200,{'Set-Cookie':'rb_auth=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0'});
+ if(path==='/api/creative-qa'&&req.method==='GET')return json(await inventory(env,{fresh:url.searchParams.get('fresh')==='1'}));
+ if(path==='/api/creative-preview'&&req.method==='GET'){const qa=await inventory(env),ad=qa.ads.find(a=>a.id===url.searchParams.get('ad'));if(!ad)return json({error:'Ad not found'},404);return json(await preview(env,ad,url.searchParams.get('format')));}
+ if(path==='/api/creative-review'&&req.method==='POST'){const b=await readBody(req),qa=await inventory(env),ad=qa.ads.find(a=>a.id===b.ad);if(!ad)return json({error:'Ad not found'},404);return json(await recordReview(env,ad,b));}
  if(path==='/api/report'&&req.method==='GET')return json(await report(env,url));
  if(path==='/api/sync'&&req.method==='POST') {
   if(await limited(env,'manual-sync',1,60))return json({error:'A sync was recently requested. Please wait one minute.'},429);
@@ -64,7 +69,7 @@ export default {
   try{response=await route(req,env,ctx);}catch(e){console.log('dashboard_request_failed',e instanceof SyntaxError?'invalid_json':'request_error');response=json({error:'Request failed. Check the input and service configuration.'},400);}
   const secured=new Response(response.body,response);
   secured.headers.set('X-Content-Type-Options','nosniff');secured.headers.set('Referrer-Policy','no-referrer');secured.headers.set('Cache-Control','no-store');
-  secured.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+  secured.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.fbcdn.net https://*.facebook.com; frame-src https://business.facebook.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   return secured;
  },
  async scheduled(_event,env,ctx){ctx.waitUntil(runSync(env));}

@@ -112,3 +112,11 @@ test('Calendly Meta bookings are counted without browser sessions and exclude ot
  const r=await report(e,new URL('https://dashboard.test/api/report'));
  assert.equal(r.metaBookings.count,1);assert.equal(r.metrics.find(m=>m.key==='scheduled_cost').value,120);
 });
+
+test('ad and ad-set conversion costs use weighted spend and exclude unmatched forms',async()=>{
+ const e=env(),day=dayIn(Date.now(),e.REPORTING_TIMEZONE);
+ for(const [id,spend] of [['222',20],['223',40]])e.DB.raw.prepare('INSERT INTO meta_daily VALUES(?,?,?,?,?,?,?,?,?)').run(day,id,'Creative '+id,'333','111','Rank Boost',spend,100,10);
+ const values={meta_ad_actions:JSON.stringify([{day,ad_id:'222',adset_id:'333',adset_name:'Set A',campaign_id:'111',websiteLeads:2},{day,ad_id:'223',adset_id:'333',adset_name:'Set A',campaign_id:'111',websiteLeads:0}]),form_fill_daily:JSON.stringify([{day,ad_id:'222',adset_id:'333',campaign_id:'111',attributed:true,forms:4},{day,ad_id:'999',adset_id:'333',campaign_id:'111',attributed:true,forms:3}]),form_fill_success:new Date().toISOString()};
+ for(const [k,v] of Object.entries(values))e.DB.raw.prepare('INSERT INTO state VALUES(?,?)').run(k,v);
+ const r=await report(e,new URL('https://local/api/report'));assert.equal(r.adsets[0].leads,2);assert.equal(r.adsets[0].cost_per_lead,30);assert.equal(r.adsets[0].form_fills,4);assert.equal(r.adsets[0].cost_per_form,15);assert.equal(r.ads.find(a=>a.id==='223').cost_per_lead,null);assert.equal(r.formFillReporting.unattributed,3);
+});
