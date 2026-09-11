@@ -10,6 +10,7 @@
     var RESULT_KEY = "tsd_rb_result";
     var TRACK_KEY = "tsd_rb_pending_track";
     var TOKEN_KEY = "tsd_rb_lead_token";
+    var bookingSource = {};
     var CALENDLY_URL = "https://calendly.com/bilal-threestripesdigital/three-stripes-digital-rank-boost";
     var STEP1 = "./#qualify";
 
@@ -61,6 +62,10 @@
       } else {
         if (lead.phone) params.push("a1=" + encodeURIComponent(lead.phone));
         if (lead.domain) params.push("a2=" + encodeURIComponent(lead.domain));
+      }
+      if (bookingSource.utm_source === 'meta') {
+        params.push('utm_source=meta');
+        if (bookingSource.utm_campaign) params.push('utm_campaign=' + encodeURIComponent(bookingSource.utm_campaign));
       }
       if (lead.lead_token) params.push("utm_content=" + encodeURIComponent(lead.lead_token));
       return params.length ? CALENDLY_URL + "?" + params.join("&") : CALENDLY_URL;
@@ -134,6 +139,7 @@
         throw new Error("access_unavailable");
       }).then(function (data) {
         if (data && data.eligible) {
+          bookingSource = data;
           if (website) {
             if (!data.booking_url || !data.booking_url.startsWith("https://calendly.com/")) throw new Error("calendar_unavailable");
             CALENDLY_URL = data.booking_url;

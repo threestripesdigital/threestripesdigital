@@ -108,3 +108,12 @@ Prelaunch review and preview sessions are retained as raw diagnostic records but
 WISTIA_API_TOKEN is stored as a Worker secret and WISTIA_MEDIA_ID selects the main VSL (8uioqg3047). The modern media analytics endpoint uses API version 2026-07. Each reporting window is queried separately, with an exclusive API end date one day after the displayed end date. Imported fields are plays, unique plays, unique loads, unique visitors, played seconds, play rate and engagement rate. Native fractions become percentages. Missing rates remain unavailable, and malformed or failed responses preserve the prior snapshot.
 
 This report includes every embed location for that media and uses Wistia native date boundaries. It includes prelaunch tests and previews. Average engagement is not the fraction of people watching at least half the video; do not use it as that benchmark or add its visitors to GA4 users.
+
+
+## Meta-only video and Calendly booking reporting
+
+Wistia traffic breakdown is filtered to exact `utm_source=meta`, with dates clamped to the launch date. Rates use plays divided by player loads from that same source, not ad impressions. Wistia only supports date boundaries here, so launch-day visits cannot be split at the exact launch time. Organic and unknown sources are excluded. Meta source includes all Meta-tagged traffic to this VSL; it is not a per-ad breakdown. The existing all-source snapshot is retained for diagnostics but is not substituted in the cards.
+
+Cost / Booked Call is USD Meta spend divided by non-cancelled Calendly bookings for the configured Rank Boost event, booked after launch and in the selected period, with Calendly `tracking.utm_source=meta`. The Calendly API supplies source data once per invitee; unavailable attribution keeps the metric unavailable. Historical untagged bookings are not guessed to be Meta. Campaign selection additionally requires a matching Calendly campaign ID. Source-only bookings appear in the all-campaigns total. The booking handoff now forwards source and campaign from the saved lead URL, including recovery links, without restoring browser analytics.
+
+The reporting worker requires CALENDLY_PAT as a secret and CALENDLY_EVENT_TYPE_URI. Apply migration 0004 before deploying. Calendly responses are reduced to source/campaign fields; invitee PII is not stored in reporting by this lookup.
