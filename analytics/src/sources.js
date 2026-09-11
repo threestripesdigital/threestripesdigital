@@ -90,7 +90,7 @@ export async function syncWistia(env) {
    if(!traffic.ok)throw Error(`Wistia traffic reporting failed (${traffic.status}).`);
    const rows=await traffic.json();
    if(!Array.isArray(rows)||rows.length>=100)throw Error('Wistia traffic breakdown may be incomplete.');
-   windows[days]={start,end,values,metaStart,metaValues:metaVideoValues(rows)};
+   windows[days]={start,end,values,metaStart,metaValues:metaVideoValues(rows),sourceBreakdown:rows.map(({utm_source,loads,plays})=>({source:utm_source,loads,plays}))};
   }
   await setState(env,'wistia_snapshot',JSON.stringify({media:env.WISTIA_MEDIA_ID,windows}));
   await setState(env,'wistia_success',new Date().toISOString());await setState(env,'wistia_error','');
