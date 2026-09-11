@@ -46,7 +46,8 @@
     "WISTIA_MEDIA_ID": "8uioqg3047",
     "META_USD_TO_ACCOUNT_RATE": "1.3784",
     "META_FX_DATE": "2026-09-08",
-    "CALENDLY_EVENT_TYPE_URI": "https://api.calendly.com/event_types/358b7255-d468-4bae-8ab5-696e49f0afd6"
+    "CALENDLY_EVENT_TYPE_URI": "https://api.calendly.com/event_types/358b7255-d468-4bae-8ab5-696e49f0afd6",
+    "INTERNAL_TEST_LEAD_IDS": "77"
   },
   "account_id": "17f7c095d40a8771cf3568fdcae11770"
 }

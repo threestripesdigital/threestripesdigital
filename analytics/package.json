@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --port 8787",
-    "check": "node --check src/worker.js && node --check src/metrics.js && node --check src/meta.js && node --check public/app.js && node --check public/tracker.js && node --check src/sources.js && node --check src/report.js",
+    "check": "node --check src/worker.js && node --check src/metrics.js && node --check src/meta.js && node --check public/app.js && node --check public/tracker.js && node --check src/sources.js && node --check src/report.js && node --check src/creative-qa.js && node --check public/creative-qa.js",
     "db:local": "wrangler d1 migrations apply DB --local",
     "db:remote": "wrangler d1 migrations apply DB --remote",
-    "deploy": "node scripts/predeploy.js && wrangler deploy"
+    "deploy": "node scripts/predeploy.js && wrangler deploy",
+    "test:creative-qa": "node --test src/creative-qa.test.js"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
