@@ -1,3 +1,4 @@
+import { smsScan, scanLine } from './_smscopy.js';
 import { APPOINTMENT_EMAILS } from './_appointmentconfig.js';
 
 export const lifecycleEnabled = env => env.APPOINTMENT_FOLLOWUP_ENABLED === 'true';
@@ -67,7 +68,7 @@ export async function appointmentCurrent(db,payload,now=Date.now()) {
 export async function queueAppointmentTimers(env,now=Date.now()) {
   if(!lifecycleEnabled(env))return {queued:0};
   const db=env.LEADS_DB;
-  const {results=[]}=await db.prepare(`SELECT a.* FROM appointment_followup a
+  const {results=[]}=await db.prepare(`SELECT a.*,l.domain,l.top_keywords,l.total_boost_fits FROM appointment_followup a
     JOIN leads l ON l.lead_ref=a.lead_ref JOIN calendly_invitees i ON i.invitee_uri=a.invitee_uri
     WHERE a.stopped_at IS NULL AND l.status='booked' AND i.status='booked' AND l.calendly_invitee_uri=a.invitee_uri
     AND a.invitee_uri=(SELECT invitee_uri FROM appointment_followup latest WHERE lower(latest.email)=lower(a.email)
@@ -85,14 +86,14 @@ export async function queueAppointmentTimers(env,now=Date.now()) {
     }
     if(row.phone)enqueue(row,'roezan.sms','confirmation',{phone:row.phone,first_name:row.first_name,
       appointment_timezone:row.timezone,appointment_deadline:new Date(Math.min(utcTime(row.starts_at)-30*60000,utcTime(row.booked_at)+24*HOUR)).toISOString(),
-      message:`Hi ${row.first_name||'there'}, it's Bilal from Three Stripes Digital. Your ${row.offer==='website'?'website consultation':'Rank Boost call'} is booked. Check your Calendly invitation for the time and joining details. Reply YES to confirm. Reply STOP to opt out.`});
+      message:`Hi ${row.first_name||'there'}, it's Bilal from Three Stripes Digital. Your ${row.offer==='website'?'website consultation to help your firm get found on Google and AI':'free Rank Boost call'} is booked. ${row.offer==='boost'?scanLine(smsScan(row))+' ':''}Check your Calendly invitation for the time and joining details. Reply YES to confirm. Reply STOP to opt out.`});
     for(const slot of appointmentSlots(row,now)) {
       const sequence=APPOINTMENT_EMAILS[row.offer]?.[slot.key]?.id;
       if(!sequence)throw Error('appointment_sequence_not_configured');
       enqueue(row,'kit.appointment_email','email-'+slot.index,{sequence_id:sequence,
         ...(!slot.index.startsWith('R')?{journey_key:`${row.lead_ref}:${row.journey_started_at}:${slot.index}`} : {}),
         appointment_deadline:new Date(slot.due+15*60000).toISOString()});
-      if(slot.key==='R01'||slot.key==='R02')enqueue(row,'roezan.sms','sms-'+slot.key,{phone:row.phone,first_name:row.first_name,appointment_timezone:row.timezone,appointment_deadline:new Date(slot.due+15*60000).toISOString(),message:`Hi ${row.first_name||'there'}, Bilal from Three Stripes Digital here. Your ${row.offer==='website'?'website consultation':'Rank Boost call'} is ${slot.key==='R01'?'tomorrow':'in 2 hours'}. Your Calendly invitation has the joining details. Reply STOP to opt out.`});
+      if(slot.key==='R01'||slot.key==='R02')enqueue(row,'roezan.sms','sms-'+slot.key,{phone:row.phone,first_name:row.first_name,appointment_timezone:row.timezone,appointment_deadline:new Date(slot.due+15*60000).toISOString(),message:`Hi ${row.first_name||'there'}, Bilal from Three Stripes Digital here. Your ${row.offer==='website'?'website consultation':'free Rank Boost call'} is ${slot.key==='R01'?'tomorrow':'in 2 hours'}. Your Calendly invitation has the joining details. Reply STOP to opt out.`});
     }
   }
   if(!statements.length)return {queued:0};

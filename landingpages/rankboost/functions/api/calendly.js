@@ -1,3 +1,4 @@
+import { smsScan, recoveryText } from './_smscopy.js';
 import { WEBSITE_EMAILS } from "./_websiteemailconfig.js";
 import { recoveryBookingLink } from "./_bookinglinks.js";
 import { lifecycleEnabled } from "./_appointments.js";
@@ -167,8 +168,7 @@ function bookingSmsJob({ phone, firstName, startIso, tz }, leadRef, sourceKey) {
   }
   const message =
     `Hey ${firstName || "there"}, it's Bilal from Three Stripes Digital. ` +
-    `You're locked in for ${when}. Reply YES to confirm and I'll have your ` +
-    `firm's keyword list ready before we talk. Reply STOP to opt out.`;
+    `You're locked in for ${when}. Your first boost is free. Reply YES to confirm. Reply STOP to opt out.`;
   return {
     leadRef,
     kind: "roezan.sms",
@@ -180,11 +180,8 @@ function bookingSmsJob({ phone, firstName, startIso, tz }, leadRef, sourceKey) {
 async function followupSmsJob(env, kind, { phone, firstName }, leadRef, sourceKey) {
   if (!phone) return null;
   const bookingUrl = await recoveryBookingLink(env, leadRef);
-  const message = kind === "no_show"
-    ? `Hey ${firstName || "there"}, Bilal here. We missed you for your Rank Boost call. ` +
-      `You can pick a new time here: ${bookingUrl}. Reply STOP to opt out.`
-    : `Hey ${firstName || "there"}, Bilal here. Your Rank Boost call was canceled. ` +
-      `If you'd like to rebook, choose a new time here: ${bookingUrl}. Reply STOP to opt out.`;
+  const lead=await env.LEADS_DB.prepare('SELECT domain,top_keywords,total_boost_fits FROM leads WHERE lead_ref=?1').bind(leadRef).first();
+  const message=recoveryText(firstName,kind,smsScan(lead||{}),bookingUrl);
   return {
     leadRef,
     kind: "roezan.sms",

@@ -146,10 +146,9 @@ export async function onRequestPost(context) {
         phone: row.phone,
         first_name: firstName,
         message:
-          `Hey ${firstName || "there"}, Bilal here. Your rank boost just went ` +
-          `LIVE. Open Google right now and search "${keyword || "your keyword"}" ` +
-          `and look for your firm. Screenshot where you land—that's your ` +
-          `before-and-after. Reply STOP to opt out.`,
+          `Hi ${firstName || "there"}, Bilal from Three Stripes Digital here. Your free boost for ` +
+          `"${keyword || "your keyword"}" is live. Your ranking dashboard will show the updates. ` +
+          `We will review the results on our follow-up. I personally read every reply. Reply STOP to opt out.`,
       },
     });
   }
