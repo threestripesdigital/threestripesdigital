@@ -1,3 +1,4 @@
+import { smsScan, scanLine } from './_smscopy.js';
 import { lifecycleEnabled, normalizedPhone, utcTime } from './_appointments.js';
 import { boostBookingLink } from './_bookinglinks.js';
 import { WEBSITE_BOOKING_URL } from './_offers.js';
@@ -23,18 +24,20 @@ export function prebookingStatement(env,lead,leadRef,token) {
 
 export function prebookingText(row,index) {
  const greeting=`Hi ${row.first_name||'there'}, it's Bilal from Three Stripes Digital.`;
+ const scan=smsScan(row);
  let text;
  if(row.offer==='boost') {
-  const keyword=row.keyword?`Your scan found "${row.keyword}" at #${row.position}.`:`Your scan confirmed that ${row.domain} qualifies for Rank Boost.`;
-  text=index===0?`${greeting} You qualify for Rank Boost. ${keyword}${row.opp_value?` At #1, our model estimates ${row.opp_value}/month in potential case value for that keyword.`:''} Book your free boost call:`:
-   index===1?`${greeting} Following up on your Rank Boost scan. Let's walk through your keyword opportunity on a 30-minute call. No payment or logins required. Book here:`:
-   `${greeting} Last follow-up text about your scan for ${row.domain}. Want to plan your free boost? Choose a time here:`;
+  const rank=scanLine(scan)||`Your scan confirmed that ${row.domain} qualifies for Rank Boost.`;
+  const value=scan.gap?` The monthly gap is ${scan.gap} in potential additional case value.`:'';
+  text=index===0?`${greeting} You qualify for Rank Boost. ${rank}${scan.others?` We found ${scan.others} other qualifying keyword${scan.others===1?'':'s'}.`:''}${value} Your first boost is free. Book your free boost call:`:
+   index===1?`${greeting} Rensch & Rensch appeared in Google's AI Overview and at #2 organically 24 hours after their first boost. Your first boost is free too. Let's get yours started:`:
+   `${greeting} ${rank}${scan.gap?` Can you afford to miss ${scan.gap}/month in potential case value?`:' The firms above you get the first chance to win the click.'} Book your free boost call:`;
  } else {
-  text=index===0?`${greeting} Your site didn't qualify for Rank Boost yet. We didn't find it in Google's first 5 pages for the lawyer searches we checked. Let's review how a website built for search could help. Book your website consultation:`:
-   index===1?`${greeting} Following up on your website scan. We can review a website plan to get your firm showing up on Google, then re-evaluate Rank Boost after it's live. Book your consultation:`:
-   `${greeting} Last follow-up text about ${row.domain}. If you'd like to discuss getting your firm showing up on Google, book your website consultation here:`;
+  text=index===0?`${greeting} You are not ranking on Google's first 5 pages for any keywords in our scan. Let's build the foundation for Google and AI to find your firm. Book your free website consultation:`:
+   index===1?`${greeting} Search Google for your service and city. Does your firm appear? If not, other firms get the first chance to win that client. Let's help your firm get found:`:
+   `${greeting} A good website gets your firm found. Let's look at what ${row.domain} needs so Google and AI can understand your services and locations. Book your free website consultation:`;
  }
- return `${text} ${row.booking_url} Reply with questions. Reply STOP to opt out.`;
+ return `${text} ${row.booking_url} I personally read every reply. Reply STOP to opt out.`;
 }
 
 export async function prebookingCurrent(db,payload,now=Date.now()) {
@@ -61,7 +64,7 @@ export async function prebookingCurrent(db,payload,now=Date.now()) {
 export async function queuePrebookingSms(env,now=Date.now()) {
  if(!lifecycleEnabled(env))return {queued:0};
  const db=env.LEADS_DB;
- const {results=[]}=await db.prepare(`SELECT p.* FROM prebooking_sms p WHERE stopped_at IS NULL
+ const {results=[]}=await db.prepare(`SELECT p.*,l.top_keywords,l.total_boost_fits FROM prebooking_sms p JOIN leads l ON l.lead_ref=p.lead_ref WHERE p.stopped_at IS NULL
   AND julianday(started_at)>julianday(?1,'-7 days') AND julianday(started_at)<=julianday(?1,'-10 minutes')
   AND NOT EXISTS(SELECT 1 FROM integration_jobs j WHERE j.dedupe_key='prebooking:'||p.lead_ref||':'||
    CASE WHEN julianday(p.started_at)<=julianday(?1,'-72 hours') THEN '2'

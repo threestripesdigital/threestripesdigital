@@ -2,7 +2,7 @@
 
 New qualified and no-fit submissions enroll atomically with their saved lead. Existing submissions are not backfilled. Appointment follow-up must be enabled.
 
-Each route sends at 10 minutes, 24 hours and 72 hours after submission, within provider daytime restrictions. The qualified route uses the signed Rank Boost booking link; the website route uses its dedicated Calendly event and attribution token. Missing keyword value omits the entire value sentence.
+Each route sends at 10 minutes, 24 hours and 72 hours after submission, within provider daytime restrictions. The qualified route uses the signed Rank Boost booking link; the website route uses its dedicated Calendly event and attribution token. The qualified route uses the saved scan to calculate the same incremental monthly case-value gap as the emails. Missing scan data omits the value claim. The second text introduces the owner-confirmed Rensch result, with one booking link; proof images remain in email. Website texts focus on being found on Google and AI. Personal replies and STOP remain in every acquisition text.
 
 At dispatch, the source must remain current. Any newer scan, booking either offer, reply, or phone suppression stops the acquisition sequence. Existing booked-call confirmation and reminders remain separate. Provider reply lookup failure prevents a send. Quiet hours defer delivery without exhausting retries. Delayed jobs expire before the next slot, and successful sends are spaced at least 20 hours apart. At most three sends per submission, without catch-up bursts.
 
