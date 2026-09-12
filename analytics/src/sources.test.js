@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ga4Request,ga4Values,sourceReport,syncWistia,wistiaValues,metaVideoValues} from './sources.js';
+import {ga4Request,ga4Values,sourceReport,syncWistia,wistiaValues,metaVideoValues,videoAttribution} from './sources.js';
 import {websiteActions} from './meta.js';
 test('Wistia converts native rates, uses exclusive end dates and preserves snapshots on failure',async()=>{
  const fixture={plays:3,unique_plays:3,unique_loads:254,unique_visitors:254,played_time:47,play_rate:.01,engagement_rate:.05};
@@ -10,7 +10,7 @@ test('Wistia converts native rates, uses exclusive end dates and preserves snaps
  const e={WISTIA_API_TOKEN:'test-only',WISTIA_MEDIA_ID:'8uioqg3047',REPORTING_TIMEZONE:'America/New_York',DB:{prepare(){return{bind(k,v){return{async run(){state.set(k,v);}};}};}}};
  try{
   globalThis.fetch=async url=>{requests.push(new URL(url));return Response.json(new URL(url).pathname.endsWith("/traffic")?[{utm_source:"meta",loads:4,plays:1,engagement_rate:.5},{utm_source:"email",loads:100,plays:90}]:fixture);};
-  await syncWistia(e);assert.equal(requests.length,8);
+  await syncWistia(e);assert.equal(requests.length,12);
   const saved=state.get('wistia_snapshot'),report=JSON.parse(saved);
   assert.equal(Date.parse(requests[0].searchParams.get('end_date'))-Date.parse(report.windows[1].end),86400000);
   assert.equal(report.windows[7].values.plays,3);assert.equal(state.get('wistia_error'),'');
@@ -47,4 +47,13 @@ test('Meta video breakdown excludes organic and unknown sources, with no fake ze
  assert.deepEqual(metaVideoValues([{utm_source:'meta',loads:20,plays:5,engagement_rate:.5},{utm_source:null,loads:100,plays:99},{utm_source:'email',loads:10,plays:9}]),{loads:20,plays:5,play_rate:25,engagement_rate:50});
  assert.equal(metaVideoValues([]).play_rate,null);
  assert.throws(()=>metaVideoValues([{utm_source:'meta',loads:null,plays:0}]));
+});
+
+test('embed attribution requires exact Meta IDs and exposes truncation',()=>{
+ const tagged={embed_url:'https://threestripesdigital.com/rank-boost/law-firms/?utm_source=meta&campaign_id=1&adset_id=2&ad_id=3',loads:5,plays:2};
+ const r=videoAttribution([tagged,{...tagged,loads:3,plays:1},{embed_url:'https://threestripesdigital.com/',loads:10,plays:4}]);
+ assert.deepEqual(r.rows,[{campaign_id:'1',adset_id:'2',ad_id:'3',loads:8,plays:3}]);
+ assert.equal(r.unmatchedLoads,10);assert.equal(r.complete,true);
+ assert.equal(videoAttribution(Array(100).fill(tagged)).complete,false);
+ assert.equal(videoAttribution([{...tagged,embed_url:tagged.embed_url+'&rb_internal=1'}]).rows.length,0);
 });

@@ -229,6 +229,9 @@
   }
 
   function renderResult(res) {
+    if (window.rankBoostReplay && res.ok && res.data && typeof res.data.qualified === "boolean") {
+      window.rankBoostReplay.track("application_complete", {keyword_qualified: res.data.qualified});
+    }
     if (res.data && res.data.lead_token && payload) {
       payload.lead_token = res.data.lead_token;
       payload.website_eligible = Boolean(res.ok && res.data.qualified === false && res.data.reason_not_qualified !== "already_first");
