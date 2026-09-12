@@ -9,7 +9,7 @@ test('provider values occupy the grid without substituting engagement for retent
  assert.equal(funnel.find(m=>m.key==='wistia_engagement').value,25);
  assert.equal(funnel.find(m=>m.key==='retention').value,null);
  assert.equal(performance.find(m=>m.key==='meta_lpv').value,9);
- assert.equal(funnel.find(m=>m.key==='ga4_sessions').value,null);
+ assert.equal(funnel.find(m=>m.key==='ga4_sessions'),undefined);
 });
 
 import {rules, classify} from './metrics.js';
