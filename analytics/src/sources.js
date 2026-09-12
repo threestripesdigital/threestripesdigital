@@ -70,6 +70,19 @@ export function metaVideoValues(rows) {
  if(!Number.isInteger(r.loads)||r.loads<0||!Number.isInteger(r.plays)||r.plays<0) throw Error('Wistia traffic counts unavailable.');
  return {loads:r.loads,plays:r.plays,play_rate:r.loads?r.plays/r.loads*100:null,engagement_rate:typeof r.engagement_rate==='number'?r.engagement_rate*100:null};
 }
+export function videoAttribution(rows) {
+ if(!Array.isArray(rows))throw Error('Wistia embed response is invalid.');
+ const groups={};let unmatchedLoads=0,matchedLoads=0;
+ for(const row of rows){
+  if(!Number.isInteger(row.loads)||row.loads<0||!Number.isInteger(row.plays)||row.plays<0)throw Error('Wistia embed counts unavailable.');
+  let p;try{p=new URL(row.embed_url).searchParams;}catch{unmatchedLoads+=row.loads;continue;}
+  const campaign_id=p.get('campaign_id'),adset_id=p.get('adset_id'),ad_id=p.get('ad_id');
+  if(p.get('utm_source')!=='meta'||p.get('rb_internal')==='1'||![campaign_id,adset_id,ad_id].every(x=>/^\d+$/.test(x||''))){unmatchedLoads+=row.loads;continue;}
+  const key=[campaign_id,adset_id,ad_id].join(':');
+  const g=groups[key]||{campaign_id,adset_id,ad_id,loads:0,plays:0};g.loads+=row.loads;g.plays+=row.plays;groups[key]=g;matchedLoads+=row.loads;
+ }
+ return {rows:Object.values(groups),matchedLoads,unmatchedLoads,complete:rows.length<100};
+}
 export async function syncWistia(env) {
  if(!env.WISTIA_API_TOKEN||!env.WISTIA_MEDIA_ID)return;
  try {
@@ -90,7 +103,14 @@ export async function syncWistia(env) {
    if(!traffic.ok)throw Error(`Wistia traffic reporting failed (${traffic.status}).`);
    const rows=await traffic.json();
    if(!Array.isArray(rows)||rows.length>=100)throw Error('Wistia traffic breakdown may be incomplete.');
-   windows[days]={start,end,values,metaStart,metaValues:metaVideoValues(rows),sourceBreakdown:rows.map(({utm_source,loads,plays})=>({source:utm_source,loads,plays}))};
+   let attribution;
+   try{
+    const embedUrl=new URL(url);embedUrl.pathname+='/embed_locations';embedUrl.searchParams.set('start_date',metaStart);embedUrl.searchParams.set('per_page','100');
+    const embeds=await fetch(embedUrl,{headers:{Authorization:'Bearer '+env.WISTIA_API_TOKEN,'X-Wistia-API-Version':'2026-07'},signal:AbortSignal.timeout(20000)});
+    if(!embeds.ok)throw Error('Embed attribution unavailable');
+    attribution=videoAttribution(await embeds.json());
+   }catch{attribution={rows:[],complete:false,error:'Wistia embed attribution could not be imported.'};}
+   windows[days]={start,end,values,metaStart,metaValues:metaVideoValues(rows),attribution,sourceBreakdown:rows.map(({utm_source,loads,plays})=>({source:utm_source,loads,plays}))};
   }
   await setState(env,'wistia_snapshot',JSON.stringify({media:env.WISTIA_MEDIA_ID,windows}));
   await setState(env,'wistia_success',new Date().toISOString());await setState(env,'wistia_error','');
@@ -107,6 +127,6 @@ export function sourceReport(env,state,days,end) {
   browserTracking:env.BROWSER_TRACKING_ENABLED!=='false',
   ga4:{configured:!!env.GA4_PROPERTY_ID&&!!env.GA4_SERVICE_ACCOUNT,property:env.GA4_PROPERTY_ID||null,lastSync:state.ga4_success||null,error:state.ga4_error||null,stale:!state.ga4_success||Date.now()-Date.parse(state.ga4_success)>7200000||window?.end!==end,window:window||null},
   wistia:{connected:!!env.WISTIA_API_TOKEN&&!!state.wistia_success&&!state.wistia_error&&!videoStale,lastSync:state.wistia_success||null,error:state.wistia_error||null,stale:videoStale,window:videoWindow||null,media:env.WISTIA_MEDIA_ID||null,message:state.wistia_error||(state.wistia_success?'Direct Wistia report for the main VSL, across all embed locations and traffic sources. Includes prelaunch activity. Average engagement is not the percentage of viewers who watched half the video.':'Waiting for a direct Wistia reporting import.')},
-  posthog:{connected:false,message:'No Three Stripes project was found in the available PostHog account. It is optional when GA4 supplies site reporting.'}
+  posthog:{connected:false,message:'PostHog status is supplied by the dedicated replay reporting integration.'}
  };
 }

@@ -4,14 +4,14 @@ const CONTENT_SECURITY_POLICY = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self' https://www.facebook.com https://*.facebook.com",
-  "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com https://static.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://src.litix.io https://browser.sentry-cdn.com",
+  "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://assets.calendly.com https://static.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://src.litix.io https://browser.sentry-cdn.com https://us-assets.i.posthog.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com blob: https://fast.wistia.com",
   "font-src 'self' data: https://fonts.gstatic.com https://*.wistia.com https://fast.wistia.net",
   "img-src 'self' data: https:",
   "media-src 'self' https://threestripesdigital.com blob: data: https://*.wistia.com https://*.wistia.net",
   "worker-src 'self' blob:",
   "frame-src https://www.facebook.com https://*.facebook.com https://calendly.com https://*.calendly.com https://fast.wistia.com https://fast.wistia.net",
-  "connect-src 'self' https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://calendly.com https://*.calendly.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://*.litix.io",
+  "connect-src 'self' https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://calendly.com https://*.calendly.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.wistia.com https://*.wistia.net https://*.litix.io https://us.i.posthog.com https://us-assets.i.posthog.com",
   "upgrade-insecure-requests",
 ].join("; ");
 

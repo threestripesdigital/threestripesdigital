@@ -117,3 +117,13 @@ Wistia traffic breakdown is filtered to exact `utm_source=meta`, with dates clam
 Cost / Booked Call is USD Meta spend divided by non-cancelled Calendly bookings for the configured Rank Boost event, booked after launch and in the selected period, with Calendly `tracking.utm_source=meta`. The Calendly API supplies source data once per invitee; unavailable attribution keeps the metric unavailable. Historical untagged bookings are not guessed to be Meta. Campaign selection additionally requires a matching Calendly campaign ID. Source-only bookings appear in the all-campaigns total. The booking handoff now forwards source and campaign from the saved lead URL, including recovery links, without restoring browser analytics.
 
 The reporting worker requires CALENDLY_PAT as a secret and CALENDLY_EVENT_TYPE_URI. Apply migration 0004 before deploying. Calendly responses are reduced to source/campaign fields; invitee PII is not stored in reporting by this lookup.
+
+### PostHog session replay and provider calculations (September 12, 2026)
+
+Dedicated organization Three Stripes, project Rank Boost (605937). The landing page loads `replay.js` and retrieves only the public ingestion token from `api/replay-config`. Set `POSTHOG_PROJECT_TOKEN` in Pages production. The analytics worker uses `POSTHOG_PERSONAL_API_KEY` and `POSTHOG_PROJECT_ID` for an hourly aggregate query. The previous Cloudflare browser tracker remains disabled.
+
+PostHog events use the `rb_` prefix: session, VSL load/play/watched milestones, application start/complete, scheduler open, and browser booking confirmation. Inputs and personal result sections are masked, cross-origin booking iframes are blocked, and console/network payload recording is off. GPC, DNT, internal browser exclusion and token-bearing recovery URLs skip collection. Browser booking confirmation is not a verified Calendly booking.
+
+Historical Meta-source Wistia reporting remains visible. The embed-location import attempts attribution using explicit campaign/ad set/ad IDs without collecting raw URLs. September 12 inspection found no matched embed rows. New PostHog VSL rows are labeled with their capture start, and partial new plays are never divided into all historical campaign spend.
+
+Calculated provider cards include cost per landing page view, VSL play, completed form, keyword-qualified scan rate, and the period ratio of verified bookings to Meta landing views (explicitly not a matched visitor cohort). Sales outcome metrics accept verified Meta-source Calendly attribution without an old browser session. Zero denominators remain undefined; Wistia engagement is never substituted for 50% retention. ROAS remains unavailable without reconciled revenue.
