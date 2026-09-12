@@ -15,12 +15,14 @@
  const cleanUrl=value=>{try{const u=new URL(value);u.search='';u.hash='';return u.href;}catch{return '';}};
  const pending=[],sent=new Set();let ph;
  function track(event,extra={}){
+  if(event==='application_complete'&&!sent.has('application_start'))return;
   if(sent.has(event))return;sent.add(event);
   const item=['rb_'+event,{...properties,...extra}];if(ph)ph.capture(...item);else pending.push(item);
  }
  window.rankBoostReplay={track};
  const form=document.getElementById('qualify-form');
  form?.addEventListener('input',()=>track('application_start'),{once:true});
+ form?.addEventListener('submit',()=>track('application_start'),{once:true});
  document.querySelectorAll('.hero-vsl wistia-player').forEach(player=>{
   track('vsl_load');player.addEventListener('play',()=>track('vsl_play'));
   player.addEventListener('percent-watched-change',()=>{
