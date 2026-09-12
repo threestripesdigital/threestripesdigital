@@ -5,7 +5,7 @@ export async function syncPostHog(env){
  try{
   const start=shiftDay(dayIn(Date.now(),env.REPORTING_TIMEZONE),-90);
   // Fixed query fields only. No visitor identity or recording payloads are copied into this dashboard.
-  const query=`SELECT toDate(timestamp, 'America/New_York') AS day, properties.campaign_id AS campaign_id, properties.adset_id AS adset_id, properties.ad_id AS ad_id, ${eventNames.map(e=>`uniqExactIf(properties.$session_id, event = 'rb_${e}') AS ${e}`).join(', ')} FROM events WHERE timestamp >= toDateTime('${start} 00:00:00', 'America/New_York') AND properties.funnel = 'rank_boost' AND properties.utm_source = 'meta' AND properties.$session_id IS NOT NULL GROUP BY day, campaign_id, adset_id, ad_id LIMIT 10000`;
+  const query=`SELECT toDate(toTimeZone(timestamp, 'America/New_York')) AS day, properties.campaign_id AS campaign_id, properties.adset_id AS adset_id, properties.ad_id AS ad_id, ${eventNames.map(e=>`uniqExactIf(properties.$session_id, event = 'rb_${e}') AS ${e}`).join(', ')} FROM events WHERE timestamp >= toDateTime('${start} 00:00:00') AND properties.funnel = 'rank_boost' AND properties.utm_source = 'meta' AND properties.$session_id IS NOT NULL GROUP BY day, campaign_id, adset_id, ad_id LIMIT 10000`;
   const r=await fetch(`https://us.posthog.com/api/projects/${env.POSTHOG_PROJECT_ID}/query/`,{method:'POST',headers:{Authorization:'Bearer '+env.POSTHOG_PERSONAL_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({query:{kind:'HogQLQuery',query}}),signal:AbortSignal.timeout(25000)});
   if(!r.ok)throw Error(`PostHog reporting failed (${r.status}).`);
   const d=await r.json();if(!Array.isArray(d.results)||d.results.length>=10000)throw Error('PostHog report incomplete.');

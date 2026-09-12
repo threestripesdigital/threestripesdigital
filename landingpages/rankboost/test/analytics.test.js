@@ -120,3 +120,12 @@ test('ad and ad-set conversion costs use weighted spend and exclude unmatched fo
  for(const [k,v] of Object.entries(values))e.DB.raw.prepare('INSERT INTO state VALUES(?,?)').run(k,v);
  const r=await report(e,new URL('https://local/api/report'));assert.equal(r.adsets[0].leads,2);assert.equal(r.adsets[0].cost_per_lead,30);assert.equal(r.adsets[0].form_fills,4);assert.equal(r.adsets[0].cost_per_form,15);assert.equal(r.ads.find(a=>a.id==='223').cost_per_lead,null);assert.equal(r.formFillReporting.unattributed,3);
 });
+
+test('direct Meta bookings expose outcomes without custom browser sessions',async()=>{
+ const e=env();e.BROWSER_TRACKING_ENABLED='false';
+ const now=new Date().toISOString(),day=dayIn(now,e.REPORTING_TIMEZONE);
+ await e.DB.prepare("INSERT INTO state(key,value) VALUES('funnel_success',?)").bind(now).run();
+ await e.DB.prepare("INSERT INTO calls(id,booked_at,booked_day,scheduled_at,scheduled_day,status,qualified,updated_at,event_type_uri,booking_source,booking_campaign) VALUES(?,?,?,?,?,'showed',1,?,?, 'meta','111')").bind('direct',now,day,now,day,now,e.CALENDLY_EVENT_TYPE_URI).run();
+ const r=await report(e,new URL('https://dashboard.test/api/report'));
+ assert.equal(r.totals.showed,1);assert.equal(r.totals.qualified,1);assert.equal(r.metrics.find(m=>m.key==='show').value,100);
+});
