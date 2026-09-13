@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preload" as="image" href="assets/rankboost-vsl-page-one.png" fetchpriority="high" />
 
   <!-- Browser-based Meta measurement. -->
   <script src="meta.js"></script>
@@ -82,8 +83,26 @@
         <section class="hero-vsl" aria-labelledby="hero-vsl-title">
           <div class="hero-vsl-frame">
             <h2 id="hero-vsl-title" class="sr-only">5-minute Rank Boost demo</h2>
-            <style>wistia-player[media-id='8uioqg3047']:not(:defined) { background: center / contain no-repeat url('assets/rankboost-vsl-page-one.png'); display: block; padding-top:56.25%; }</style>
+            <style>
+              .hero-vsl-frame { background: center / contain no-repeat url('assets/rankboost-vsl-page-one.png'); }
+              wistia-player[media-id='8uioqg3047']:not(:defined),
+              wistia-player[media-id='8uioqg3047'].poster-loading { opacity: 0; }
+            </style>
             <wistia-player media-id="8uioqg3047" aspect="1.7777777777777777" poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.png"></wistia-player>
+            <script>
+              (() => {
+                const player = document.querySelector('wistia-player[media-id="8uioqg3047"]');
+                player.classList.add('poster-loading');
+                // Wistia renders its saved swatch before applying the poster override.
+                // Keep our matching background visible until the player is ready.
+                player.addEventListener('api-ready', async () => {
+                  const poster = new Image();
+                  poster.src = player.getAttribute('poster');
+                  try { await poster.decode(); } catch (_) { /* Keep playback available if the image fails. */ }
+                  requestAnimationFrame(() => player.classList.remove('poster-loading'));
+                }, { once: true });
+              })();
+            </script>
           </div>
           <p class="hero-vsl-caption hero-subcopy">Watch the 5-minute demo to see exactly how the boost works, then apply below. If your firm qualifies, your first boost is free. No credit card, no site access, no contract.</p>
         </section>
