@@ -2,7 +2,7 @@ import { prebookingCurrent } from './_prebooking.js';
 import { websiteEmailJobCurrent } from "./_websiteemails.js";
 import { appointmentCurrent } from "./_appointments.js";
 import { WEBSITE_TAG_IDS } from "./_offers.js";
-import { dispatchIntegrationJob, IntegrationError } from "./_providers.js";
+import { appointmentEnrollmentAccepted, dispatchIntegrationJob, IntegrationError } from "./_providers.js";
 
 const MAX_ATTEMPTS = 5;
 const DEFAULT_LIMIT = 4;
@@ -436,6 +436,41 @@ export function jobStatementForLeadState(db, job, leadId, leadStatus) {
     );
 }
 
+export async function reconcileAppointmentEnrollments(env, deadlineAt) {
+  const {results = []} = await env.LEADS_DB.prepare(`SELECT j.id, j.payload_json,
+    (SELECT MAX(a.created_at) FROM integration_job_attempts a
+      WHERE a.job_id=j.id AND a.event_type='started') AS started_at
+    FROM integration_jobs j WHERE j.kind='kit.appointment_email'
+      AND j.status='failed' AND j.last_error LIKE 'delivery_unknown:%'
+      AND j.available_at <= CURRENT_TIMESTAMP
+    ORDER BY j.available_at, j.id LIMIT 2`).all();
+  let reconciled = 0;
+  for (const job of results) {
+    if (Date.now() >= deadlineAt - 250) break;
+    // Rotate unresolved jobs so one outage cannot starve other reconciliation.
+    await env.LEADS_DB.prepare(`UPDATE integration_jobs SET available_at=datetime('now','+5 minutes')
+      WHERE id=?1 AND status='failed'`).bind(job.id).run();
+    try {
+      if (!job.started_at || !await appointmentEnrollmentAccepted(env,
+        JSON.parse(job.payload_json), job.started_at, {timeoutMs: 2500, deadlineAt})) continue;
+      const guard = "SELECT id FROM integration_jobs WHERE id=?1 AND status='failed' AND last_error LIKE 'delivery_unknown:%'";
+      const results = await env.LEADS_DB.batch([
+        env.LEADS_DB.prepare(`INSERT INTO integration_job_attempts (job_id,attempt_id,event_type,error_code)
+          SELECT id,?2,'succeeded','enrollment_reconciled' FROM integration_jobs WHERE id IN (${guard})`)
+          .bind(job.id,crypto.randomUUID()),
+        env.LEADS_DB.prepare(`UPDATE operational_alerts SET status='resolved',resolved_at=CURRENT_TIMESTAMP
+          WHERE job_id IN (${guard}) AND status<>'resolved'`).bind(job.id),
+        env.LEADS_DB.prepare(`UPDATE integration_jobs SET status='completed',last_error=NULL,dead_at=NULL,
+          completed_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE id IN (${guard})`).bind(job.id),
+      ]);
+      reconciled += Number(results[2].meta?.changes || 0);
+    } catch {
+      // Provider/read failures preserve the original alert and unsafe replay guard.
+    }
+  }
+  return reconciled;
+}
+
 export async function processIntegrationJobs(env, options = {}) {
   if (!env.LEADS_DB) throw new Error("integration_database_unavailable");
   const limit = boundedInteger(options.limit, DEFAULT_LIMIT, 1, MAX_LIMIT);
@@ -469,6 +504,7 @@ export async function processIntegrationJobs(env, options = {}) {
   }
   const deadlineAt = Date.now() + budgetMs;
   try {
+    summary.reconciled = await reconcileAppointmentEnrollments(env, Math.min(deadlineAt, Date.now() + 3000));
     const { results } = await env.LEADS_DB
       .prepare(
         `SELECT job.id, job.lead_ref, job.kind, job.dedupe_key,
@@ -511,6 +547,8 @@ export async function processIntegrationJobs(env, options = {}) {
         }
         continue;
       }
+      // Short background kicks leave appointment sends for the minute processor.
+      if (job.kind === 'kit.appointment_email' && deadlineAt - Date.now() < 16000) continue;
       const leaseToken = crypto.randomUUID();
       if (!await claimJob(env.LEADS_DB, job, leaseToken)) {
         summary.lost += 1;
@@ -560,8 +598,8 @@ export async function processIntegrationJobs(env, options = {}) {
           });
         }
         await dispatchIntegrationJob(env, job.kind, payload, {
-          timeoutMs: 7000,
-          deadlineAt: Math.min(deadlineAt - 250, Date.now() + 7000),
+          timeoutMs: job.kind === 'kit.appointment_email' ? 15000 : 7000,
+          deadlineAt: Math.min(deadlineAt - 250, Date.now() + (job.kind === 'kit.appointment_email' ? 15000 : 7000)),
         });
         providerCompleted=true;
         if (await finishJob(env.LEADS_DB, job.id, leaseToken)) {
@@ -761,6 +799,8 @@ export async function flushOperationalAlerts(env, options = {}) {
          FROM operational_alerts
          WHERE status = 'open' AND notified_at IS NULL
            AND notification_attempts < 8
+           AND NOT (COALESCE(resource_key,'')='kit.appointment_email' AND category='delivery_unknown'
+             AND first_seen_at > datetime('now','-2 minutes'))
            AND (next_notification_at IS NULL OR next_notification_at <= CURRENT_TIMESTAMP)
          ORDER BY first_seen_at LIMIT ?1`
       )

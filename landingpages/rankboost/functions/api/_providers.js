@@ -303,6 +303,30 @@ async function appointmentSubscriberStopped(env,payload,options) {
   return stopped;
 }
 
+// Read-only evidence: never repeat the enrollment POST to resolve uncertainty.
+export async function appointmentEnrollmentAccepted(env, payload, startedAt, options = {}) {
+  if (!env.KIT_API_KEY) throw missing('KIT_API_KEY');
+  const started = Date.parse(startedAt.replace(' ', 'T') + 'Z');
+  if (!Number.isFinite(started) || !payload.kit_subscriber_id || !payload.sequence_id) return false;
+  const url = new URL(`https://api.kit.com/v4/sequences/${payload.sequence_id}/subscribers`);
+  url.searchParams.set('status', 'all');
+  url.searchParams.set('added_after', new Date(started - 86400000).toISOString().slice(0, 10));
+  // Bounded pagination. Missing evidence always remains unknown, never resendable.
+  for (let page = 0; page < 3; page++) {
+    const data = await (await request(url.toString(), {
+      headers: {'X-Kit-Api-Key': env.KIT_API_KEY},
+    }, options)).json();
+    const match = (data.subscribers || []).find(subscriber =>
+      String(subscriber.id) === String(payload.kit_subscriber_id) &&
+      subscriber.email_address?.toLowerCase() === payload.email?.toLowerCase());
+    const added = Date.parse(match?.added_at);
+    if (Number.isFinite(added) && added >= started && added <= started + 30000) return true;
+    if (!data.pagination?.has_next_page || !data.pagination.end_cursor) return false;
+    url.searchParams.set('after', data.pagination.end_cursor);
+  }
+  return false;
+}
+
 async function appointmentEmail(env,payload,options) {
   if(await appointmentSubscriberStopped(env,payload,options))return;
   const definition=[...Object.values(APPOINTMENT_EMAILS.boost),...Object.values(APPOINTMENT_EMAILS.website)].find(e=>e.id===payload.sequence_id);

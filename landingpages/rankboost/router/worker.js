@@ -96,7 +96,7 @@ async function processIntegrationJobs(origin, processorToken) {
       body: JSON.stringify({
         action: "process",
         limit: 4,
-        budget_ms: 10000,
+        budget_ms: 20000,
         no_show_limit: 4,
       }),
       signal: controller.signal,
