@@ -18,6 +18,8 @@ import {
 } from "../functions/api/calendly.js";
 import { onRequestPost as checkPost } from "../functions/api/check.js";
 import {
+  reconcileAppointmentEnrollments,
+  flushOperationalAlerts,
   processIntegrationJobs,
   repairIntegrationJobs,
   requeueDeadIntegrationJobs,
@@ -2022,4 +2024,58 @@ test('unbooked SMS sends once in safe hours and suppresses opt-outs before provi
   db.prepare("INSERT INTO sms_suppression(phone) VALUES ('12025550100')").run();
   await dispatchIntegrationJob(env,'roezan.sms',{prebooking_lead:'pre-lead',phone:'12025550100',message:'blocked'});assert.equal(sends,1);
  }finally {globalThis.fetch=original;}
+});
+
+
+test('ambiguous Kit enrollment reconciles exact attempt evidence without a POST', async () => {
+  const db = migratedSqlite();
+  const env = {LEADS_DB:d1Sqlite(db), KIT_API_KEY:'test'};
+  const payload = JSON.stringify({email:'test@example.com',kit_subscriber_id:123,sequence_id:2887914});
+  db.prepare(`INSERT INTO integration_jobs (id,kind,dedupe_key,payload_json,status,last_error)
+    VALUES (175,'kit.appointment_email','test',?,'failed','delivery_unknown:provider_timeout')`).run(payload);
+  db.exec(`INSERT INTO integration_job_attempts (job_id,attempt_id,event_type,created_at)
+    VALUES (175,'original','started','2026-09-14 12:48:42');
+    INSERT INTO operational_alerts (alert_key,category,job_id,resource_key,message_code)
+    VALUES ('unknown','delivery_unknown',175,'kit.appointment_email','delivery_unknown:provider_timeout');`);
+  const originalFetch = globalThis.fetch;
+  let added = '2026-09-13T12:48:56Z';
+  let fail = false;
+  let reads = 0;
+  globalThis.fetch = async (url, options) => {
+    assert.equal(options.method, undefined);
+    assert.match(String(url), /sequences\/2887914\/subscribers/);
+    reads++;
+    if (fail) throw new Error('offline');
+    return Response.json({subscribers:[{id:123,email_address:'test@example.com',added_at:added}],pagination:{has_next_page:false}});
+  };
+  try {
+    assert.equal(await reconcileAppointmentEnrollments(env,Date.now()+3000),0);
+    assert.equal(db.prepare('SELECT status FROM integration_jobs').get().status,'failed');
+    db.exec("UPDATE integration_jobs SET available_at=CURRENT_TIMESTAMP");
+    fail = true;
+    assert.equal(await reconcileAppointmentEnrollments(env,Date.now()+3000),0);
+    assert.equal(db.prepare('SELECT status FROM operational_alerts').get().status,'open');
+    db.exec("UPDATE integration_jobs SET available_at=CURRENT_TIMESTAMP");
+    fail = false;
+    added = '2026-09-14T12:48:56Z';
+    assert.equal(await reconcileAppointmentEnrollments(env,Date.now()+3000),1);
+    assert.equal(db.prepare('SELECT status FROM integration_jobs').get().status,'completed');
+    assert.equal(db.prepare('SELECT status FROM operational_alerts').get().status,'resolved');
+    assert.equal(db.prepare("SELECT count(*) n FROM integration_job_attempts WHERE event_type='succeeded' AND error_code='enrollment_reconciled'").get().n,1);
+    assert.equal(await reconcileAppointmentEnrollments(env,Date.now()+3000),0);
+    assert.equal(reads,3);
+  } finally { globalThis.fetch = originalFetch; db.close(); }
+});
+
+test('Kit unknown alert gets a reconciliation grace period but other alerts do not', async () => {
+  const db = migratedSqlite();
+  const env = {LEADS_DB:d1Sqlite(db)};
+  db.exec(`INSERT INTO operational_alerts (alert_key,category,resource_key,message_code)
+    VALUES ('kit','delivery_unknown','kit.appointment_email','delivery_unknown:provider_timeout');`);
+  assert.equal((await flushOperationalAlerts(env)).pending,0);
+  db.exec("UPDATE operational_alerts SET first_seen_at=datetime('now','-3 minutes')");
+  assert.equal((await flushOperationalAlerts(env)).pending,1);
+  db.exec("UPDATE operational_alerts SET first_seen_at=CURRENT_TIMESTAMP,resource_key='roezan.sms'");
+  assert.equal((await flushOperationalAlerts(env)).pending,1);
+  db.close();
 });

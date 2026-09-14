@@ -136,7 +136,7 @@ export async function onRequestPost({ request, env }) {
     const prebookingSms = await queuePrebookingSms(env);
     const jobs = await processIntegrationJobs(env, {
       limit: body.limit || 4,
-      budgetMs: Math.min(Number(body.budget_ms) || 10000, 10000),
+      budgetMs: Math.min(Number(body.budget_ms) || 20000, 20000),
     });
     const pollTimeoutMs = Math.max(
       500,

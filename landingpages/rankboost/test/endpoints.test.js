@@ -220,7 +220,7 @@ test("router cron invokes the protected durable-job processor", async () => {
     assert.deepEqual(JSON.parse(requests[0].options.body), {
       action: "process",
       limit: 4,
-      budget_ms: 10000,
+      budget_ms: 20000,
       no_show_limit: 4,
     });
   } finally {
