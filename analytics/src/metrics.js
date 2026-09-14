@@ -8,7 +8,7 @@ export const rules = [
  ['application','Application completion','percent','high',60,40,'Reduce manual questions and check form errors on mobile.'],
  ['conversion','Visitor to booked call','percent','high',3,1.5,'Inspect play rate, VSL retention, application completion and scheduler drop-off.'],
  ['scheduled_cost','Cost per booked call','money','low',120,200,'If CPM and CTR are healthy, diagnose the landing page and scheduler.'],
- ['qualified_rate','Qualified rate','percent','high',null,null,'Review sales fit on each booking. No benchmark has been set for this metric.'],
+ ['qualified_rate','Qualified rate','percent','high',null,null,'Passing the form and booking a Rank Boost meeting means qualified. No additional review is required.'],
  ['qualified_cost','Cost per qualified call','money','low',150,250,'Make the creative explicitly qualify law firms and practicing attorneys.'],
  ['showed_cost','Cost per showed call','money','low',200,300,'Check the confirmation page, calendar invitation and reminder delivery.'],
  ['show','Show rate','percent','high',65,50,'Improve confirmation videos and the pre-call email and SMS sequence.'],

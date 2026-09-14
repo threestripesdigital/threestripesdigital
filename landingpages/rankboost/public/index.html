@@ -35,6 +35,7 @@
   <link rel="preload" as="image" href="assets/rankboost-vsl-page-one.png" fetchpriority="high" />
 
   <!-- Browser-based Meta measurement. -->
+  <script src="attribution.js"></script>
   <script src="meta.js"></script>
   <!-- Wistia player for the hero VSL. -->
   <script src="https://fast.wistia.com/player.js" async></script>
@@ -672,7 +673,7 @@
             domain: domain,
             company: (form.company.value || "").trim(),
             website_url: website,
-            page_url: location.href,
+            page_url: window.rankBoostAttribution?.pageUrl() || location.href,
             event_id: eventId,
             fbp: fbp,
             fbc: fbc,

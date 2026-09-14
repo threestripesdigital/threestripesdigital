@@ -65,6 +65,7 @@
       }
       if (bookingSource.utm_source === 'meta') {
         params.push('utm_source=meta');
+        for (var key of ['utm_medium','utm_term']) if (bookingSource[key]) params.push(key+'='+encodeURIComponent(bookingSource[key]));
         if (bookingSource.utm_campaign) params.push('utm_campaign=' + encodeURIComponent(bookingSource.utm_campaign));
       }
       if (lead.lead_token) params.push("utm_content=" + encodeURIComponent(lead.lead_token));
