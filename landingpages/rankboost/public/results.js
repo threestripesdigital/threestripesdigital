@@ -357,7 +357,7 @@
         fbp: payload.fbp || "",
         fbc: payload.fbc || "",
         external_id: payload.external_id || "",
-        page_url: location.href
+        page_url: window.rankBoostAttribution?.pageUrl() || location.href
       };
       try { sessionStorage.setItem(TRACK_KEY, JSON.stringify(pending)); } catch (e) {}
     }

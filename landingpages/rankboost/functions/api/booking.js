@@ -2,7 +2,7 @@ function bookingSource(pageUrl) {
   try {
     const q = new URL(pageUrl).searchParams;
     if (q.get('utm_source')?.toLowerCase() !== 'meta') return {};
-    return { utm_source: 'meta', utm_campaign: q.get('campaign_id') || q.get('utm_campaign') || '' };
+    return { utm_source: 'meta', utm_campaign: q.get('campaign_id') || q.get('utm_campaign') || '', utm_medium: q.get('adset_id') || 'paid', utm_term: q.get('ad_id') || '' };
   } catch { return {}; }
 }
 

@@ -1,3 +1,5 @@
+import {syncBookingTiming} from './booking-timing.js';
+import {syncDelivery} from './delivery.js';
 import {syncPostHog} from './posthog.js';
 import {syncFormFills} from './form-fills.js';
 import {inventory,preview,recordReview} from './creative-qa.js';
@@ -9,7 +11,7 @@ import {authorized,cookie,equal,limited,readBody} from './auth.js';
 const json=(body,status=200,headers={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store',...headers}});
 async function assets(env,request,path) {const u=new URL(request.url);if(path)u.pathname=path;return env.ASSETS.fetch(new Request(u,request));}
 async function runSync(env) {
- const outcomes=await Promise.allSettled([syncMeta(env),syncFunnel(env),syncGA4(env),syncWistia(env),syncFormFills(env),syncPostHog(env)]);
+ const outcomes=await Promise.allSettled([syncDelivery(env),syncMeta(env),syncFunnel(env).then(()=>syncBookingTiming(env)),syncGA4(env),syncWistia(env),syncFormFills(env),syncPostHog(env)]);
  await env.DB.prepare('DELETE FROM rate_limits WHERE expires < ?').bind(Date.now()).run();
  if(outcomes.some(x=>x.status==='rejected')) console.log('reporting_sync_failed');
 }
@@ -40,7 +42,8 @@ async function route(req,env,ctx) {
  if(path==='/api/calls'&&req.method==='POST') {
   const b=await readBody(req),old=await env.DB.prepare('SELECT * FROM calls WHERE id=?').bind(String(b.id||'')).first();
   if(!old)return json({error:'Call not found'},404);
-  if(!['scheduled','showed','no_show','cancelled'].includes(b.status)||![null,0,1].includes(b.qualified))return json({error:'Invalid call outcome'},400);
+  b.qualified=old.keyword_qualified;
+  if(!['scheduled','showed','no_show','cancelled'].includes(b.status))return json({error:'Invalid call outcome'},400);
   if(['showed','no_show'].includes(b.status)&&Date.parse(old.scheduled_at)>Date.now())return json({error:'Attendance can only be recorded after the scheduled start time'},400);
   if(typeof b.boosted!=='boolean'||typeof b.paid!=='boolean')return json({error:'Invalid boost or payment outcome'},400);
   if((b.boosted||b.paid)&&b.status!=='showed')return json({error:'Mark the call showed before recording boost or sale outcomes'},400);
@@ -73,5 +76,5 @@ export default {
   secured.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.fbcdn.net https://*.facebook.com; frame-src https://business.facebook.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   return secured;
  },
- async scheduled(_event,env,ctx){ctx.waitUntil(runSync(env));}
+ async scheduled(event,env,ctx){ctx.waitUntil(event.cron==='*/5 * * * *'?Promise.allSettled([syncFunnel(env),syncDelivery(env)]):runSync(env));}
 };

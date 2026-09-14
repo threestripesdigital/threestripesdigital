@@ -1,7 +1,7 @@
 // Dedicated PostHog recording and measurement. The old Cloudflare tracker stays off.
 (async()=>{
  if(navigator.globalPrivacyControl===true||navigator.doNotTrack==='1')return;
- const query=new URLSearchParams(location.search);
+ const query=new URL(window.rankBoostAttribution?.pageUrl()||location.href).searchParams;
  if([...query.keys()].some(k=>/token|email|phone|name|lead_ref/i.test(k)))return;
  try{
   if(query.get('rb_internal')==='1')localStorage.setItem('rb_analytics_exclude','1');
