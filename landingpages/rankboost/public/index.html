@@ -569,6 +569,7 @@
       function setInvalid(field, invalid) {
         if (!field) return;
         field.classList.toggle("is-invalid", !!invalid);
+        if (invalid && window.rankBoostReplay) window.rankBoostReplay.capture("form_invalid", { field: field.getAttribute("data-field") || "" });
         var control = field.querySelector("input, select, textarea");
         if (control) control.setAttribute("aria-invalid", invalid ? "true" : "false");
       }
@@ -591,7 +592,27 @@
           if (!formOpened) {
             formOpened = true;
             if (window.tsdMetaTrackingEnabled === true && window.fbq) {
-              fbq("trackCustom", "LeadFormOpened", { content_name: "rank-boost-qualification" });
+              var openId = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : "open-" + Date.now();
+              fbq("trackCustom", "LeadFormOpened", { content_name: "rank-boost-qualification" }, { eventID: openId });
+              fbq("track", "SubmitApplication", { content_name: "rank-boost-qualification" }, { eventID: openId });
+              // Server copy of the same event id, so Meta still counts the open
+              // when the pixel is blocked and dedupes it against the pixel when it is not.
+              var openCookie = function (k) { var m = document.cookie.match("(?:^|; )" + k + "=([^;]*)"); return m ? decodeURIComponent(m[1]) : ""; };
+              var openFbc = openCookie("_fbc");
+              if (!openFbc) { var openClick = new URLSearchParams(location.search).get("fbclid"); if (openClick) openFbc = "fb.1." + Date.now() + "." + openClick; }
+              fetch("api/track", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                keepalive: true,
+                body: JSON.stringify({
+                  event_name: "SubmitApplication",
+                  event_id: openId,
+                  fbp: openCookie("_fbp"),
+                  fbc: openFbc,
+                  external_id: window.tsdExtId || "",
+                  page_url: window.rankBoostAttribution?.pageUrl() || location.href
+                })
+              }).catch(function () { /* the pixel copy already fired; the relay is best effort */ });
             }
           }
 

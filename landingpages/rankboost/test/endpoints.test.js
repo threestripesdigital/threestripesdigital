@@ -169,6 +169,117 @@ test("booking verifier requires exact event and invitee identifiers", async () =
   assert.equal(response.status, 400);
 });
 
+// A LEADS_DB stand-in for /api/track: records every prepared statement with the
+// arguments bound to it, and answers the usage-counter reservation with `count`.
+function trackDbRecorder(count) {
+  const state = { prepared: [], batches: [] };
+  const db = {
+    prepare(sql) {
+      const statement = {
+        sql,
+        args: [],
+        bind(...args) {
+          statement.args = args;
+          return statement;
+        },
+        async first() {
+          return { count };
+        },
+      };
+      state.prepared.push(statement);
+      return statement;
+    },
+    async batch(statements) {
+      state.batches.push(statements);
+      return statements.map(() => ({ success: true }));
+    },
+  };
+  return { db, state };
+}
+
+function formOpenRequest() {
+  return new Request("https://threestripesdigital.com/api/track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Origin: "https://threestripesdigital.com",
+      "CF-Connecting-IP": "203.0.113.9",
+      "User-Agent": "Mozilla/5.0 (test)",
+    },
+    body: JSON.stringify({
+      event_name: "SubmitApplication",
+      event_id: "open-1234567890",
+      fbp: "fb.1.1.2",
+      external_id: "visitor-1",
+      page_url: "https://threestripesdigital.com/rank-boost/law-firms/?utm_source=meta",
+    }),
+  });
+}
+
+test("tracking relay queues a pre-lead form open with browser identifiers only", async () => {
+  const { db, state } = trackDbRecorder(1);
+  const response = await trackPost({
+    request: formOpenRequest(),
+    // No waitUntil: kickIntegrationJobs returns without work when the context
+    // cannot hold background work, which keeps the relay under test.
+    env: { FUNNEL_SIGNING_KEY: "configured", LEADS_DB: db },
+  });
+  assert.equal(response.status, 204);
+  assert.equal(state.batches.length, 1);
+
+  const payload = state.batches[0]
+    .flatMap((statement) => statement.args)
+    .find((arg) => typeof arg === "string" && arg.includes("\"event_name\""));
+  assert.ok(payload, "the queued job carries a serialized Conversions API payload");
+  assert.ok(payload.includes("\"event_name\":\"SubmitApplication\""));
+  assert.ok(payload.includes("\"content_name\":\"rank-boost-qualification\""));
+  assert.ok(payload.includes("\"fbp\":\"fb.1.1.2\""));
+  assert.ok(!payload.includes("\"em\":"));
+  assert.ok(!payload.includes("\"ph\":"));
+});
+
+test("tracking relay rate limits pre-lead form opens per address", async () => {
+  const { db, state } = trackDbRecorder(21);
+  const response = await trackPost({
+    request: formOpenRequest(),
+    // No waitUntil: kickIntegrationJobs returns without work when the context
+    // cannot hold background work, which keeps the relay under test.
+    env: { FUNNEL_SIGNING_KEY: "configured", LEADS_DB: db },
+  });
+  assert.equal(response.status, 204);
+  assert.equal(state.batches.length, 0);
+});
+
+test("tracking relay rejects a pre-lead event off the funnel before database access", async () => {
+  const response = await trackPost({
+    request: new Request("https://threestripesdigital.com/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://threestripesdigital.com",
+        "CF-Connecting-IP": "203.0.113.9",
+      },
+      body: JSON.stringify({
+        event_name: "SubmitApplication",
+        event_id: "open-1234567890",
+        page_url: "https://example.test/rank-boost/law-firms/",
+      }),
+    }),
+    env: {
+      FUNNEL_SIGNING_KEY: "configured",
+      LEADS_DB: {
+        prepare() {
+          throw new Error("database must not be touched for an off-funnel page");
+        },
+        batch() {
+          throw new Error("database must not be touched for an off-funnel page");
+        },
+      },
+    },
+  });
+  assert.equal(response.status, 204);
+});
+
 test("tracking relay ignores an unsigned event before database access", async () => {
   const response = await trackPost({
     request: new Request("https://example.test/api/track", {
@@ -319,6 +430,7 @@ test("booking UI preserves consent and returns to the real form anchor", async (
   const source = await readFile(new URL("../public/book.js", import.meta.url), "utf8");
   const page = await readFile(new URL("../public/book.html", import.meta.url), "utf8");
   assert.doesNotMatch(source, /hide_gdpr_banner/);
+  assert.doesNotMatch(source, /SubmitApplication/);
   assert.match(source, /\.\/#qualify/);
   assert.match(page, /target="_blank" rel="noopener noreferrer"/);
 });
@@ -343,6 +455,8 @@ test("browser-based Meta measurement loads automatically without a consent banne
   assert.doesNotMatch(meta, /Allow measurement/);
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   assert.match(index, /window\.tsdMetaTrackingEnabled === true/);
+  const results = await readFile(new URL("../public/results.js", import.meta.url), "utf8");
+  assert.doesNotMatch(results, /SubmitApplication/);
   assert.match(index, /var fbp = metaAllowed \? readCookie\("_fbp"\) : ""/);
 });
 
@@ -379,7 +493,10 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
   assert.doesNotMatch(index, /Paste your full URL. We’ll normalize to the bare domain for the ranking check./);
   assert.doesNotMatch(index, /website-hint/);
   assert.match(index, /window\.tsdMetaTrackingEnabled === true && window\.fbq/);
-  assert.ok(index.includes("fbq(\"trackCustom\", \"LeadFormOpened\", { content_name: \"rank-boost-qualification\" });"));
+  assert.ok(index.includes("fbq(\"trackCustom\", \"LeadFormOpened\", { content_name: \"rank-boost-qualification\" }, { eventID: openId });"));
+  assert.ok(index.includes("fbq(\"track\", \"SubmitApplication\", { content_name: \"rank-boost-qualification\" }, { eventID: openId });"));
+  assert.match(index, /event_name: "SubmitApplication"/);
+  assert.match(index, /event_id: openId/);
   assert.ok(index.indexOf("data-field=\"name\"") < index.indexOf("data-field=\"phone\""));
   assert.ok(index.indexOf("data-field=\"phone\"") < index.indexOf("data-field=\"website_url\""));
   assert.ok(index.indexOf("data-field=\"website_url\"") < index.indexOf("data-field=\"email\""));

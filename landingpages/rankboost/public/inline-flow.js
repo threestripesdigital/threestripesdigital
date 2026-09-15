@@ -11,6 +11,7 @@
   var dialog = document.getElementById("boost-dialog");
   var resume = document.getElementById("boost-resume");
   var pageY = 0;
+  var currentStep = 1;
   function openPopup() {
     if (dialog.open) return;
     pageY = window.scrollY;
@@ -20,6 +21,7 @@
     dialog.showModal();
   }
   dialog.addEventListener("close", function () {
+    if (window.rankBoostReplay) window.rankBoostReplay.capture("dialog_closed", { step: currentStep });
     document.body.style.position = "";
     document.body.style.top = "";
     document.body.style.width = "";
@@ -69,6 +71,16 @@
       else item.removeAttribute("aria-current");
       item.querySelector(".dot").textContent = index + 1 < number ? "✓" : String(index + 1);
     });
+    currentStep = number;
+    if (window.rankBoostReplay) {
+      if (number === 2) window.rankBoostReplay.capture("step_2_shown", {
+        keyword_qualified: flow.lead && flow.lead.keyword_qualified != null ? flow.lead.keyword_qualified : null,
+        booking_eligible: Boolean(flow.lead && flow.lead.booking_eligible === true),
+        website_eligible: Boolean(flow.lead && flow.lead.website_eligible === true)
+      });
+      if (number === 3) window.rankBoostReplay.capture("step_3_shown");
+      if (flow.lead && typeof flow.lead.lead_token === "string") window.rankBoostReplay.identifyLead(flow.lead.lead_token);
+    }
     if (window.rankBoostAnalytics && flow.lead && flow.lead.lead_token) {
       window.rankBoostAnalytics.track("link", { lead_token: flow.lead.lead_token });
     }
