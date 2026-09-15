@@ -17,3 +17,5 @@ tr.delivery-paused td,tr.delivery-paused td.good,tr.delivery-paused td.bad,tr.de
 @media(min-width:761px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 .campaign-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.campaign-tabs button{min-height:44px}.campaign-tabs button[aria-pressed="true"]{background:#184c3b;color:#fff;border-color:#184c3b}#baseline-panel{margin-bottom:24px}#baseline-panel td.num,#baseline-panel th.num{text-align:center}
+
+.metric-comparison{display:flex;flex-wrap:wrap;gap:5px 12px;justify-content:space-between;padding:10px 0;margin:0 0 12px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums}.metric-comparison b{font-weight:650;color:var(--ink)}.comparison-note{flex-basis:100%;font-size:11px}.kpi .metric-comparison{margin-top:12px;margin-bottom:0}.kpi .metric-comparison b{font-size:12px;letter-spacing:normal}

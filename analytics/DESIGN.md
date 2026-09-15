@@ -27,3 +27,7 @@ Bookings and delivery status refresh every five minutes; full performance and ti
 ## Campaign versions
 
 V2 is the default. Persistent campaign buttons separate the current angle test, the historical v1 run and all-source context. Buttons wrap on narrow screens and remain at least 44px high. The v2 baseline table shows its selected date window beside the full v1 run, names event definitions, and scrolls within the panel on mobile. Unknown costs remain No data. Never compare optimization-result CPA across different events.
+
+## Inline v1 comparisons
+
+V2 metric cards show the matching full-run v1 value immediately below the current value. Comparable rate and cost cards include a neutral percentage change; counts do not imply a fair growth comparison across unequal periods. Form-open cards explicitly say the optimization event differs. The period and attribution note stays above the grid without a separate comparison table. Preserve existing desktop grid and single-column mobile layout; comparison text wraps within each card.
