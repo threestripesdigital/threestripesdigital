@@ -3,7 +3,7 @@ export const shiftDay = (day, n) => new Date(Date.parse(day+'T12:00:00Z')+n*8640
 export const ids = env => (env.META_CAMPAIGN_IDS||'').split(',').map(x=>x.trim()).filter(x=>/^\d+$/.test(x));
 export function websiteActions(actions=[]) {
  const value=type=>{const n=Number(actions.find(a=>a.action_type===type)?.value||0);if(!Number.isFinite(n)||n<0)throw Error('Invalid Meta website action count');return n;};
- return {landingPageViews:value('landing_page_view'),websiteLeads:value('offsite_conversion.fb_pixel_lead')};
+ return {landingPageViews:value('landing_page_view'),websiteLeads:value('offsite_conversion.fb_pixel_lead'),formOpens:value('offsite_conversion.fb_pixel_submit_application')};
 }
 export function reportingSpendFactor(env, accountCurrency) {
  if(accountCurrency===env.CURRENCY)return 1;
@@ -70,12 +70,15 @@ export async function syncMeta(env) {
  // Replace the complete fetched range atomically, including rows removed by Meta corrections.
  const statements=[env.DB.prepare('DELETE FROM meta_daily WHERE day BETWEEN ? AND ?').bind(since,until)];
  for(const r of rows) statements.push(env.DB.prepare('INSERT INTO meta_daily VALUES(?,?,?,?,?,?,?,?,?)').bind(r.date_start,r.ad_id,r.ad_name||r.ad_id,r.adset_id,r.campaign_id,r.campaign_name||r.campaign_id,Number(r.spend||0)*spendFactor,Number(r.impressions||0),Number(r.inline_link_clicks||0)));
- const actionDays=Object.values(rows.reduce((acc,r)=>{const key=r.date_start+':'+r.campaign_id;const counts=websiteActions(r.actions);const row=acc[key]||{day:r.date_start,campaign_id:r.campaign_id,landingPageViews:0,websiteLeads:0};row.landingPageViews+=counts.landingPageViews;row.websiteLeads+=counts.websiteLeads;acc[key]=row;return acc;},{}));
+ let actionDays=Object.values(rows.reduce((acc,r)=>{const key=r.date_start+':'+r.campaign_id;const counts=websiteActions(r.actions);const row=acc[key]||{day:r.date_start,campaign_id:r.campaign_id,landingPageViews:0,websiteLeads:0};row.landingPageViews+=counts.landingPageViews;row.websiteLeads+=counts.websiteLeads;acc[key]=row;return acc;},{}));
+ try{const old=await env.DB.prepare("SELECT value FROM state WHERE key='meta_website_actions'").first();actionDays=[...JSON.parse(old?.value||'[]').filter(r=>r.day<since),...actionDays];}catch{}
  statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('meta_website_actions',JSON.stringify(actionDays)));
- const adActions=rows.map(r=>({day:r.date_start,ad_id:r.ad_id,adset_id:r.adset_id,adset_name:r.adset_name||r.adset_id,campaign_id:r.campaign_id,...websiteActions(r.actions)}));
+ let adActions=rows.map(r=>({day:r.date_start,ad_id:r.ad_id,adset_id:r.adset_id,adset_name:r.adset_name||r.adset_id,campaign_id:r.campaign_id,...websiteActions(r.actions)}));
+ try{const old=await env.DB.prepare("SELECT value FROM state WHERE key='meta_ad_actions'").first();adActions=[...JSON.parse(old?.value||'[]').filter(r=>r.day<since),...adActions];}catch{}
  statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('meta_ad_actions',JSON.stringify(adActions)));
  const successfulAt=new Date().toISOString();
  for(const [k,v] of [['meta_success',successfulAt],['meta_error',''],['meta_account_name',info.name],['meta_campaign_ids',selected.join(',')]]) statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind(k,v));
+ for(const campaign of selected){const firstDay=rows.filter(r=>r.campaign_id===campaign&&Number(r.spend)>0).map(r=>r.date_start).sort()[0];if(firstDay)statements.push(env.DB.prepare('INSERT OR IGNORE INTO state VALUES(?,?)').bind('campaign_launch:'+campaign,firstDay===until?successfulAt:firstDay+'T23:59:59Z'));}
  const first=rows.filter(r=>Number(r.spend)>0).map(r=>r.date_start).sort()[0];
  if(first) statements.push(env.DB.prepare("INSERT OR IGNORE INTO state VALUES('launch_at',?)").bind(first===until?successfulAt:shiftDay(first,1)+'T23:59:59Z'));
  await env.DB.batch(statements);

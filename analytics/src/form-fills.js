@@ -7,5 +7,6 @@ export async function syncFormFills(env){if(!env.LEADS_DB)return;try{
  if(results.length===10000)throw Error('Form reporting pagination required');
  const groups={};
  for(const row of results){const a=formAttribution(row);if(!a)continue;const created=/[zZ]|[+-]\d\d:\d\d$/.test(row.created_at)?row.created_at:row.created_at.replace(' ','T')+'Z';if(!Number.isFinite(Date.parse(env.LAUNCH_AT))||Date.parse(created)<Date.parse(env.LAUNCH_AT))continue;const day=dayIn(created,env.REPORTING_TIMEZONE),key=[day,a.campaign_id,a.adset_id,a.ad_id].join(':');const g=groups[key]||{day,...a,forms:0,qualified:0};g.forms++;g.qualified+=row.qualified===1?1:0;groups[key]=g;}
- await setState(env,'form_fill_daily',JSON.stringify(Object.values(groups)));await setState(env,'form_fill_success',new Date().toISOString());await setState(env,'form_fill_error','');
+ const previous=await env.DB.prepare("SELECT value FROM state WHERE key='form_fill_daily'").first();let history=[];try{history=JSON.parse(previous?.value||'[]').filter(r=>r.day<since);}catch{}
+ await setState(env,'form_fill_daily',JSON.stringify([...history,...Object.values(groups)]));await setState(env,'form_fill_success',new Date().toISOString());await setState(env,'form_fill_error','');
  }catch{await setState(env,'form_fill_error','Completed form attribution could not be imported. Counts are unavailable.');}}

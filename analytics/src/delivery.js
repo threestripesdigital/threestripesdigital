@@ -17,7 +17,7 @@ export async function syncDelivery(env) {
    for(const [edge,kind] of [['adsets','adset_id'],['ads','ad_id']]){
     let after='';
     for(let page=0;page<20;page++){
-     const d=await graph(env,campaign+'/'+edge,{fields:'id,name,status,effective_status',limit:100,...(after?{after}:{})});
+     const d=await graph(env,campaign+'/'+edge,{fields:kind==='adset_id'?'id,name,status,effective_status,daily_budget,promoted_object,learning_stage_info':'id,name,status,effective_status,adset_id',limit:100,...(after?{after}:{})});
      rows.push(...(d.data||[]).map(r=>({...r,campaign_id:campaign,kind,effective_status:c.effective_status==='PAUSED'?'CAMPAIGN_PAUSED':r.effective_status})));
      if(!d.paging?.next)break;
      after=d.paging.cursors?.after;if(!after||page===19)throw Error('Delivery status pagination incomplete.');
