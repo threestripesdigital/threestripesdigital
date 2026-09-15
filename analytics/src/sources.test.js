@@ -19,8 +19,8 @@ test('Wistia converts native rates, uses exclusive end dates and preserves snaps
  }finally{globalThis.fetch=old;}
 });
 test('Meta website actions do not add overlapping lead aggregates',()=>{
- assert.deepEqual(websiteActions([{action_type:'landing_page_view',value:'12'},{action_type:'offsite_conversion.fb_pixel_lead',value:'3'},{action_type:'lead',value:'3'},{action_type:'omni_lead',value:'3'}]),{landingPageViews:12,websiteLeads:3});
- assert.deepEqual(websiteActions(),{landingPageViews:0,websiteLeads:0});
+ assert.deepEqual(websiteActions([{action_type:'landing_page_view',value:'12'},{action_type:'offsite_conversion.fb_pixel_lead',value:'3'},{action_type:'lead',value:'3'},{action_type:'omni_lead',value:'3'},{action_type:'offsite_conversion.fb_pixel_submit_application',value:'4'}]),{landingPageViews:12,websiteLeads:3,formOpens:4});
+ assert.deepEqual(websiteActions(),{landingPageViews:0,websiteLeads:0,formOpens:0});
  assert.throws(()=>websiteActions([{action_type:'landing_page_view',value:'NaN'}]));
 });
 test('GA4 is restricted to the funnel and reports a missing result as unavailable',()=>{

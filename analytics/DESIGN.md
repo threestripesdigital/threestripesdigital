@@ -23,3 +23,7 @@ Provider availability is evaluated per metric. Disabling custom collection does 
 Booking KPIs include all real sources and exclude internal tests. Verified Meta and unattributed booking counts appear beside them. Paid acquisition costs use verified Meta bookings only. Paused ad sets keep historical metrics with a grey background, readable grey text and an explicit Paused badge. Parent campaign pauses are labelled. Stale delivery status is visible and never implied current. Booking, Meta and delivery sync times are separate.
 
 Bookings and delivery status refresh every five minutes; full performance and timing evidence refresh hourly or on demand. Timing candidates list aggregate same-hour ad set clicks with an explicit warning that this is not a verified visitor match. No inferred candidate changes paid performance totals.
+
+## Campaign versions
+
+V2 is the default. Persistent campaign buttons separate the current angle test, the historical v1 run and all-source context. Buttons wrap on narrow screens and remain at least 44px high. The v2 baseline table shows its selected date window beside the full v1 run, names event definitions, and scrolls within the panel on mobile. Unknown costs remain No data. Never compare optimization-result CPA across different events.

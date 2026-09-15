@@ -15,3 +15,5 @@
 tr.delivery-paused td,tr.delivery-paused td.good,tr.delivery-paused td.bad,tr.delivery-paused td.ok{background:#f0f1f0;color:#58605b}tr.delivery-paused small{color:#626963}.badge.delivery{background:#ecefed;color:#44504a;font-size:11px}#last-sync{display:block;margin-top:8px;line-height:1.6}
 
 @media(min-width:761px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.campaign-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.campaign-tabs button{min-height:44px}.campaign-tabs button[aria-pressed="true"]{background:#184c3b;color:#fff;border-color:#184c3b}#baseline-panel{margin-bottom:24px}#baseline-panel td.num,#baseline-panel th.num{text-align:center}
