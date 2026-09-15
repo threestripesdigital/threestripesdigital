@@ -85,17 +85,25 @@
 
     function mountCalendly() {
       if (!isCurrent()) return;
+      var mountedAt = Date.now();
       var host = document.getElementById("calendly-embed");
       if (!host) return;
       var url = calendlyLink();
       if (fallback) {
         fallback.href = url;
         fallback.removeAttribute("aria-disabled");
+        fallback.addEventListener("click", function () {
+          if (window.rankBoostReplay) window.rankBoostReplay.capture("calendly_fallback_click");
+        }, { once: true });
       }
       function init() {
         if (!isCurrent()) return;
         host.innerHTML = "";
         window.Calendly.initInlineWidget({ url: url, parentElement: host });
+        var frame = host.querySelector ? host.querySelector("iframe") : null;
+        if (frame) frame.addEventListener("load", function () {
+          if (window.rankBoostReplay) window.rankBoostReplay.capture("calendly_iframe_loaded", { ms_since_step_3: Date.now() - mountedAt });
+        }, { once: true });
       }
       if (window.Calendly && window.Calendly.initInlineWidget) { init(); return; }
       var s = document.createElement("script");

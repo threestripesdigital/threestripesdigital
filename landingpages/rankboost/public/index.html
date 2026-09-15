@@ -569,6 +569,7 @@
       function setInvalid(field, invalid) {
         if (!field) return;
         field.classList.toggle("is-invalid", !!invalid);
+        if (invalid && window.rankBoostReplay) window.rankBoostReplay.capture("form_invalid", { field: field.getAttribute("data-field") || "" });
         var control = field.querySelector("input, select, textarea");
         if (control) control.setAttribute("aria-invalid", invalid ? "true" : "false");
       }
@@ -591,7 +592,9 @@
           if (!formOpened) {
             formOpened = true;
             if (window.tsdMetaTrackingEnabled === true && window.fbq) {
-              fbq("trackCustom", "LeadFormOpened", { content_name: "rank-boost-qualification" });
+              var openId = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : "open-" + Date.now();
+              fbq("trackCustom", "LeadFormOpened", { content_name: "rank-boost-qualification" }, { eventID: openId });
+              fbq("track", "SubmitApplication", { content_name: "rank-boost-qualification" }, { eventID: openId });
             }
           }
 

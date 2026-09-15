@@ -319,6 +319,7 @@ test("booking UI preserves consent and returns to the real form anchor", async (
   const source = await readFile(new URL("../public/book.js", import.meta.url), "utf8");
   const page = await readFile(new URL("../public/book.html", import.meta.url), "utf8");
   assert.doesNotMatch(source, /hide_gdpr_banner/);
+  assert.doesNotMatch(source, /SubmitApplication/);
   assert.match(source, /\.\/#qualify/);
   assert.match(page, /target="_blank" rel="noopener noreferrer"/);
 });
@@ -343,6 +344,8 @@ test("browser-based Meta measurement loads automatically without a consent banne
   assert.doesNotMatch(meta, /Allow measurement/);
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   assert.match(index, /window\.tsdMetaTrackingEnabled === true/);
+  const results = await readFile(new URL("../public/results.js", import.meta.url), "utf8");
+  assert.doesNotMatch(results, /SubmitApplication/);
   assert.match(index, /var fbp = metaAllowed \? readCookie\("_fbp"\) : ""/);
 });
 
@@ -379,7 +382,8 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
   assert.doesNotMatch(index, /Paste your full URL. We’ll normalize to the bare domain for the ranking check./);
   assert.doesNotMatch(index, /website-hint/);
   assert.match(index, /window\.tsdMetaTrackingEnabled === true && window\.fbq/);
-  assert.ok(index.includes("fbq(\"trackCustom\", \"LeadFormOpened\", { content_name: \"rank-boost-qualification\" });"));
+  assert.ok(index.includes("fbq(\"trackCustom\", \"LeadFormOpened\", { content_name: \"rank-boost-qualification\" }, { eventID: openId });"));
+  assert.ok(index.includes("fbq(\"track\", \"SubmitApplication\", { content_name: \"rank-boost-qualification\" }, { eventID: openId });"));
   assert.ok(index.indexOf("data-field=\"name\"") < index.indexOf("data-field=\"phone\""));
   assert.ok(index.indexOf("data-field=\"phone\"") < index.indexOf("data-field=\"website_url\""));
   assert.ok(index.indexOf("data-field=\"website_url\"") < index.indexOf("data-field=\"email\""));

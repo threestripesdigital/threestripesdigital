@@ -234,6 +234,7 @@
     }
     if (res.data && res.data.lead_token && payload) {
       payload.lead_token = res.data.lead_token;
+      if (typeof res.data.qualified === "boolean") payload.keyword_qualified = res.data.qualified;
       payload.website_eligible = Boolean(res.ok && res.data.qualified === false && res.data.reason_not_qualified !== "already_first");
       payload.offer = payload.website_eligible ? "website" : "boost";
       payload.booking_eligible = Boolean(
