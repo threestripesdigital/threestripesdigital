@@ -39,7 +39,8 @@ export function evaluate(ad,images,videos={}){
   const asset=(spec.images||[]).find(i=>i.adlabels?.some(l=>l.name===rule?.image_label?.name));
   const video=(spec.videos||[]).find(v=>v.adlabels?.some(l=>l.name===rule?.video_label?.name));
   const img=video?videos[video.video_id]:images[asset?.hash];assets[placement]=img||null;
-  const expected=['story','reels','facebook_reels'].includes(position)?[1080,1920]:[1080,1350];
+  const compact=['facebook_right_hand_column','facebook_marketplace','facebook_search','instagram_explore_home','messenger_messenger_home','audience_network_classic'].includes(placement);
+  const expected=['story','reels','facebook_reels'].includes(position)?[1080,1920]:compact?[1080,1080]:[1080,1350];
   if(!img||img.width!==expected[0]||img.height!==expected[1])issues.push(placement+' requires '+expected.join(' × ')+' artwork.');
   if(video&&img?.status!=='ready')issues.push(placement+' video is not ready.');
  }
