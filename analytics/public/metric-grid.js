@@ -33,3 +33,13 @@ export function gridMetrics(data) {
  }
  return {performance,funnel};
 }
+
+// Compare like-for-like measurements only. V1 did not optimize for form opens.
+export function baselineMetric(data,key){
+ const b=data.comparison;if(!b)return null;
+ const t=b.totals||{},f=b.forms||{},w=b.metaWebsite||{},n=b.bookings?.ready?b.bookings.count:null;
+ const values={spend:t.spend,cpm:ratio(t.spend,t.impressions,1000),ctr:ratio(t.link_clicks,t.impressions,100),cpc:ratio(t.spend,t.link_clicks),meta_lpv:w.landingPageViews,meta_leads:w.websiteLeads,cost_lpv:ratio(t.spend,w.landingPageViews),form_fills:f.ready?f.total:null,cost_form:ratio(t.spend,f.ready?f.total:null),scheduled_cost:ratio(t.spend,n),lpv_booking_rate:ratio(n,w.landingPageViews,100),scan_qualified_rate:ratio(f.qualified,f.ready?f.total:null),booked:n};
+ const notes={form_opens:'Different optimization event',cost_form_open:'Different optimization event',cost_vsl:'No campaign-matched v1 baseline'};
+ if(!(key in values)&&!(key in notes))return null;
+ return {value:values[key]??null,note:notes[key]||((key==='booked'||key==='scheduled_cost'||key==='lpv_booking_rate')&&b.unknownCampaignBookings?`${b.unknownCampaignBookings} booking lacks a campaign ID`:null),stale:b.stale,period:b.period,deltaAllowed:['cpm','ctr','cpc','cost_lpv','cost_form','scheduled_cost','lpv_booking_rate','scan_qualified_rate'].includes(key)};
+}
