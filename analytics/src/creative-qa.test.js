@@ -46,3 +46,26 @@ test('Instagram desktop preview sends the unchanged creative specification to Me
   await assert.rejects(preview(env,{required:[]},'INSTAGRAM_FEED_WEB'),/not enabled/);
  }finally{globalThis.fetch=originalFetch;}
 });
+
+
+test('static video-only exclusions preserve mobile in-stream and do not exempt video creatives',()=>{
+ const a=fixture();a.adset.targeting={publisher_platforms:['facebook','audience_network'],facebook_positions:['instream_video'],audience_network_positions:['rewarded_video']};
+ a.creative.asset_feed_spec.ad_formats=['SINGLE_IMAGE'];
+ let r=evaluate(a,images);
+ assert.ok(r.required.includes('INSTREAM_VIDEO_MOBILE'));
+ assert.ok(!r.required.includes('INSTREAM_VIDEO_DESKTOP'));
+ assert.ok(!r.required.includes('AUDIENCE_NETWORK_REWARDED_VIDEO'));
+ assert.equal(r.ineligible.length,2);
+ a.creative.asset_feed_spec.ad_formats=['SINGLE_VIDEO'];r=evaluate(a,images);
+ assert.ok(r.required.includes('INSTREAM_VIDEO_DESKTOP'));
+ assert.ok(r.required.includes('AUDIENCE_NETWORK_REWARDED_VIDEO'));
+});
+test('verified v2 Reels device eligibility never waives profile desktop or an unknown campaign',()=>{
+ const a=fixture();a.campaign={id:'120249151255100545'};
+ a.adset.targeting={publisher_platforms:['facebook','instagram'],facebook_positions:['profile_feed'],instagram_positions:['reels']};
+ let r=evaluate(a,images);assert.ok(r.required.includes('INSTAGRAM_REELS'));
+ assert.ok(!r.required.includes('INSTAGRAM_REELS_WEB'));assert.ok(r.required.includes('FACEBOOK_PROFILE_FEED_DESKTOP'));
+ a.campaign.id='other';assert.ok(evaluate(a,images).required.includes('INSTAGRAM_REELS_WEB'));
+ a.campaign.id='120249151255100545';a.adset.targeting={publisher_platforms:['instagram'],instagram_positions:['reels'],device_platforms:['desktop']};
+ assert.match(evaluate(a,images).issues.join(),/No eligible preview/);
+});
