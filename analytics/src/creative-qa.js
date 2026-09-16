@@ -1,11 +1,12 @@
 import {graph,ids,setState} from './meta.js';
 async function parseInventory(raw){const parsed=JSON.parse(raw||'null');if(parsed?.encoding!=='gzip-base64')return parsed;const bytes=Uint8Array.from(atob(parsed.value),c=>c.charCodeAt(0));return JSON.parse(await new Response(new Response(bytes).body.pipeThrough(new DecompressionStream('gzip'))).text());}
 const critical=['advantage_plus_creative','image_auto_crop','image_uncrop','image_enhancement','image_animation','image_background_gen','text_generation','text_optimizations','music_generation'];
-// Preview enums verified against Meta's official Business SDK, September 16, 2026.
-// No supported Facebook search preview enum is published there; keep it blocked.
+// Preview formats verified against live Graph v25.0 and Meta's placement selector.
+// Search formats work in Graph despite being absent from the published SDK enum.
 const formats={
  facebook_feed:['DESKTOP_FEED_STANDARD','MOBILE_FEED_STANDARD'],
  facebook_right_hand_column:['RIGHT_COLUMN_STANDARD'],facebook_marketplace:['MARKETPLACE_MOBILE'],
+ facebook_search:['SEARCH_SERP_ADS_MOBILE','MARKETPLACE_SEARCH_ADS_MOBILE'],
  facebook_profile_feed:['FACEBOOK_PROFILE_FEED_DESKTOP','FACEBOOK_PROFILE_FEED_MOBILE'],
  facebook_instream_video:['INSTREAM_VIDEO_DESKTOP','INSTREAM_VIDEO_MOBILE'],
  facebook_story:['FACEBOOK_STORY_MOBILE'],facebook_facebook_reels:['FACEBOOK_REELS_MOBILE'],

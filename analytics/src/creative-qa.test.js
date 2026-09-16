@@ -13,3 +13,16 @@ test('video mapping preserves multiword platform and position names',()=>{const 
  test('compact placements require their square asset, not the feed crop',()=>{const a=fixture();a.adset.targeting={publisher_platforms:['facebook'],facebook_positions:['marketplace','right_hand_column']};a.creative.asset_feed_spec.images=[{hash:'compact',adlabels:[{name:'compact'}]}];a.creative.asset_feed_spec.asset_customization_rules=[{priority:1,image_label:{name:'compact'},customization_spec:{publisher_platforms:['facebook'],facebook_positions:['marketplace','right_hand_column']}}];assert.deepEqual(evaluate(a,{compact:{hash:'compact',width:1080,height:1080}}).issues,[]);assert.match(evaluate(a,{compact:{hash:'compact',width:1080,height:1350}}).issues.join(),/1080 × 1080/);});
 
 test('Instagram search uses a portrait asset while retaining visual review requirements',()=>{const a=fixture();a.adset.targeting={publisher_platforms:['instagram'],instagram_positions:['ig_search']};a.creative.asset_feed_spec.asset_customization_rules=[{priority:1,image_label:{name:'feed'},customization_spec:{publisher_platforms:['instagram'],instagram_positions:['ig_search']}}];const r=evaluate(a,images);assert.deepEqual(r.issues,[]);assert.ok(r.required.includes('INSTAGRAM_SEARCH_GRID'));assert.ok(r.required.includes('INSTAGRAM_SEARCH_CHAIN'));assert.match(evaluate(a,{...images,feed:{width:1080,height:1080}}).issues.join(),/1080 × 1350/);});
+
+
+test('Facebook search requires both live API search previews and its square asset',()=>{
+ const a=fixture();a.adset.targeting={publisher_platforms:['facebook'],facebook_positions:['search']};
+ a.creative.asset_feed_spec.images=[{hash:'compact',adlabels:[{name:'compact'}]}];
+ a.creative.asset_feed_spec.asset_customization_rules=[{priority:1,image_label:{name:'compact'},customization_spec:{publisher_platforms:['facebook'],facebook_positions:['search']}}];
+ const r=evaluate(a,{compact:{hash:'compact',width:1080,height:1080}});
+ assert.deepEqual(r.issues,[]);
+ assert.deepEqual(r.required,['SEARCH_SERP_ADS_MOBILE','MARKETPLACE_SEARCH_ADS_MOBILE']);
+ assert.equal(r.formatPlacements.SEARCH_SERP_ADS_MOBILE,'facebook_search');
+ assert.equal(r.formatPlacements.MARKETPLACE_SEARCH_ADS_MOBILE,'facebook_search');
+ assert.match(evaluate(a,{compact:{width:1080,height:1350}}).issues.join(),/1080 × 1080/);
+});
