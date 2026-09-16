@@ -31,3 +31,7 @@ V2 is the default. Persistent campaign buttons separate the current angle test, 
 ## Inline v1 comparisons
 
 V2 metric cards show the matching full-run v1 value immediately below the current value. Comparable rate and cost cards include a neutral percentage change; counts do not imply a fair growth comparison across unequal periods. Form-open cards explicitly say the optimization event differs. The period and attribution note stays above the grid without a separate comparison table. Preserve existing desktop grid and single-column mobile layout; comparison text wraps within each card.
+
+## Placement QA eligibility
+
+Show proven ineligible media/device preview combinations explicitly as not applicable with a reason. Keep them distinct from unverified previews, which continue to block launch. Never present a renderer error as a passed visual check.

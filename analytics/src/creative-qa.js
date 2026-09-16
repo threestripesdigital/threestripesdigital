@@ -26,7 +26,19 @@ export function evaluate(ad,images,videos={}){
  const desktopFormat=f=>f.includes('DESKTOP')||f==='RIGHT_COLUMN_STANDARD'||f.endsWith('_WEB');
  const desktopOnly=target.device_platforms?.length===1&&target.device_platforms[0]==='desktop';
  const formatPlacements=Object.fromEntries(placements.flatMap(p=>(formats[p]||[]).filter(f=>!mobileOnly||!desktopFormat(f)).filter(f=>!desktopOnly||desktopFormat(f)).map(f=>[f,p])));
+ const ineligible=[];
+ // Meta v25.0 validation and preview responses, verified September 16, 2026.
+ // Keep live targeting unchanged; omit only combinations that cannot serve this media/device.
+ const staticImage=spec.ad_formats?.length===1&&spec.ad_formats[0]==='SINGLE_IMAGE'&&!spec.videos?.length;
+ for(const format of staticImage?['INSTREAM_VIDEO_DESKTOP','AUDIENCE_NETWORK_REWARDED_VIDEO']:[]){
+  if(formatPlacements[format]){ineligible.push({format,reason:'Meta requires video for this format; this creative is a static image.'});delete formatPlacements[format];}
+ }
+ if(ad.campaign?.id==='120249151255100545'&&formatPlacements.INSTAGRAM_REELS_WEB){
+  ineligible.push({format:'INSTAGRAM_REELS_WEB',reason:'Meta validation rejects desktop-only Reels for this campaign; the identical mobile targeting validates.'});
+  delete formatPlacements.INSTAGRAM_REELS_WEB;
+ }
  const required=Object.keys(formatPlacements);
+ if(!required.length)issues.push('No eligible preview formats are available for the selected placements and devices.');
  for(const p of placements)if(!formats[p])issues.push('Unreviewed placement: '+p);
  const enabled=Object.keys(features).filter(k=>features[k]?.enroll_status!=='OPT_OUT');
  for(const k of critical)if(features[k]?.enroll_status!=='OPT_OUT')enabled.push(k);
@@ -45,7 +57,7 @@ export function evaluate(ad,images,videos={}){
   if(!img||img.width!==expected[0]||img.height!==expected[1])issues.push(placement+' requires '+expected.join(' × ')+' artwork.');
   if(video&&img?.status!=='ready')issues.push(placement+' video is not ready.');
  }
- return {issues,required,formatPlacements,placements,assets,enhancementsChecked:Object.keys(features).length,enhancementsOff:!enabled.length};
+ return {issues,required,ineligible,formatPlacements,placements,assets,enhancementsChecked:Object.keys(features).length,enhancementsOff:!enabled.length};
 }
 async function all(env,path,params){let result=[],after;for(let i=0;i<10;i++){const r=await graph(env,path,{...params,limit:100,...(after?{after}:{})});result.push(...r.data||[]);if(!r.paging?.next)return result;after=r.paging.cursors?.after;if(!after)break;}throw Error('Incomplete creative inventory');}
 export async function inventory(env,{fresh=false}={}){
