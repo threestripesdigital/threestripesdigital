@@ -30,3 +30,8 @@ Audience Network video playback errors remain unresolved visual checks. Neither 
 ## Review rules
 
 All eligible formats require visual inspection of the current assets and placement rules. Targeting or creative changes invalidate reviews. Unsupported or unknown placements fail closed. A passed gate does not authorize activation or spend.
+
+
+## Instagram Explore home aspect ratio
+
+The live INSTAGRAM_EXPLORE_GRID_HOME renderer rejects an exact 1080 by 1080 asset with "Unsupported aspect ratio" and states that supported ratios range from 4:5 to 9:16. The placement-customized preview silently substituted the default portrait asset when its mapped square asset was invalid. The checker now requires the campaign's 1080 by 1350 portrait asset for Explore home, matching Instagram search. A saved placement rule alone is insufficient evidence: visually inspect the actual mapped portrait in the generated preview. This changes the dimension check only; visual review remains mandatory.

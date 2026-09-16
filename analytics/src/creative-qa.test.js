@@ -69,3 +69,17 @@ test('verified v2 Reels device eligibility never waives profile desktop or an un
  a.campaign.id='120249151255100545';a.adset.targeting={publisher_platforms:['instagram'],instagram_positions:['reels'],device_platforms:['desktop']};
  assert.match(evaluate(a,images).issues.join(),/No eligible preview/);
 });
+
+
+test('Explore home rejects square artwork and keeps its portrait visual review',()=>{
+ const a=fixture();a.adset.targeting={publisher_platforms:['instagram'],instagram_positions:['explore_home']};
+ a.creative.asset_feed_spec.asset_customization_rules=[{priority:1,image_label:{name:'feed'},customization_spec:{publisher_platforms:['instagram'],instagram_positions:['explore_home']}}];
+ const result=evaluate(a,images);
+ assert.deepEqual(result.issues,[]);assert.deepEqual(result.required,['INSTAGRAM_EXPLORE_GRID_HOME']);
+ assert.equal(result.formatPlacements.INSTAGRAM_EXPLORE_GRID_HOME,'instagram_explore_home');
+ assert.match(evaluate(a,{...images,feed:{width:1080,height:1080}}).issues.join(),/1080 × 1350/);
+ a.creative.asset_feed_spec.images=[];a.creative.asset_feed_spec.videos=[{video_id:'portrait',adlabels:[{name:'feed'}]}];
+ a.creative.asset_feed_spec.asset_customization_rules[0].video_label={name:'feed'};
+ assert.deepEqual(evaluate(a,{}, {portrait:{width:1080,height:1350,status:'ready'}}).issues,[]);
+ assert.match(evaluate(a,{}, {portrait:{width:1080,height:1080,status:'ready'}}).issues.join(),/1080 × 1350/);
+});
