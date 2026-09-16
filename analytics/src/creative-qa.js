@@ -72,5 +72,22 @@ export async function inventory(env,{fresh=false}={}){
  }
  return {checkedAt,fromCache:!!reuse,stale,passed:result.length>0&&result.every(a=>a.passed),ads:result};
 }
-export async function preview(env,ad,format){if(!ad.required.includes(format))throw Error('Placement is not enabled for this ad');const key='meta_preview:'+ad.id+':'+ad.fingerprint+':'+format;let cached;try{cached=JSON.parse((await env.DB.prepare('SELECT value FROM state WHERE key=?').bind(key).first())?.value||'null');}catch{}if(cached&&Date.now()-cached.savedAt<15*60*1000)return cached;const r=await graph(env,ad.id+'/previews',{ad_format:format});const match=r.data?.[0]?.body?.match(/src="([^"]+)"/);if(!match)throw Error('Meta preview unavailable');const url=new URL(match[1].replaceAll('&amp;','&'));if(url.protocol!=='https:'||url.hostname!=='business.facebook.com')throw Error('Unexpected preview origin');const result={url:url.href,format,savedAt:Date.now()};await setState(env,key,JSON.stringify(result));return result;}
+export async function preview(env,ad,format){
+ if(!ad.required.includes(format))throw Error('Placement is not enabled for this ad');
+ const fullSpec=['INSTAGRAM_FEED_WEB','INSTAGRAM_STORY_WEB'].includes(format);
+ const key='meta_preview:'+(fullSpec?'full-spec:':'')+ad.id+':'+ad.fingerprint+':'+format;
+ let cached;try{cached=JSON.parse((await env.DB.prepare('SELECT value FROM state WHERE key=?').bind(key).first())?.value||'null');}catch{}
+ if(cached&&Date.now()-cached.savedAt<15*60*1000)return cached;
+ let r;
+ if(fullSpec){
+  // Meta's ad-ID renderer rejects these formats for placement-customized ads.
+  // Generate the preview from the exact current creative, preserving every asset rule.
+  const creative=await graph(env,ad.creativeId,{fields:'object_story_spec,asset_feed_spec,degrees_of_freedom_spec,contextual_multi_ads,url_tags'});
+  delete creative.id;
+  r=await graph(env,'act_'+env.META_ACCOUNT_ID.replace(/^act_/, '')+'/generatepreviews',{ad_format:format,creative:JSON.stringify(creative)});
+ }else r=await graph(env,ad.id+'/previews',{ad_format:format});
+ const match=r.data?.[0]?.body?.match(/src="([^"]+)"/);if(!match)throw Error('Meta preview unavailable');
+ const url=new URL(match[1].replaceAll('&amp;','&'));if(url.protocol!=='https:'||url.hostname!=='business.facebook.com')throw Error('Unexpected preview origin');
+ const result={url:url.href,format,savedAt:Date.now()};await setState(env,key,JSON.stringify(result));return result;
+}
 export async function recordReview(env,ad,body){if(ad.issues.length||body.fingerprint!==ad.fingerprint||!ad.required.every(f=>body.formats?.includes(f)))throw Error('Review every enabled placement and resolve all checks first');const review={fingerprint:ad.fingerprint,formats:ad.required,at:new Date().toISOString()};await setState(env,'creative_review:'+ad.id,JSON.stringify(review));return {ok:true};}
