@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {evaluate,fingerprint} from './creative-qa.js';
+import test from 'node:test';import assert from 'node:assert/strict';import {evaluate,fingerprint,preview} from './creative-qa.js';
 const keys=['advantage_plus_creative','image_auto_crop','image_uncrop','image_enhancement','image_animation','image_background_gen','text_generation','text_optimizations','music_generation'];
 function fixture(){return {adset:{targeting:{publisher_platforms:['facebook','instagram'],facebook_positions:['feed'],instagram_positions:['stream','story']}},creative:{contextual_multi_ads:{enroll_status:'OPT_OUT'},degrees_of_freedom_spec:{creative_features_spec:Object.fromEntries(keys.map(k=>[k,{enroll_status:'OPT_OUT'}]))},asset_feed_spec:{optimization_type:'PLACEMENT',images:[{hash:'feed',adlabels:[{name:'feed'}]},{hash:'story',adlabels:[{name:'story'}]}],asset_customization_rules:[{priority:1,image_label:{name:'story'},customization_spec:{publisher_platforms:['instagram'],instagram_positions:['story']}},{priority:2,image_label:{name:'feed'},customization_spec:{publisher_platforms:['facebook','instagram'],facebook_positions:['feed'],instagram_positions:['stream']}}]}}};}
 const images={feed:{hash:'feed',width:1080,height:1350},story:{hash:'story',width:1080,height:1920}};
@@ -25,4 +25,24 @@ test('Facebook search requires both live API search previews and its square asse
  assert.equal(r.formatPlacements.SEARCH_SERP_ADS_MOBILE,'facebook_search');
  assert.equal(r.formatPlacements.MARKETPLACE_SEARCH_ADS_MOBILE,'facebook_search');
  assert.match(evaluate(a,{compact:{width:1080,height:1350}}).issues.join(),/1080 × 1080/);
+});
+
+
+test('Instagram desktop preview sends the unchanged creative specification to Meta',async()=>{
+ const originalFetch=globalThis.fetch,creative={id:'456',...fixture().creative},requests=[],writes=[];
+ const env={META_API_VERSION:'v25.0',META_ACCOUNT_ID:'123',META_ACCESS_TOKEN:'test',DB:{prepare(sql){return {bind(...args){return {first:async()=>null,run:async()=>{writes.push({sql,args})}}}}}}};
+ globalThis.fetch=async url=>{
+  requests.push(new URL(url));
+  return new Response(JSON.stringify(requests.length===1?creative:{data:[{body:'<iframe src="https://business.facebook.com/preview/test?a=1&amp;b=2"></iframe>'}]}),{status:200});
+ };
+ try{
+  const result=await preview(env,{id:'789',creativeId:'456',fingerprint:'fp',required:['INSTAGRAM_FEED_WEB']},'INSTAGRAM_FEED_WEB');
+  assert.equal(requests[0].pathname,'/v25.0/456');
+  assert.equal(requests[1].pathname,'/v25.0/act_123/generatepreviews');
+  assert.deepEqual(JSON.parse(requests[1].searchParams.get('creative')),fixture().creative);
+  assert.equal(requests[1].searchParams.get('ad_format'),'INSTAGRAM_FEED_WEB');
+  assert.equal(result.url,'https://business.facebook.com/preview/test?a=1&b=2');
+  assert.equal(writes[0].args[0],'meta_preview:full-spec:789:fp:INSTAGRAM_FEED_WEB');
+  await assert.rejects(preview(env,{required:[]},'INSTAGRAM_FEED_WEB'),/not enabled/);
+ }finally{globalThis.fetch=originalFetch;}
 });
