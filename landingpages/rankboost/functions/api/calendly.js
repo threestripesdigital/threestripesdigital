@@ -88,6 +88,21 @@ function answerFor(qa, needle) {
   return hit ? String(hit.answer || "") : "";
 }
 
+function marketingAnswerFor(qa) {
+  const nonBudgetQuestions = (qa || []).filter((q) =>
+    !String(q.question || "").toLowerCase().includes("budget")
+  );
+  for (const needle of [
+    "currently do for marketing",
+    "generating new cases",
+    "marketing now",
+  ]) {
+    const answer = answerFor(nonBudgetQuestions, needle);
+    if (answer) return answer;
+  }
+  return answerFor(nonBudgetQuestions, "marketing");
+}
+
 async function sha256(value) {
   const data = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", data);
@@ -757,7 +772,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
   const website = answerFor(qa, "website");
   const budget = answerFor(qa, "budget");
   const revenue = answerFor(qa, "revenue");
-  const marketing = answerFor(qa, "marketing");
+  const marketing = marketingAnswerFor(qa);
   const domain = normalizeDomain(website);
   const attribution = String(
     (p.tracking && p.tracking.utm_content) || p.utm_content || ""
@@ -918,7 +933,7 @@ async function recordCalendlyLifecycle(context, kind, payload, rawBody, options 
     const recoveredWebsite = answerFor(recoveredQa, "website");
     const recoveredBudget = answerFor(recoveredQa, "budget");
     const recoveredRevenue = answerFor(recoveredQa, "revenue");
-    const recoveredMarketing = answerFor(recoveredQa, "marketing");
+    const recoveredMarketing = marketingAnswerFor(recoveredQa);
     const recoveredDomain = normalizeDomain(recoveredWebsite);
     const recoveredFirstName = recoveredName.trim().split(/\s+/)[0] || "";
     const recoveredWhen = recoveredBooking.start
