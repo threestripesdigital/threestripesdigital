@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {evaluate,fingerprint,preview} from './creative-qa.js';
+import test from 'node:test';import assert from 'node:assert/strict';import {evaluate,fingerprint,preview,stableCreativeFingerprintInput} from './creative-qa.js';
 const keys=['advantage_plus_creative','image_auto_crop','image_uncrop','image_enhancement','image_animation','image_background_gen','text_generation','text_optimizations','music_generation'];
 function fixture(){return {adset:{targeting:{publisher_platforms:['facebook','instagram'],facebook_positions:['feed'],instagram_positions:['stream','story']}},creative:{contextual_multi_ads:{enroll_status:'OPT_OUT'},degrees_of_freedom_spec:{creative_features_spec:Object.fromEntries(keys.map(k=>[k,{enroll_status:'OPT_OUT'}]))},asset_feed_spec:{optimization_type:'PLACEMENT',images:[{hash:'feed',adlabels:[{name:'feed'}]},{hash:'story',adlabels:[{name:'story'}]}],asset_customization_rules:[{priority:1,image_label:{name:'story'},customization_spec:{publisher_platforms:['instagram'],instagram_positions:['story']}},{priority:2,image_label:{name:'feed'},customization_spec:{publisher_platforms:['facebook','instagram'],facebook_positions:['feed'],instagram_positions:['stream']}}]}}};}
 const images={feed:{hash:'feed',width:1080,height:1350},story:{hash:'story',width:1080,height:1920}};
@@ -7,6 +7,28 @@ test('fails closed for enabled or missing enhancements',()=>{const a=fixture();a
 test('wrong story asset dimensions block readiness',()=>{assert.match(evaluate(fixture(),{...images,story:{...images.story,height:1350}}).issues.join(),/1080 × 1920/)});
 test('new unsupported placements block readiness',()=>{const a=fixture();a.adset.targeting.instagram_positions.push('unknown_future_placement');assert.match(evaluate(a,images).issues.join(),/Unreviewed placement/)});
 test('fingerprint ignores object key order but invalidates changed configuration',async()=>{assert.equal(await fingerprint({b:2,a:1}),await fingerprint({a:1,b:2}));assert.notEqual(await fingerprint({creative:'a'}),await fingerprint({creative:'b'}))});
+
+test('stable video identity ignores only rotating signed thumbnail URLs',async()=>{
+ const base={asset_feed_spec:{videos:[{video_id:'video-1',thumbnail_hash:'hash-1',thumbnail_url:'https://www.facebook.com/ads/image/?d=old',adlabels:[{name:'feed'}]}]},object_story_spec:{link_data:{message:'copy'}}};
+ const input={creative:stableCreativeFingerprintInput(base),targeting:{publisher_platforms:['facebook']},assets:{facebook_feed:{video_id:'video-1',status:'ready',width:1080,height:1350}}};
+ const rotated=structuredClone(base);rotated.asset_feed_spec.videos[0].thumbnail_url='https://www.facebook.com/ads/image/?d=new';
+ assert.equal(await fingerprint(input),await fingerprint({...input,creative:stableCreativeFingerprintInput(rotated)}));
+ assert.equal(base.asset_feed_spec.videos[0].thumbnail_url,'https://www.facebook.com/ads/image/?d=old');
+ for(const [path,mutate] of [
+  ['video ID',v=>v.creative.asset_feed_spec.videos[0].video_id='video-2'],
+  ['thumbnail hash',v=>v.creative.asset_feed_spec.videos[0].thumbnail_hash='hash-2'],
+  ['copy',v=>v.creative.object_story_spec.link_data.message='changed'],
+  ['targeting',v=>v.targeting.publisher_platforms=['instagram']],
+  ['dimensions',v=>v.assets.facebook_feed.width=720]
+ ]){const changed=structuredClone(input);mutate(changed);assert.notEqual(await fingerprint(input),await fingerprint(changed),path);}
+});
+
+test('thumbnail URL remains fingerprinted without both stable video identifiers',async()=>{
+ for(const video of [{video_id:'video-1',thumbnail_url:'old'},{thumbnail_hash:'hash-1',thumbnail_url:'old'}]){
+  const changed=structuredClone(video);changed.thumbnail_url='new';
+  assert.notEqual(await fingerprint(stableCreativeFingerprintInput({asset_feed_spec:{videos:[video]}})),await fingerprint(stableCreativeFingerprintInput({asset_feed_spec:{videos:[changed]}})));
+ }
+});
 
 test('video mapping preserves multiword platform and position names',()=>{const a=fixture();a.adset.targeting={publisher_platforms:['facebook','audience_network'],device_platforms:['mobile'],facebook_positions:['facebook_reels'],audience_network_positions:['rewarded_video']};const spec=a.creative.asset_feed_spec;spec.images=[];spec.videos=[{video_id:'vertical',adlabels:[{name:'story'}]},{video_id:'feed',adlabels:[{name:'feed'}]}];spec.asset_customization_rules=[{priority:1,video_label:{name:'story'},customization_spec:{publisher_platforms:['facebook'],facebook_positions:['facebook_reels']}},{priority:2,video_label:{name:'feed'},customization_spec:{publisher_platforms:['audience_network'],audience_network_positions:['rewarded_video']}}];const videos={vertical:{video_id:'vertical',width:1080,height:1920,status:'ready'},feed:{video_id:'feed',width:1080,height:1350,status:'ready'}};const result=evaluate(a,{},videos);assert.deepEqual(result.issues,[]);assert.equal(result.assets.audience_network_rewarded_video.video_id,'feed');assert.equal(result.formatPlacements.FACEBOOK_REELS_MOBILE,'facebook_facebook_reels');videos.vertical.height=1350;assert.match(evaluate(a,{},videos).issues.join(),/1080 × 1920/);});
 
