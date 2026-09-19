@@ -18,6 +18,11 @@ const formats={
 };
 const canonical=v=>Array.isArray(v)?v.map(canonical):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,canonical(v[k])])):v;
 export async function fingerprint(value){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(canonical(value))));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+export function stableCreativeFingerprintInput(creative){
+ const stable=structuredClone(creative);
+ for(const video of stable?.asset_feed_spec?.videos||[])if(typeof video.video_id==='string'&&video.video_id&&typeof video.thumbnail_hash==='string'&&video.thumbnail_hash)delete video.thumbnail_url;
+ return stable;
+}
 export function evaluate(ad,images,videos={}){
  const c=ad.creative||{},spec=c.asset_feed_spec||{},features=c.degrees_of_freedom_spec?.creative_features_spec||{},target=ad.adset?.targeting||{},issues=[],placements=[];
  for(const platform of target.publisher_platforms||[])for(const position of target[platform+'_positions']||[])placements.push(platform+'_'+position);
@@ -76,7 +81,7 @@ export async function inventory(env,{fresh=false}={}){
  const checkedAt=reuse?cached.checkedAt:new Date().toISOString();
  if(!reuse)await setState(env,'creative_inventory',JSON.stringify({checkedAt,campaigns,ads,images,videos}));
  const result=[];
- for(const a of scoped){const evaluation=evaluate(a,images,videos),fp=await fingerprint({creative:a.creative,targeting:a.adset?.targeting,assets:Object.fromEntries(Object.entries(evaluation.assets).map(([k,v])=>[k,v?{hash:v.hash,video_id:v.video_id,status:v.status,width:v.width,height:v.height}:null]))});
+ for(const a of scoped){const evaluation=evaluate(a,images,videos),fp=await fingerprint({creative:stableCreativeFingerprintInput(a.creative),targeting:a.adset?.targeting,assets:Object.fromEntries(Object.entries(evaluation.assets).map(([k,v])=>[k,v?{hash:v.hash,video_id:v.video_id,status:v.status,width:v.width,height:v.height}:null]))});
   const saved=await env.DB.prepare('SELECT value FROM state WHERE key=?').bind('creative_review:'+a.id).first();let review=null;try{review=JSON.parse(saved?.value||'null');}catch{}
   const reviewed=review?.fingerprint===fp&&evaluation.required.every(f=>review.formats?.includes(f));
   const link=a.creative?.object_story_spec?.link_data||{},feed=a.creative?.asset_feed_spec||{};
