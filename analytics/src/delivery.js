@@ -12,15 +12,17 @@ export async function syncDelivery(env) {
   const campaigns=ids({...env,META_CAMPAIGN_IDS:env.META_CAMPAIGN_IDS||prior?.value});
   const rows=[];
   for(const campaign of campaigns){
-   const c=await graph(env,campaign,{fields:'id,name,status,effective_status'});
-   rows.push({...c,kind:'campaign_id'});
+   const c=await graph(env,campaign,{fields:'id,name,status,effective_status,adsets.limit(100){id,name,status,effective_status,daily_budget},ads.limit(100){id,name,status,effective_status,adset_id}'});
+   const {adsets,ads,...campaignFields}=c;
+   rows.push({...campaignFields,kind:'campaign_id'});
    for(const [edge,kind] of [['adsets','adset_id'],['ads','ad_id']]){
-    let after='';
+    let d=c[edge];
     for(let page=0;page<20;page++){
-     const d=await graph(env,campaign+'/'+edge,{fields:kind==='adset_id'?'id,name,status,effective_status,daily_budget,promoted_object,learning_stage_info':'id,name,status,effective_status,adset_id',limit:100,...(after?{after}:{})});
+     if(!Array.isArray(d?.data))throw Error('Delivery status response incomplete.');
      rows.push(...(d.data||[]).map(r=>({...r,campaign_id:campaign,kind,effective_status:c.effective_status==='PAUSED'?'CAMPAIGN_PAUSED':r.effective_status})));
      if(!d.paging?.next)break;
-     after=d.paging.cursors?.after;if(!after||page===19)throw Error('Delivery status pagination incomplete.');
+     const after=d.paging.cursors?.after;if(!after||page===19)throw Error('Delivery status pagination incomplete.');
+     d=await graph(env,campaign+'/'+edge,{fields:kind==='adset_id'?'id,name,status,effective_status,daily_budget':'id,name,status,effective_status,adset_id',limit:100,after});
     }
    }
   }
