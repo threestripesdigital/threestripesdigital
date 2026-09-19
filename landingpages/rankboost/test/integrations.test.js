@@ -354,6 +354,11 @@ test("Calendly lifecycle webhooks enqueue durable provider work", async (t) => {
           questions_and_answers: [
             { question: "Best phone number", answer: "+15555550100" },
             { question: "Firm website", answer: "example.test" },
+            { question: "Current Monthly Marketing Budget", answer: "$5k - 10k" },
+            {
+              question: "What do you currently do for marketing / generating new cases?",
+              answer: "SEO",
+            },
           ],
         },
       }, key, true);
@@ -377,6 +382,10 @@ test("Calendly lifecycle webhooks enqueue durable provider work", async (t) => {
       const bookingFields = queuedJobs(db).find(({ kind }) => kind === "kit.upsert_tag").payload.fields;
       assert.equal(bookingFields.call_date, "Thursday, August 20, 2026");
       assert.equal(bookingFields.call_time, "11:00 AM EDT");
+      const slackText = queuedJobs(db).find(({ kind }) => kind === "slack.webhook").payload.text;
+      assert.match(slackText, /Budget: \$5k - 10k/);
+      assert.match(slackText, /Marketing now: SEO/);
+      assert.doesNotMatch(slackText, /Marketing now: \$5k - 10k/);
       assert.deepEqual(queuedJobs(db).map(({ kind }) => kind), [
         "slack.webhook",
         "kit.upsert_tag",
@@ -814,6 +823,11 @@ test("reschedule relation binds a new invitee without a redirect token", async (
         questions_and_answers: [
           { question: "Best phone number", answer: "+15555550199" },
           { question: "Firm website", answer: "updated.example.test" },
+          { question: "Current Monthly Marketing Budget", answer: "$5k - 10k" },
+          {
+            question: "What do you currently do for marketing / generating new cases?",
+            answer: "SEO",
+          },
         ],
         created_at: "2026-08-18T14:00:00Z",
         updated_at: "2026-08-18T14:00:00Z",
@@ -907,6 +921,9 @@ test("reschedule relation binds a new invitee without a redirect token", async (
     }));
     assert.equal(hydrationRequests.length, 1);
     assert.match(recoveredJobs[0].payload.text, /Updated Relation/);
+    assert.match(recoveredJobs[0].payload.text, /Budget: \$5k - 10k/);
+    assert.match(recoveredJobs[0].payload.text, /Marketing now: SEO/);
+    assert.doesNotMatch(recoveredJobs[0].payload.text, /Marketing now: \$5k - 10k/);
     assert.equal(recoveredJobs[1].payload.email, "updated-relation@example.test");
     assert.equal(recoveredJobs[2].payload.phone, "+15555550199");
   } finally {
