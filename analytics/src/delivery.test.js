@@ -36,11 +36,16 @@ test('delivery sync uses nested inventory and follows a bounded edge cursor',asy
  }finally{globalThis.fetch=oldFetch;}
 });
 
-test('delivery sync preserves the last good inventory when a nested read is incomplete',async()=>{
- const db=database(),oldFetch=globalThis.fetch;
+test('delivery sync preserves the last good inventory when a paginated read is incomplete',async()=>{
+ const db=database(),requests=[],oldFetch=globalThis.fetch;
  try{
-  globalThis.fetch=async()=>Response.json({id:'1',name:'Campaign',status:'ACTIVE',effective_status:'ACTIVE',adsets:{data:[]}});
+  globalThis.fetch=async input=>{
+   requests.push(new URL(input));
+   if(requests.length===2)return Response.json({});
+   return Response.json({id:'1',name:'Campaign',status:'ACTIVE',effective_status:'ACTIVE',adsets:{data:[{id:'11',status:'ACTIVE',effective_status:'ACTIVE'}],paging:{next:'next',cursors:{after:'cursor'}}},ads:{data:[]}});
+  };
   await syncDelivery({DB:db,META_API_VERSION:'v25.0',META_ACCESS_TOKEN:'test-only'});
+  assert.equal(requests.length,2);
   assert.equal(db.state.get('delivery_inventory'),'old inventory');
   assert.equal(db.state.get('delivery_success'),'old success');
   assert.equal(db.state.get('delivery_error'),'Could not refresh Meta delivery status. Showing the last known status.');

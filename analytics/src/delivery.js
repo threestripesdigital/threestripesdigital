@@ -17,8 +17,8 @@ export async function syncDelivery(env) {
    rows.push({...campaignFields,kind:'campaign_id'});
    for(const [edge,kind] of [['adsets','adset_id'],['ads','ad_id']]){
     let d=c[edge];
-    if(!Array.isArray(d?.data))throw Error('Delivery status response incomplete.');
     for(let page=0;page<20;page++){
+     if(!Array.isArray(d?.data))throw Error('Delivery status response incomplete.');
      rows.push(...(d.data||[]).map(r=>({...r,campaign_id:campaign,kind,effective_status:c.effective_status==='PAUSED'?'CAMPAIGN_PAUSED':r.effective_status})));
      if(!d.paging?.next)break;
      const after=d.paging.cursors?.after;if(!after||page===19)throw Error('Delivery status pagination incomplete.');
