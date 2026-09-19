@@ -16,7 +16,7 @@ Provider results occupy the existing metric grids. Meta website actions sit with
 
 Provider-backed strategy metrics retain their configured thresholds. Play rate compares Wistia all-traffic values to the supplied 40% ideal and 25% bad boundary, with the scope visible. Metric values, badges and bands reflect the computed status. Cards display ideal, OK range and bad boundary, including when data is missing. Counts and other metrics without supplied targets remain unrated.
 
-Campaigns & creatives includes a live placement evaluation and Meta-rendered previews in desktop and mobile screen frames. Artwork is also shown without distortion with its exact pixel dimensions. The evaluation states Passed or Not ready in text. Missing enhancement settings, unsupported placements, wrong dimensions, and stale visual reviews fail closed. Users inspect each enabled preview and explicitly confirm legibility, cropping and safe areas. A review binds to a fingerprint of the creative, assets and targeting, so configuration changes invalidate it. The dashboard remains unable to activate ads or change spend.
+Campaigns & creatives includes a live placement evaluation and Meta-rendered previews in desktop and mobile screen frames. Artwork is also shown without distortion with its exact pixel dimensions. The evaluation states Passed or Not ready in text. Missing enhancement settings, unsupported placements, wrong dimensions, and stale visual reviews fail closed. Users inspect each enabled preview and explicitly confirm legibility, cropping and safe areas. A review binds to a fingerprint of the creative, assets and targeting, so configuration changes invalidate it. The dashboard cannot activate ads or change daily budgets. Campaign cap removal is a separate, explicit confirmed action.
 
 Provider availability is evaluated per metric. Disabling custom collection does not hide measured provider values or Calendly-attributed call outcomes. Cost cards cover landing page views, VSL plays and completed forms. VSL ad rows show their source and capture window; historical spend is never divided by partial PostHog plays. Session recordings open in the dedicated private Rank Boost PostHog project.
 
@@ -35,3 +35,9 @@ V2 metric cards show the matching full-run v1 value immediately below the curren
 ## Placement QA eligibility
 
 Show proven ineligible media/device preview combinations explicitly as not applicable with a reason. Keep them distinct from unverified previews, which continue to block launch. Never present a renderer error as a passed visual check.
+
+## Campaign spend cap
+
+A persistent card above the observation banner shows the current v2 campaign cap in every dashboard view. Its full-campaign spend is independent of the selected date range. USD estimates are primary, with exact CAD billing values and the check time below. Missing or stale data is explicit and disables removal. At 70% the card uses an amber warning, at 85% an urgent red warning, and at 100% a cap-reached message. Status words supplement color. Time remaining is an estimate at current active daily budgets, not a delivery forecast.
+
+Use three responsive spending figures, a labeled native progress bar, and wrapping actions. Existing 760px mobile breakpoint applies, with 44px touch targets and no animation. The confirmation dialog scrolls within the viewport and has a clear Keep cap action. It shows full-run forms, verified bookings, and per-ad-set form costs before the explicit Confirm removal action. Changes are only reported successful after server readback. No automatic performance decision or budget increase is introduced.
