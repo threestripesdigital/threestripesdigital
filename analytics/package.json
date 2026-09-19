@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --port 8787",
-    "check": "node --check src/worker.js && node --check src/metrics.js && node --check src/meta.js && node --check public/app.js && node --check public/tracker.js && node --check src/sources.js && node --check src/report.js && node --check src/creative-qa.js && node --check public/creative-qa.js",
+    "check": "node --check src/worker.js && node --check src/metrics.js && node --check src/meta.js && node --check public/app.js && node --check public/tracker.js && node --check src/sources.js && node --check src/report.js && node --check src/creative-qa.js && node --check public/creative-qa.js && node --check src/spend-cap.js && node --check public/spend-cap.js",
     "db:local": "wrangler d1 migrations apply DB --local",
     "db:remote": "wrangler d1 migrations apply DB --remote",
     "deploy": "node scripts/predeploy.js && wrangler deploy",

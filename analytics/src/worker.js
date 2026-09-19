@@ -7,11 +7,12 @@ import {syncMeta,dayIn,setState} from './meta.js';
 import {syncFunnel} from './funnel.js';
 import {syncGA4,syncWistia} from './sources.js';
 import {report} from './report.js';
+import {getSpendCap,removeSpendCap,SpendCapError,syncSpendCaps} from './spend-cap.js';
 import {authorized,cookie,equal,limited,readBody} from './auth.js';
 const json=(body,status=200,headers={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store',...headers}});
 async function assets(env,request,path) {const u=new URL(request.url);if(path)u.pathname=path;return env.ASSETS.fetch(new Request(u,request));}
 async function runSync(env) {
- const outcomes=await Promise.allSettled([syncDelivery(env),syncMeta(env),syncFunnel(env).then(()=>syncBookingTiming(env)),syncGA4(env),syncWistia(env),syncFormFills(env),syncPostHog(env)]);
+ const outcomes=await Promise.allSettled([syncSpendCaps(env),syncDelivery(env),syncMeta(env),syncFunnel(env).then(()=>syncBookingTiming(env)),syncGA4(env),syncWistia(env),syncFormFills(env),syncPostHog(env)]);
  await env.DB.prepare('DELETE FROM rate_limits WHERE expires < ?').bind(Date.now()).run();
  if(outcomes.some(x=>x.status==='rejected')) console.log('reporting_sync_failed');
 }
@@ -34,6 +35,11 @@ async function route(req,env,ctx) {
  if(path==='/api/creative-qa'&&req.method==='GET')return json(await inventory(env,{fresh:url.searchParams.get('fresh')==='1'}));
  if(path==='/api/creative-preview'&&req.method==='GET'){const qa=await inventory(env),ad=qa.ads.find(a=>a.id===url.searchParams.get('ad'));if(!ad)return json({error:'Ad not found'},404);return json(await preview(env,ad,url.searchParams.get('format')));}
  if(path==='/api/creative-review'&&req.method==='POST'){const b=await readBody(req),qa=await inventory(env),ad=qa.ads.find(a=>a.id===b.ad);if(!ad)return json({error:'Ad not found'},404);return json(await recordReview(env,ad,b));}
+ if(path==='/api/spend-cap'&&req.method==='GET'){try{return json(await getSpendCap(env,url.searchParams.get('campaign')));}catch(error){if(error instanceof SpendCapError)return json({error:error.message},error.status);throw error;}}
+ if(path==='/api/spend-cap/remove'&&req.method==='POST') {
+  if(await limited(env,'spend-cap-remove:'+req.headers.get('CF-Connecting-IP'),3,900))return json({error:'Too many spend cap removal attempts. Try again later.'},429);
+  try{return json(await removeSpendCap(env,await readBody(req)));}catch(error){if(error instanceof SpendCapError)return json({error:error.message},error.status);throw error;}
+ }
  if(path==='/api/report'&&req.method==='GET')return json(await report(env,url));
  if(path==='/api/sync'&&req.method==='POST') {
   if(await limited(env,'manual-sync',1,60))return json({error:'A sync was recently requested. Please wait one minute.'},429);
@@ -76,5 +82,5 @@ export default {
   secured.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.fbcdn.net https://*.facebook.com; frame-src https://business.facebook.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
   return secured;
  },
- async scheduled(event,env,ctx){ctx.waitUntil(event.cron==='*/5 * * * *'?Promise.allSettled([syncFunnel(env),syncDelivery(env)]):runSync(env));}
+ async scheduled(event,env,ctx){ctx.waitUntil(event.cron==='*/5 * * * *'?Promise.allSettled([syncFunnel(env),syncDelivery(env),syncSpendCaps(env)]):runSync(env));}
 };

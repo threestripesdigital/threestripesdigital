@@ -1,6 +1,6 @@
 # Rank Boost Command Center
 
-Private Cloudflare Worker dashboard and D1 analytics backend for Three Stripes Digital's lawyer Rank Boost funnel. The dashboard never writes to Meta or changes campaigns.
+Private Cloudflare Worker dashboard and D1 analytics backend for Three Stripes Digital's lawyer Rank Boost funnel. Reporting is read only except for an explicitly confirmed removal of the configured v2 campaign spend cap. The dashboard cannot activate ads or change daily budgets.
 
 ## What runs automatically
 
@@ -133,3 +133,14 @@ Calculated provider cards include cost per landing page view, VSL play, complete
 Both v1 and v2 campaign IDs are pinned for reporting. The UI defaults to v2, with separate A and B budgets and form-open optimization unchanged. The v1 tab selects its full spend-date range. The v2 comparison uses that full v1 baseline and labels the selected v2 dates. Unknown-campaign bookings remain in All campaigns and are counted in the baseline caveat, never assigned by timing. SubmitApplication is labeled Form opens; the older Lead event is not treated as the same CPA. V2 gets its own first-spend observation hold. Zero-spend entities are sourced from the delivery inventory.
 
 Placement QA now maps supported feed, Stories, Reels, profile, Explore, search, Messenger and Audience Network preview formats and reads uploaded video dimensions/readiness. Facebook search remains explicitly unsupported because the official SDK has no corresponding preview enum. API errors or unavailable previews do not pass a review. Campaign registration and dimensions do not authorize activation or certify visual quality.
+
+
+## Campaign spend cap
+
+The persistent v2 cap card reads full campaign spend directly from Meta, independently of the selected reporting dates. It shows spent, remaining, percent used, the exact CAD cap, an estimated USD equivalent at the configured dated exchange rate, and an approximate time remaining at the enabled daily budget. This pace is an estimate, not a delivery guarantee. Warnings begin at 70%, become urgent at 85%, and show a cap-reached state at 100%. The existing five-minute cron refreshes the snapshot; visible browsers check it every minute. Meta reporting can lag.
+
+The Remove campaign cap button opens a confirmation with full-run forms, verified bookings and ad-set form costs. Nothing removes the cap automatically. Confirmation sends only a spend_cap update for META_SPEND_CAP_CAMPAIGN_ID, after authenticating the operator, checking same origin, confirming the expected current cap, rate limiting, and acquiring a bounded lock. A fresh Meta read verifies removal and unchanged configured delivery settings. Failed or stale reads disable removal and preserve the last known values as stale. Audit records are retained in D1 state.
+
+Install META_MANAGEMENT_TOKEN as a Worker secret to enable removal. It is never exposed to the browser. The existing META_ACCESS_TOKEN remains the reporting credential. Both the configured campaign and its account are checked before mutation. The daily budgets, ad statuses, targeting and creatives are not written by this feature. Apply no new database migrations for this change.
+
+Use mocked tests for successful removal and financial failure paths: `node --test src/spend-cap.test.js`. Production verification uses GET requests and the confirmation dialog's Keep cap action. Do not submit a live removal or validation-only write merely to test this feature.
