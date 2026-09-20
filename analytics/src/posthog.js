@@ -3,7 +3,12 @@ import {campaignInfo} from './campaigns.js';
 const eventNames=['session','vsl_load','vsl_play','vsl_25','vsl_50','vsl_75','application_start','application_complete','scheduler_open','booking_browser_confirmation'];
 const captureStart='2026-09-12T04:00:00.000Z';
 const snapshotVersion=2;
-const validInstant=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/.test(value)&&Number.isFinite(Date.parse(value))?value:null;
+const validInstant=value=>{
+ const match=typeof value==='string'&&value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$/);
+ if(!match||!Number.isFinite(Date.parse(value)))return null;
+ // Normalize offsets without losing the stored microsecond precision.
+ return new Date(value).toISOString().slice(0,19)+(match[1]||'')+'Z';
+};
 const sqlInstant=value=>`toDateTime64('${value.replace('T',' ').replace('Z','')}', 6, 'UTC')`;
 export function posthogLaunches(env,state){
  return Object.fromEntries(ids({...env,META_CAMPAIGN_IDS:env.META_CAMPAIGN_IDS||state.meta_campaign_ids}).sort().map(id=>[id,validInstant(campaignInfo(id)?.version==='v1'?(env.LAUNCH_AT||state['campaign_launch:'+id]||state.launch_at):state['campaign_launch:'+id])]));
