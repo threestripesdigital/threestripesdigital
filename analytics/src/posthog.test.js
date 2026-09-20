@@ -66,3 +66,13 @@ test('invalid aggregate counts fail closed and cannot replace a prior cohort sna
  const {env,state}=setup(),old=globalThis.fetch;state.posthog_cohort='previous';
  try{globalThis.fetch=async()=>Response.json({results:[['2026-09-19',campaign,'2','3',1,2,0,0,0,0,0,0,0,0]]});await syncPostHog(env);assert.match(state.posthog_error,/invalid counts/);assert.equal(state.posthog_cohort,'previous');}finally{globalThis.fetch=old;}
 });
+
+test('stored offset launch timestamps normalize to UTC without losing microseconds',()=>{
+ const {env,state}=setup();
+ for(const stored of ['2026-09-19T19:26:26.545831+00:00','2026-09-20T04:26:26.545831+09:00']){
+  state['campaign_launch:'+campaign]=stored;
+  const launches=posthogLaunches(env,state);assert.equal(launches[campaign],launch);
+  assert.match(posthogQuery(env,launches,'2026-09-01','2026-09-20T13:00:00.000Z'),/2026-09-19 19:26:26.545831/);
+ }
+ state['campaign_launch:'+campaign]='2026-09-19T19:26:26';assert.equal(posthogLaunches(env,state)[campaign],null);
+});
