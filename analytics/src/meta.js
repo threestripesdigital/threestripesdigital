@@ -1,9 +1,12 @@
 export const dayIn = (date, tz) => new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(date));
 export const shiftDay = (day, n) => new Date(Date.parse(day+'T12:00:00Z')+n*86400000).toISOString().slice(0,10);
 export const ids = env => (env.META_CAMPAIGN_IDS||'').split(',').map(x=>x.trim()).filter(x=>/^\d+$/.test(x));
-export function websiteActions(actions=[]) {
- const value=type=>{const n=Number(actions.find(a=>a.action_type===type)?.value||0);if(!Number.isFinite(n)||n<0)throw Error('Invalid Meta website action count');return n;};
- return {landingPageViews:value('landing_page_view'),websiteLeads:value('offsite_conversion.fb_pixel_lead'),formOpens:value('offsite_conversion.fb_pixel_submit_application')};
+export const metaInsightFields='date_start,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,spend,impressions,inline_link_clicks,actions,conversions';
+export function websiteActions(actions=[],conversions=[]) {
+ const actionRows=Array.isArray(actions)?actions:[],conversionRows=Array.isArray(conversions)?conversions:[];
+ const value=(type,rows=[actionRows])=>{for(const list of rows){const match=list.find(a=>a.action_type===type);if(!match)continue;const n=Number(match.value);if(!Number.isFinite(n)||n<0)throw Error('Invalid Meta website action count');return n;}return null;};
+ const formOpens=value('submit_application_website',[conversionRows,actionRows])??value('offsite_conversion.fb_pixel_submit_application',[conversionRows,actionRows])??value('submit_application_total',[conversionRows,actionRows])??0;
+ return {landingPageViews:value('landing_page_view')??0,websiteLeads:value('offsite_conversion.fb_pixel_lead')??0,formOpens};
 }
 export function reportingSpendFactor(env, accountCurrency) {
  if(accountCurrency===env.CURRENCY)return 1;
@@ -52,7 +55,7 @@ export async function syncMeta(env) {
   await setState(env,'meta_account_name',info.name);return;
  }
  const until=dayIn(now,env.REPORTING_TIMEZONE), since=shiftDay(until,-89);
- const params={fields:'date_start,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,spend,impressions,inline_link_clicks,actions',level:'ad',time_increment:1,time_range:JSON.stringify({since,until}),filtering:JSON.stringify([{field:'campaign.id',operator:'IN',value:selected}]),limit:500};
+ const params={fields:metaInsightFields,level:'ad',time_increment:1,time_range:JSON.stringify({since,until}),filtering:JSON.stringify([{field:'campaign.id',operator:'IN',value:selected}]),limit:500};
  const rows=[];let after='';
  for(let page=0;page<20;page++) {
   const b=await graph(env,'act_'+account+'/insights',{...params,...(after?{after}:{})});
@@ -70,10 +73,10 @@ export async function syncMeta(env) {
  // Replace the complete fetched range atomically, including rows removed by Meta corrections.
  const statements=[env.DB.prepare('DELETE FROM meta_daily WHERE day BETWEEN ? AND ?').bind(since,until)];
  for(const r of rows) statements.push(env.DB.prepare('INSERT INTO meta_daily VALUES(?,?,?,?,?,?,?,?,?)').bind(r.date_start,r.ad_id,r.ad_name||r.ad_id,r.adset_id,r.campaign_id,r.campaign_name||r.campaign_id,Number(r.spend||0)*spendFactor,Number(r.impressions||0),Number(r.inline_link_clicks||0)));
- let actionDays=Object.values(rows.reduce((acc,r)=>{const key=r.date_start+':'+r.campaign_id;const counts=websiteActions(r.actions);const row=acc[key]||{day:r.date_start,campaign_id:r.campaign_id,landingPageViews:0,websiteLeads:0};row.landingPageViews+=counts.landingPageViews;row.websiteLeads+=counts.websiteLeads;acc[key]=row;return acc;},{}));
+ let actionDays=Object.values(rows.reduce((acc,r)=>{const key=r.date_start+':'+r.campaign_id;const counts=websiteActions(r.actions,r.conversions);const row=acc[key]||{day:r.date_start,campaign_id:r.campaign_id,landingPageViews:0,websiteLeads:0};row.landingPageViews+=counts.landingPageViews;row.websiteLeads+=counts.websiteLeads;acc[key]=row;return acc;},{}));
  try{const old=await env.DB.prepare("SELECT value FROM state WHERE key='meta_website_actions'").first();actionDays=[...JSON.parse(old?.value||'[]').filter(r=>r.day<since),...actionDays];}catch{}
  statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('meta_website_actions',JSON.stringify(actionDays)));
- let adActions=rows.map(r=>({day:r.date_start,ad_id:r.ad_id,adset_id:r.adset_id,adset_name:r.adset_name||r.adset_id,campaign_id:r.campaign_id,...websiteActions(r.actions)}));
+ let adActions=rows.map(r=>({day:r.date_start,ad_id:r.ad_id,adset_id:r.adset_id,adset_name:r.adset_name||r.adset_id,campaign_id:r.campaign_id,...websiteActions(r.actions,r.conversions)}));
  try{const old=await env.DB.prepare("SELECT value FROM state WHERE key='meta_ad_actions'").first();adActions=[...JSON.parse(old?.value||'[]').filter(r=>r.day<since),...adActions];}catch{}
  statements.push(env.DB.prepare('INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('meta_ad_actions',JSON.stringify(adActions)));
  const successfulAt=new Date().toISOString();
