@@ -29,6 +29,14 @@ const SCOUT_HOST_ALLOWED = new Set([
   "/favicon-32.png",
   "/apple-touch-icon.png",
   "/privacy.html",
+  // The shared privacy page uses these public branding assets on the Scout host.
+  "/site-brand.css",
+  "/assets/brand/brand-mark.svg",
+  "/assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk79FO_F.woff2",
+  "/assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk7PFO_F.woff2",
+  "/assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4jE-_F.woff2",
+  "/assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4aE-_F.woff2",
+  "/assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk59E-_F.woff2",
   "/api/scout",
 ]);
 
