@@ -1,0 +1,84 @@
+/* New main-site branding is scoped to the header and hero through the form. */
+
+.rankboost-brand-header,
+#top.hero-brand {
+  --hero-navy: #0C2031;
+  --hero-panel: #193447;
+  --hero-gold: #D9B35B;
+  --hero-text: #FAF8F2;
+  --hero-muted: #B8C6D0;
+  font-family: "Rank Boost Manrope", Arial, sans-serif;
+  color: var(--hero-text);
+  background: var(--hero-navy);
+}
+.rankboost-brand-header { height: 76px; border-bottom: 1px solid #ffffff16; }
+.rankboost-brand-header .header-inner { width: min(100% - 48px, 1312px); }
+.rankboost-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--hero-text); font-size: 20px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
+.rankboost-brand img { flex: 0 0 auto; width: 36px; height: 32px; }
+.rankboost-brand b { color: var(--hero-gold); font-weight: 500; }
+.rankboost-brand-header .header-cta,
+#top.hero-brand #qualify-form-toggle,
+#top.hero-brand .qualify-form button[type="submit"] {
+  background: var(--hero-gold);
+  color: var(--hero-navy);
+  border-color: var(--hero-gold);
+  border-radius: 999px;
+  box-shadow: none;
+  font-family: "Rank Boost Manrope", Arial, sans-serif;
+  font-weight: 700;
+}
+.rankboost-brand-header .header-cta:hover,
+#top.hero-brand #qualify-form-toggle:hover,
+#top.hero-brand .qualify-form button[type="submit"]:hover { background: #E7C675; border-color: #E7C675; transform: none; }
+.rankboost-brand-header .header-cta { min-height: 44px; font-size: 13px; padding: 10px 21px; }
+.rankboost-brand-header a:focus-visible,
+#top.hero-brand #qualify-form-toggle:focus-visible,
+#top.hero-brand .qualify-form button:focus-visible { outline: 3px solid var(--hero-text); outline-offset: 4px; }
+
+#top.hero-brand { padding: 26px 0 36px; border-bottom-color: #ffffff16; }
+#top.hero-brand .hero-grid { width: min(100% - 40px, 960px); gap: 20px; }
+#top.hero-brand .hero-audience { margin: 0 0 12px; color: var(--hero-gold); font-size: 11px; font-weight: 700; letter-spacing: .12em; line-height: 1.4; }
+#top.hero-brand .hero-intro h1 { margin: 0; color: var(--hero-text); font-size: 44px; font-weight: 500; line-height: 1.12; letter-spacing: -.04em; }
+#top.hero-brand .hero-intro h1 .hl-num { color: var(--hero-gold); }
+#top.hero-brand .hero-free-offer { margin: 12px 0 0; color: var(--hero-text); font-size: 22px; font-weight: 500; line-height: 1.45; }
+#top.hero-brand .hero-free-offer strong { color: var(--hero-gold); font-weight: 700; }
+#top.hero-brand .hero-vsl-frame { width: min(100%, 640px); border-radius: 12px; border-color: #ffffff26; box-shadow: none; }
+#top.hero-brand .hero-qualify { width: min(100%, 600px); min-width: 0; }
+#top.hero-brand #boost-dialog { font-family: var(--font); }
+#top.hero-brand .hero-qualify .form-shell { text-align: center; }
+#top.hero-brand #qualify-form-toggle { width: min(100%, 350px); min-height: 58px; padding: 15px 24px; margin: 0 auto; font-size: 18px; }
+#top.hero-brand .hero-reassurance { margin: 12px 0 0; color: var(--hero-muted); font-size: 12px; line-height: 1.6; }
+#top.hero-brand #qualify-form-toggle[hidden] + .hero-reassurance { display: none; }
+#top.hero-brand .qualify-form { margin-top: 0; padding: 24px; border: 1px solid #ffffff26; border-radius: 16px; background: var(--hero-panel); text-align: left; font-family: "Rank Boost Manrope", Arial, sans-serif; }
+#top.hero-brand .qualify-form label { color: var(--hero-text); }
+#top.hero-brand .qualify-form,
+#top.hero-brand .qualify-form .form-row,
+#top.hero-brand .qualify-form .field,
+#top.hero-brand .qualify-form input { min-width: 0; }
+#top.hero-brand .qualify-form input:focus { border-color: var(--hero-gold); box-shadow: 0 0 0 3px rgb(217 179 91 / 24%); }
+#top.hero-brand .qualify-form .form-consent { color: var(--hero-muted); }
+#top.hero-brand .qualify-form .form-consent a { color: var(--hero-gold); }
+#top.hero-brand .qualify-form button[type="submit"] { min-height: 54px; white-space: normal; }
+
+@media (max-width: 600px) {
+  .rankboost-brand-header { height: 72px; }
+  .rankboost-brand-header .header-inner { width: calc(100% - 32px); gap: 10px; }
+  .rankboost-brand { font-size: 15px; gap: 7px; }
+  .rankboost-brand img { width: 27px; height: 24px; }
+  .rankboost-brand-header .header-cta { padding: 10px 13px; font-size: 11px; white-space: nowrap; }
+  #top.hero-brand { padding: 26px 0 32px; }
+  #top.hero-brand .hero-grid { width: calc(100% - 32px); gap: 20px; }
+  #top.hero-brand .hero-intro h1 { font-size: 34px; line-height: 1.14; }
+  #top.hero-brand .hero-free-offer { font-size: 17px; margin-top: 12px; }
+  #top.hero-brand .hero-vsl-frame { border-radius: 9px; }
+  #top.hero-brand #qualify-form-toggle { width: 100%; font-size: 17px; min-height: 55px; }
+  #top.hero-brand .hero-reassurance { font-size: 11px; }
+  #top.hero-brand .qualify-form { padding: 19px 16px; }
+}
+@media (max-width: 360px) {
+  .rankboost-brand { font-size: 13px; gap: 5px; }
+  .rankboost-brand img { width: 23px; height: 21px; }
+  .rankboost-brand-header .header-cta { font-size: 10px; padding-inline: 10px; }
+  #top.hero-brand .hero-intro h1 { font-size: 30px; }
+  #top.hero-brand .hero-free-offer { font-size: 15px; }
+}

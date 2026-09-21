@@ -468,9 +468,10 @@ test("qualification form uses a one-way accessible disclosure trigger", async ()
   assert.notEqual(qualifyStart, -1);
   assert.notEqual(qualifyEnd, -1);
   const qualification = index.slice(qualifyStart, qualifyEnd);
-  const vslPosition = index.indexOf("hero-vsl-caption");
+  const vslPosition = index.indexOf('media-id="8uioqg3047"');
   assert.notEqual(vslPosition, -1);
   assert.ok(index.slice(vslPosition).includes("qualify-form-toggle"));
+  assert.match(qualification, /class="hero-reassurance">No credit card\. No contract\. No website login\./);
   const trigger = /<button class="[^"]*qualify-form-toggle[^"]*" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">\s*Get my free boost\s*<\/button>/;
   assert.match(index, trigger);
   assert.match(qualification, trigger);
@@ -675,7 +676,7 @@ test("static responses enforce transport and browser security policy", async () 
 test("hero VSL renders the Wistia embed and the CSP allows it", async () => {
   const index = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   assert.match(index, /<wistia-player\b[^>]*media-id="8uioqg3047"[^>]*><\/wistia-player>/);
-  assert.ok(index.includes('poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.png"'));
+  assert.ok(index.includes('poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.be53caf8850c.webp"'));
   assert.ok(index.includes("https://fast.wistia.com/player.js"));
   assert.ok(index.includes("https://fast.wistia.com/embed/8uioqg3047.js"));
   assert.doesNotMatch(index, /hero-vsl-placeholder/);
