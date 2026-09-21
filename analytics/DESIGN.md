@@ -45,3 +45,7 @@ Use three responsive spending figures, a labeled native progress bar, and wrappi
 ## Campaign video reporting, September 20, 2026
 
 The primary VSL cards and campaign, ad set and ad rows now use the same PostHog session cohort. This supersedes the earlier Wistia card rules above. Each session belongs to its first session event's day and ad attribution, and must start after that campaign's exact launch timestamp. Exclude internally marked sessions and known QA campaign markers. Dates, source, test exclusion and refresh time are visible. Missing or stale cohort imports show unavailable values rather than falling back to unmatched Wistia counts. Average engagement is not shown as a campaign metric because the current PostHog events cannot calculate it. Wistia remains a separate connection and provider diagnostic. Existing responsive card layouts and benchmarks remain unchanged.
+
+## Daily spend labels
+
+Every daily spend bar shows its currency-formatted amount, including zero, centered above the bar with its date below. Use the selected reporting currency and preserve the existing budget scale. Keep amounts on one line with tabular numerals. Longer periods and narrow mobile panels scroll horizontally within the chart rather than shrinking or hiding daily amounts. Reserve vertical space so the largest bar and label remain visible.
