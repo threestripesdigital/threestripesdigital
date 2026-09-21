@@ -17,7 +17,7 @@
 - Proof comparisons must expose keyboard-operable slider semantics, and enlarged images must use a labeled modal with focus restoration.
 - Saved failures, capacity limits, and rate limits keep booking closed and explain the next safe action.
 - Keep browser-based Meta Pixel tracking enabled across the funnel without consent banners, privacy popups, or inline tracking disclosures; disclose tracking practices in the privacy policy.
-- Place the click-to-open qualification form directly after supporting VSL copy: its one-way full-width trigger reveals the native-hidden form, hides itself and its pre-open reassurance note after opening, keeps entered data intact, focuses the full-name field, and tracks the first open.
+- Place the click-to-open qualification form directly after the visible VSL: its one-way trigger reveals the native-hidden form, hides itself and its pre-open reassurance note after opening, keeps entered data intact, focuses the full-name field, and tracks the first open. Watching the video is optional and never gates the form.
 - Keep section headings and subheadings full width and centered within their section container; do not apply this alignment to ordinary card or body copy.
 - The protected partner lookup may expose its login shell publicly, but its access code is session-only and the endpoint remains rate-limited.
 - A canceled booking may trigger operational notice and a single cancellation SMS, but must not enroll the contact in an unbooked or abandonment email sequence.
@@ -47,6 +47,16 @@
 - Run `npm run deploy` so remote D1 migrations complete before Pages and router deployment.
 - Verify desktop and mobile views with screenshots no larger than 1568 pixels on the longest side.
 - Exercise direct-entry, failure, and successful funnel states rather than reviewing only the happy path.
+
+## Header and hero brand preview
+
+- Apply the approved main-site three-stripe SVG mark, Manrope typography, navy `#0C2031`, gold `#D9B35B`, cream `#FAF8F2`, and muted `#B8C6D0` across all public funnel pages, including lower-page sections, results and booking dialogs, thank-you and privacy. Share tokens, local fonts and controls in `public/site-brand.css`; retain hero layout rules in `public/hero-brand.css`. Preserve existing content and section order.
+- Keep the sequence: law firm audience, page-one outcome in 24 to 48 hours, first keyword free, existing 16:9 Wistia VSL, Get my free boost button, reassurance, and original four-field disclosure form. Do not add a watch gate or new proof section above the form.
+- Preserve the existing form, DOM identifiers, all script bodies and order, VSL media identity, popup, attribution, Pixel, CAPI, PostHog, and Calendly behavior.
+- The Pages production branch is named `preview`. The normal deployment commands publish production, and ordinary Pages previews can forward requests to the production API. For design review, use the separate isolated static preview Worker with no production database, routes, API forwarding, or tracking. Keep this preview guard outside production assets.
+- On screens up to 720 pixels, hide only the header CTA and center the brand. Preserve the desktop header CTA, main application button and sticky mobile CTA.
+- Load local Manrope with font-display swap and preload the 500 weight. Remove obsolete Google Fonts requests. Use the same optimized 1280-pixel WebP hero poster for preload, background and Wistia poster, and keep lower testimonial videos at preload none with click playback.
+- Production deployment requires Bilal's review of the hosted desktop and mobile preview. A design preview does not demonstrate live event receipt or real lead submission.
 
 - Lead the confirmation content with Step 1, Watch this before your call, and the founder video. Step 2, Accept your calendar invitation, follows immediately before FAQs. Calendar instructions are always readable; personalized invite details retain the existing verification gate. Keep the remaining FAQs and proof below, with the save-number reminder unnumbered.
 

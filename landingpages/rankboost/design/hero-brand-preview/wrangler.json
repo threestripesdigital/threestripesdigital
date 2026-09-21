@@ -1,0 +1,15 @@
+{
+  "name": "rankboost-hero-brand-preview",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-08-01",
+  "account_id": "17f7c095d40a8771cf3568fdcae11770",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

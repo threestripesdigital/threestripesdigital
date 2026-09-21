@@ -12,7 +12,7 @@
   <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <meta name="theme-color" content="#0A1628" />
+  <meta name="theme-color" content="#0C2031" />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Three Stripes Digital" />
@@ -28,11 +28,12 @@
   <meta name="twitter:description" content="A no-charge rank-boost test for qualifying law firms. No card or site access; outcomes and timing vary." />
   <meta name="twitter:image" content="https://threestripesdigital.com/rank-boost/law-firms/og-image.png" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk7PFO_F.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="site-brand.css" as="style" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="preload" as="image" href="assets/rankboost-vsl-page-one.png" fetchpriority="high" />
+  <link rel="stylesheet" href="hero-brand.css" />
+  <link rel="stylesheet" href="site-brand.css" />
+  <link rel="preload" as="image" href="assets/rankboost-vsl-page-one.be53caf8850c.webp" fetchpriority="high" />
 
   <!-- Browser-based Meta measurement. -->
   <script src="attribution.js"></script>
@@ -62,10 +63,10 @@
   </style>
 </head>
 <body>
-  <header class="site-header">
+  <header class="site-header rankboost-brand-header">
     <div class="header-inner">
       <!-- Deliberately not a link: nothing in this funnel routes off-page. -->
-      <span class="wordmark">Three Stripes <span>Digital</span></span>
+      <span class="rankboost-brand"><img src="assets/brand/brand-mark.svg" alt="" width="36" height="32"><span>Three Stripes <b>Digital</b></span></span>
       <a class="btn btn-primary header-cta" href="#qualify">
         Get my free boost
       </a>
@@ -74,22 +75,23 @@
 
   <main>
     <!-- 1. Hero -->
-    <section class="hero" id="top">
+    <section class="hero hero-brand" id="top">
       <div class="container hero-grid">
         <div class="hero-intro">
-          <h1>We move law-firm keywords from <span class="hl-num">page 2 to 5</span> to <span class="hl-num">page 1</span> in under 48 hours.</h1>
-          <p class="page-one-note">Rank Boost helps move your existing keywords higher in Google. Check your website below to see your opportunities.</p>
+          <p class="hero-audience">LAW FIRM OWNERS</p>
+          <h1>Page one of Google<br>in <span class="hl-num">24 to 48 hours.</span></h1>
+          <p class="hero-free-offer">Your first keyword boost is <strong>FREE.</strong></p>
         </div>
 
         <section class="hero-vsl" aria-labelledby="hero-vsl-title">
           <div class="hero-vsl-frame">
             <h2 id="hero-vsl-title" class="sr-only">5-minute Rank Boost demo</h2>
             <style>
-              .hero-vsl-frame { background: center / contain no-repeat url('assets/rankboost-vsl-page-one.png'); }
+              .hero-vsl-frame { background: center / contain no-repeat url('assets/rankboost-vsl-page-one.be53caf8850c.webp'); }
               wistia-player[media-id='8uioqg3047']:not(:defined),
               wistia-player[media-id='8uioqg3047'].poster-loading { opacity: 0; }
             </style>
-            <wistia-player media-id="8uioqg3047" aspect="1.7777777777777777" poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.png"></wistia-player>
+            <wistia-player media-id="8uioqg3047" aspect="1.7777777777777777" poster="https://threestripesdigital.com/rank-boost/law-firms/assets/rankboost-vsl-page-one.be53caf8850c.webp"></wistia-player>
             <script>
               (() => {
                 const player = document.querySelector('wistia-player[media-id="8uioqg3047"]');
@@ -105,7 +107,6 @@
               })();
             </script>
           </div>
-          <p class="hero-vsl-caption hero-subcopy">Watch the 5-minute demo to see exactly how the boost works, then apply below. If your firm qualifies, your first boost is free. No credit card, no site access, no contract.</p>
         </section>
 
         <!-- Kept intact so the existing validation, API, consent, and result UI retain their bindings. -->
@@ -143,6 +144,8 @@
               <button class="btn btn-primary btn-lg btn-block qualify-form-toggle" id="qualify-form-toggle" type="button" aria-expanded="false" aria-controls="qualify-form">
                 Get my free boost
               </button>
+
+              <p class="hero-reassurance">No credit card. No contract. No website login.</p>
 
               <form class="qualify-form" id="qualify-form" action="#" method="post" novalidate hidden>
                 <div class="form-row two">
@@ -380,7 +383,7 @@
         <div class="video-grid">
           <article class="video-card" data-video-slot="vernsten">
             <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg">
+              <video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/vernsten-law/poster.jpg">
                 <source src="https://threestripesdigital.com/case-studies/assets/vernsten-law/Vernsten.mp4" type="video/mp4" />
               </video>
             </div>
@@ -393,7 +396,7 @@
           </article>
           <article class="video-card" data-video-slot="cruzgold">
             <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/cruz-gold/poster.jpg">
+              <video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/cruz-gold/poster.jpg">
                 <source src="https://threestripesdigital.com/case-studies/assets/cruz-gold/CruzGold.mp4#t=8" type="video/mp4" />
               </video>
             </div>
@@ -406,7 +409,7 @@
           </article>
           <article class="video-card" data-video-slot="ticketcrushers">
             <div class="video-frame">
-              <video controls playsinline preload="metadata" poster="https://threestripesdigital.com/case-studies/assets/ticket-crushers/poster.jpg">
+              <video controls playsinline preload="none" poster="https://threestripesdigital.com/case-studies/assets/ticket-crushers/poster.jpg">
                 <source src="https://threestripesdigital.com/case-studies/assets/ticket-crushers/testimonial.mp4" type="video/mp4" />
               </video>
             </div>

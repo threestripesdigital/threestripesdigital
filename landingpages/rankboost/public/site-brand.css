@@ -1,0 +1,71 @@
+@font-face { font-family: "Rank Boost Manrope"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk79FO_F.woff2") format("woff2"); }
+@font-face { font-family: "Rank Boost Manrope"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk7PFO_F.woff2") format("woff2"); }
+@font-face { font-family: "Rank Boost Manrope"; font-style: normal; font-weight: 600; font-display: swap; src: url("assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4jE-_F.woff2") format("woff2"); }
+@font-face { font-family: "Rank Boost Manrope"; font-style: normal; font-weight: 700; font-display: swap; src: url("assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk4aE-_F.woff2") format("woff2"); }
+
+@font-face { font-family: "Rank Boost Manrope"; font-style: normal; font-weight: 800; font-display: swap; src: url("assets/brand/xn7_YHE41ni1AdIRqAuZuw1Bx9mbZk59E-_F.woff2") format("woff2"); }
+
+/* Shared approved main-site branding for every public Rank Boost funnel page. */
+:root {
+  --navy: #0C2031;
+  --navy-2: #193447;
+  --navy-3: #193447;
+  --gold: #D9B35B;
+  --gold-light: #D9B35B;
+  --gold-dim: rgb(217 179 91 / 14%);
+  --muted: #B8C6D0;
+  --muted-2: #B8C6D0;
+  --white: #FAF8F2;
+  --white-pure: #FAF8F2;
+  --line: rgb(220 231 237 / 16%);
+  --line-strong: rgb(217 179 91 / 35%);
+  --font: "Rank Boost Manrope", Arial, sans-serif;
+  --display: var(--font);
+  --mono: var(--font);
+  --brand-pale: #DCE7ED;
+  --brand-ink: #152F40;
+}
+::selection { background: rgb(217 179 91 / 35%); color: var(--white); }
+h1, h2 { font-weight: 500; }
+.site-header, .step-header { background: var(--navy); }
+.wordmark { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font); font-weight: 500; white-space: nowrap; }
+.wordmark::before { content: ""; display: block; flex: 0 0 auto; width: 30px; height: 27px; margin-right: 5px; background: url("assets/brand/brand-mark.svg") center / contain no-repeat; }
+.wordmark span { color: var(--gold); }
+.btn, .step-cta, .opp-sticky-btn { border-radius: 999px; font-family: var(--font); }
+.btn-primary, .step-cta, .opp-sticky-btn { background: var(--gold); border-color: var(--gold); color: var(--navy); box-shadow: none; }
+.btn-primary:hover, .step-cta:hover, .opp-sticky-btn:hover { background: #E7C675; border-color: #E7C675; color: var(--navy); box-shadow: none; }
+.btn-ghost { color: var(--white); border-color: var(--line-strong); }
+.btn:focus-visible, .step-cta:focus-visible { outline: 3px solid var(--white); outline-offset: 4px; }
+.eyebrow, .marquee-label, .trust-h, .video-stat, .cta-inline-note, .final-micro { font-weight: 600; }
+.marquee-section { background: var(--navy-2); }
+.marquee-item, .trust-chip, .win-card { background: var(--navy); }
+.video-card, .faq-item, .ba-card { background: var(--navy-2); }
+.final-cta { background: var(--navy); }
+.sticky-cta, .opp-sticky-inner { background: rgb(12 32 49 / 96%); }
+.kw-row.kw-head, .kw-math { background: var(--navy-2); }
+.opp-total { background: linear-gradient(180deg, var(--gold-dim), transparent); }
+.opp-card.first, .step-cta-wrap { background: rgb(217 179 91 / 6%); }
+.inline-progress-bar { background: var(--navy-3); }
+.fit-summary { border-color: var(--line-strong); background: var(--gold-dim); }
+.fit-summary > strong, .fit-table .fit-upside, .fit-table .rank-warn { color: var(--gold); }
+.fit-summary > span, .fit-summary small, .fit-summary p, .fit-table thead th, .fit-ranking-url { color: var(--muted); }
+.ty-calendar, .ty-explore-nav a { background: var(--brand-pale); border-color: #B8C6D0; color: var(--brand-ink); }
+.ty-calendar .ty-step-kicker, .ty-calendar h2, .ty-calendar .ty-ec-when, .ty-inbox-copy, .ty-inbox-copy a, .ty-nav-detail, .ty-nav-action { color: var(--brand-ink); }
+.ty-nav-icon { background: rgb(217 179 91 / 30%); color: var(--brand-ink); }
+.ty-explore-nav a:hover { background: #EAF0F3; border-color: var(--gold); }
+.ty-proof-prompt a { color: var(--gold); }
+.ty-n { background: var(--navy-2); }
+.ty-step-badge { background: var(--gold); color: var(--navy); }
+/* Keep source screenshots, native video controls and semantic error/status colors intact. */
+@media (max-width: 720px) {
+  .site-header .header-cta { display: none; }
+  .site-header .header-inner { justify-content: center; }
+  .site-header .rankboost-brand { font-size: 18px; }
+  .site-header .wordmark { font-size: 18px; }
+  .legal p, .legal li { font-size: 16px; }
+  .faq-body { font-size: 16px; }
+}
+@media (max-width: 400px) {
+  .step-header > .wordmark { font-size: 14px; }
+  .step-header > .wordmark::before { width: 23px; height: 21px; }
+}
