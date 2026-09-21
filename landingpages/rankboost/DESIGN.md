@@ -34,6 +34,7 @@
 
 ## Responsive behaviour
 
+- The three main-page testimonial cards share one equal-width row at viewport widths of 960 pixels and above. Keep two columns from 721 to 959 pixels and one column at 720 pixels and below. Preserve each video's 16:9 frame without cropping or stretching.
 - Founder and breakout videos retain their portrait 9:16 framing, use accessible playback controls, and never autoplay.
 - Cap portrait cards at 380 pixels, with two FAQ columns above 680 pixels and one column on smaller screens. Show clean white and pale-blue thumbnails with bold blue questions above the center play button.
 - Publish complete selected takes only. The full agency-difference claim and the free-offer sales-tool explanation remain intact at Bilal’s request.
