@@ -59,6 +59,29 @@ test("scout files do not exist on the funnel hosts", async () => {
   }
 });
 
+test("Scout privacy page can load its branding without exposing other funnel assets", async () => {
+  const privacy = await readFile(new URL("../public/privacy.html", import.meta.url), "utf8");
+  const brandCss = await readFile(new URL("../public/site-brand.css", import.meta.url), "utf8");
+  const paths = new Set([
+    "/privacy.html",
+    ...Array.from(privacy.matchAll(/href="([^"]+)"/g), match => match[1])
+      .filter(path => /^(?:site-brand\.css|styles\.css|assets\/brand\/)/.test(path))
+      .map(path => "/" + path),
+    ...Array.from(brandCss.matchAll(/url\("([^"]+)"\)/g), match => "/" + match[1]),
+  ]);
+  for (const path of paths) {
+    const result = await run("https://" + DEFAULT_SCOUT_HOST + path);
+    assert.equal(result.res.status, 200, path);
+    assert.deepEqual(result.seen, ["next"], path);
+    await readFile(new URL("../public" + path, import.meta.url));
+  }
+  for (const path of ["/hero-brand.css", "/assets/brand/private.json", "/meta.js", "/api/check"]) {
+    const result = await run("https://" + DEFAULT_SCOUT_HOST + path);
+    assert.equal(result.res.status, 404, path);
+    assert.deepEqual(result.seen, [], path);
+  }
+});
+
 test("scout host can be overridden by SCOUT_HOST", async () => {
   const r = await run("https://scout.example.test/", { SCOUT_HOST: "scout.example.test" });
   assert.deepEqual(r.seen, ["asset:/scout"]);
